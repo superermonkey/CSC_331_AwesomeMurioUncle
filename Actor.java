@@ -2,6 +2,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.util.Vector;
 
+import com.sun.prism.Graphics;
+
 /**
  * 
  */
@@ -22,6 +24,11 @@ public abstract class Actor extends LevelObject{
 		super(l, d, v);
 		this.velocity = vector;
 		// TODO Auto-generated constructor stub
+	}
+	
+	public void draw(Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

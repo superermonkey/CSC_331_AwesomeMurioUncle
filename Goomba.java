@@ -18,8 +18,8 @@ public class Goomba extends Enemy{
 	 * @param v
 	 * @param vector
 	 */
-	public Goomba(Point l, Dimension d, boolean v, Vector vector) {
-		super(l, d, v, vector);
+	public Goomba(Point l, Dimension d, boolean v, Vector vector, int point) {
+		super(l, d, v, vector, point);
 		// TODO Auto-generated constructor stub
 	}
 

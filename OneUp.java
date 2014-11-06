@@ -1,8 +1,7 @@
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Vector;
-
-import com.sun.prism.Graphics;
 
 /**
  * 
@@ -26,12 +25,14 @@ public class OneUp extends PowerUp{
 	}
 
 	/* (non-Javadoc)
-	 * @see LevelObject#draw(com.sun.prism.Graphics)
+	 * @see LevelObject#draw(java.awt.Graphics)
 	 */
 	@Override
 	public void draw(Graphics g) {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 
 }

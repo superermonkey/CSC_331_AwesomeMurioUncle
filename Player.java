@@ -1,8 +1,8 @@
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Vector;
 
-import com.sun.prism.Graphics;
 
 /**
  * 
@@ -14,6 +14,7 @@ import com.sun.prism.Graphics;
  */
 public class Player extends Actor{
 
+	private double angle;
 	/**
 	 * @param l
 	 * @param d
@@ -22,16 +23,30 @@ public class Player extends Actor{
 	 */
 	public Player(Point l, Dimension d, boolean v, Vector vector) {
 		super(l, d, v, vector);
-		// TODO Auto-generated constructor stub
+		angle = 0;
+	}
+
+	/**
+	 * @return the angle
+	 */
+	public double getAngle() {
+		return angle;
+	}
+
+	/**
+	 * @param angle the angle to set
+	 */
+	public void setAngle(double angle) {
+		this.angle = angle;
+
 	}
 
 	/* (non-Javadoc)
-	 * @see LevelObject#draw(com.sun.prism.Graphics)
+	 * @see LevelObject#draw(java.awt.Graphics)
 	 */
 	@Override
 	public void draw(Graphics g) {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

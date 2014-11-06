@@ -1,7 +1,7 @@
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
 
-import com.sun.prism.Graphics;
 
 /**
  * 
@@ -24,12 +24,13 @@ public class QuestionMarkBox extends InteractiveBox{
 	}
 
 	/* (non-Javadoc)
-	 * @see LevelObject#draw(com.sun.prism.Graphics)
+	 * @see LevelObject#draw(java.awt.Graphics)
 	 */
 	@Override
 	public void draw(Graphics g) {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

@@ -1,7 +1,9 @@
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
 
-import com.sun.prism.Graphics;
+import javax.swing.ImageIcon;
+
 
 /**
  * 
@@ -13,6 +15,7 @@ import com.sun.prism.Graphics;
  */
 public class Ground extends LevelObject{
 
+	protected ImageIcon groundImage = new ImageIcon("ground_block.png");
 	/**
 	 * @param l
 	 * @param d
@@ -20,16 +23,13 @@ public class Ground extends LevelObject{
 	 */
 	public Ground(Point l, Dimension d, boolean v) {
 		super(l, d, v);
-		// TODO Auto-generated constructor stub
 	}
-
 	/* (non-Javadoc)
-	 * @see LevelObject#draw(com.sun.prism.Graphics)
+	 * @see LevelObject#draw(java.awt.Graphics)
 	 */
 	@Override
 	public void draw(Graphics g) {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
