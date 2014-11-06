@@ -1,7 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
-import java.util.Vector;
 
 
 /**
@@ -21,8 +21,8 @@ public class Enemy extends Actor{
 	 * @param v
 	 * @param vector
 	 */
-	public Enemy(Point l, Dimension d, boolean v, Vector vector, int point) {
-		super(l, d, v, vector);
+	public Enemy(Point l, Dimension d, boolean v, Vector vector, Image i, int point) {
+		super(l, d, v, vector, i);
 		this.pointValue = point;
 	}
 

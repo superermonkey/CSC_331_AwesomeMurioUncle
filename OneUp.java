@@ -1,8 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
-import java.util.Vector;
-
 /**
  * 
  */
@@ -19,8 +18,8 @@ public class OneUp extends PowerUp{
 	 * @param v
 	 * @param vector
 	 */
-	public OneUp(Point l, Dimension d, boolean v, Vector vector) {
-		super(l, d, v, vector);
+	public OneUp(Point l, Dimension d, boolean v, Vector vector, Image i) {
+		super(l, d, v, vector, i);
 		// TODO Auto-generated constructor stub
 	}
 

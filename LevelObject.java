@@ -1,5 +1,6 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 
 
@@ -15,13 +16,14 @@ public abstract class LevelObject {
 	protected boolean isVisible;
 	protected Dimension size;
 	protected Point location;
+	protected Image image;
 	
-	public LevelObject(Point l, Dimension d, boolean v){
+	public LevelObject(Point l, Dimension d, boolean v, Image i){
 		super();
 		this.location = l;
 		this.size = d;
 		this.isVisible = v;
-		
+		this.image = i;
 	}
 
 

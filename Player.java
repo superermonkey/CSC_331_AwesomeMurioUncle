@@ -1,7 +1,8 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
-import java.util.Vector;
 
 
 /**
@@ -21,8 +22,8 @@ public class Player extends Actor{
 	 * @param v
 	 * @param vector
 	 */
-	public Player(Point l, Dimension d, boolean v, Vector vector) {
-		super(l, d, v, vector);
+	public Player(Point l, Dimension d, boolean v, Vector vector, Image i) {
+		super(l, d, v, vector, i);
 		angle = 0;
 	}
 
@@ -46,7 +47,7 @@ public class Player extends Actor{
 	 */
 	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
-		
+		Graphics2D g2 = (Graphics2D) g;
+		g2.drawImage(this.image, location.x, location.y, size.width, size.height, null);
 	}
 }

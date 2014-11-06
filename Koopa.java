@@ -1,6 +1,6 @@
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
-import java.util.Vector;
 
 /**
  * 
@@ -18,8 +18,8 @@ public class Koopa extends Enemy{
 	 * @param v
 	 * @param vector
 	 */
-	public Koopa(Point l, Dimension d, boolean v, Vector vector, int point) {
-		super(l, d, v, vector, point);
+	public Koopa(Point l, Dimension d, boolean v, Vector vector, Image i, int point) {
+		super(l, d, v, vector, i, point);
 		// TODO Auto-generated constructor stub
 	}
 

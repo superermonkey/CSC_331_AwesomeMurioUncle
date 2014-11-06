@@ -19,7 +19,7 @@ public class Coin extends LevelObject{
 	 * @param v
 	 */
 	public Coin(Point l, Dimension d, boolean v) {
-		super(l, d, v);
+		super(l, d, v, null);
 		// TODO Auto-generated constructor stub
 	}
 

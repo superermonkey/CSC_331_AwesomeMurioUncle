@@ -1,7 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
-import java.util.Vector;
 
 
 /**
@@ -20,8 +20,8 @@ public class Star extends PowerUp{
 	 * @param v
 	 * @param vector
 	 */
-	public Star(Point l, Dimension d, boolean v, Vector vector) {
-		super(l, d, v, vector);
+	public Star(Point l, Dimension d, boolean v, Vector vector, Image i) {
+		super(l, d, v, vector, i);
 		// TODO Auto-generated constructor stub
 	}
 

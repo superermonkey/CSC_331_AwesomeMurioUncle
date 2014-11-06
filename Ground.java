@@ -22,7 +22,7 @@ public class Ground extends LevelObject{
 	 * @param v
 	 */
 	public Ground(Point l, Dimension d, boolean v) {
-		super(l, d, v);
+		super(l, d, v, null);
 	}
 	/* (non-Javadoc)
 	 * @see LevelObject#draw(java.awt.Graphics)

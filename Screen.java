@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -23,7 +22,7 @@ public class Screen extends JPanel{
 	public static int screenWidth = 700;
 	public static int screenHeight = 500;
 	public static ImageIcon backgroundImg = new ImageIcon("img/happy_background.jpg");
-	public static ImageIcon marioImg = new ImageIcon("img/Mario_walk.gif");
+	public static ImageIcon playerImg = new ImageIcon("img/Mario_walk.gif");
 	
 	private ArrayList<LevelObject> objects;
 	private javax.swing.Timer timer;
@@ -37,12 +36,10 @@ public class Screen extends JPanel{
 		
 		// Create Player
 		Point playerLocation = new Point(50,200);
-		Dimension playerSize = new Dimension(50,30);
+		Dimension playerSize = new Dimension(30,50);
 		boolean playerVisibility = true;
 		Vector playerVelocity = new Vector(0,0);
-		
-		
-		Player player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity);
+		Player player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
 		
 		objects.add(player);
 		
@@ -63,5 +60,7 @@ public class Screen extends JPanel{
 		for (LevelObject obj : objects) {
 			obj.draw(g);
 		}
+		
+		repaint();
 	}
 }
