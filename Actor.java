@@ -29,6 +29,7 @@ public abstract class Actor extends LevelObject{
 		super(l, d, v, i);
 		this.velocity = vel;
 		this.acceleration.setDY(GRAVITY);
+		this.isSolidAndStationary = false;
 	}
 	
 	/**

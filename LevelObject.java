@@ -2,6 +2,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 
 /**
@@ -17,6 +18,7 @@ public abstract class LevelObject {
 	protected Dimension size;
 	protected Point location;
 	protected Image image;
+	protected boolean isSolidAndStationary;
 	
 	public LevelObject(Point l, Dimension d, boolean v, Image i){
 		super();
@@ -69,6 +71,18 @@ public abstract class LevelObject {
 		this.location = location;
 	}
 	
+	public boolean collide(LevelObject other) {
+		Rectangle thisObject = new Rectangle(this.location.x, this.location.y, this.size.width, this.size.height);
+		Rectangle thatObject = new Rectangle(other.location.x, other.location.y, other.size.width, other.size.height);
+		
+		if(thisObject.intersects(thatObject)){
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+	}
 	
 	// Abstract so all subclasses must implement.
 	abstract public void draw(Graphics g);

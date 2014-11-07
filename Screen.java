@@ -28,8 +28,10 @@ import javax.swing.Timer;
  *
  */
 public class Screen extends JPanel implements KeyListener{
-	public static int screenWidth = 700;
-	public static int screenHeight = 500;
+	// Set Screen width and height.
+	public static Dimension screenSize = new Dimension(700, 500);
+	//public static int screenWidth = 700;
+	//public static int screenHeight = 500;
 	public static ImageIcon backgroundImg = new ImageIcon("img/happy_background.jpg");
 	public static ImageIcon playerImg = new ImageIcon("img/Mario_walk.gif");
 	
@@ -41,7 +43,7 @@ public class Screen extends JPanel implements KeyListener{
 	private Ground ground;
 	
 	public Screen() {
-		setPreferredSize(new Dimension(screenWidth, screenHeight));
+		setPreferredSize(screenSize);
 		setBackground(Color.blue);
 		setFocusable(true);
 		requestFocusInWindow();
@@ -61,27 +63,31 @@ public class Screen extends JPanel implements KeyListener{
 		
 		// Create Ground
 		Point groundLocation = new Point(0, 450);
-		Dimension groundSize = new Dimension(100, 11);
+		Dimension groundSize = new Dimension(500, GroundSection.BLOCK_SIZE.height);
 		boolean groundVisibility = true;
 		ground = new Ground(groundLocation, groundSize, groundVisibility, playerImg.getImage());
 		ground.buildGround((int)groundSize.width/10);
 		
+		// Add static objects (ground, bricks, boxes) to objects ArrayList.
+		// Add moving objects (players, enemies, shrooms) to actors ArrayList.
 		objects.add(ground);
 		actors.add(player);
+		
+		// Add a KeyListener for keyboard input.
 		this.addKeyListener(this);
 		
-		
+		// Add a Timer for the Level
 		timer = new Timer(30, new TimerListener());
 		timer.start();
 	}
 	
 	
 	public void paintComponent(Graphics g) {
-		screenWidth = this.getWidth();
-		screenHeight = this.getHeight();
+		screenSize.width= this.getWidth();
+		screenSize.height = this.getHeight();
 		super.paintComponent(g);
 		
-		g.drawImage(backgroundImg.getImage(), 0, 0, screenWidth, screenHeight, null);
+		g.drawImage(backgroundImg.getImage(), 0, 0, screenSize.width, screenSize.height, null);
 		// draw actors
 		for (Actor obj : actors) {
 			obj.draw(g);
@@ -140,6 +146,14 @@ public class Screen extends JPanel implements KeyListener{
 	
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
+			
+			for (LevelObject currentObject: objects) {
+				if (player.collide(currentObject)){
+					player.velocity.setDY(0);
+				}
+			}
+			
+			
 			// move each Actor
 			for (Actor ob: actors) {
 				Actor ob2 = (Actor) ob;
