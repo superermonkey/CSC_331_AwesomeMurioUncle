@@ -38,6 +38,7 @@ public class Screen extends JPanel implements KeyListener{
 	private Timer timer;
 	
 	private Player player;
+	private Ground ground;
 	
 	public Screen() {
 		setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -56,6 +57,16 @@ public class Screen extends JPanel implements KeyListener{
 		boolean playerVisibility = true;
 		Vector playerVelocity = new Vector(0,0);
 		player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
+		
+		
+		// Create Ground
+		Point groundLocation = new Point(0, 450);
+		Dimension groundSize = new Dimension(100, 11);
+		boolean groundVisibility = true;
+		ground = new Ground(groundLocation, groundSize, groundVisibility, playerImg.getImage());
+		ground.buildGround((int)groundSize.width/10);
+		
+		objects.add(ground);
 		actors.add(player);
 		this.addKeyListener(this);
 		
@@ -74,6 +85,9 @@ public class Screen extends JPanel implements KeyListener{
 		// draw actors
 		for (Actor obj : actors) {
 			obj.draw(g);
+		}
+		for (LevelObject ob : objects) {
+			ob.draw(g);
 		}
 		
 	}
@@ -113,6 +127,15 @@ public class Screen extends JPanel implements KeyListener{
 
 	
 	public void keyReleased(KeyEvent e) {
+	while (player.getAcceleration().getDX() != 0){
+			if(player.getAcceleration().getDX() > 0){
+				player.acceleration.setDX((player.getAcceleration().getDX())-1);
+			}
+			else if(player.getAcceleration().getDX() < 0){
+				player.acceleration.setDX((player.getAcceleration().getDX())+1);
+			}
+		}
+	
 	}
 	
 	private class TimerListener implements ActionListener {
