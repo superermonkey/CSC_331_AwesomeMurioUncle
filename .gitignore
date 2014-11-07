@@ -20,3 +20,5 @@
 /Brick.class
 /QuestionMarkBox.class
 /Vector.class
+/PhysicsObject.class
+/Screen$TimerListener.class

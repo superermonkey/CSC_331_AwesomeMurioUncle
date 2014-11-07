@@ -32,6 +32,15 @@ public class OneUp extends PowerUp{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see Actor#move()
+	 */
+	@Override
+	public void move() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }

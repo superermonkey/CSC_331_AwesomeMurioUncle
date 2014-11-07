@@ -32,5 +32,14 @@ public class QuestionMarkBox extends InteractiveBox{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see LevelObject#move()
+	 */
+	@Override
+	public void move() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

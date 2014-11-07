@@ -5,9 +5,14 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 
 /**
@@ -18,20 +23,27 @@ import javax.swing.JPanel;
  * @author Monkey
  *
  */
-public class Screen extends JPanel{
+public class Screen extends JPanel implements KeyListener{
 	public static int screenWidth = 700;
 	public static int screenHeight = 500;
 	public static ImageIcon backgroundImg = new ImageIcon("img/happy_background.jpg");
 	public static ImageIcon playerImg = new ImageIcon("img/Mario_walk.gif");
 	
+	private ArrayList<Actor> actors;
 	private ArrayList<LevelObject> objects;
-	private javax.swing.Timer timer;
+	private Timer timer;
+	
+	private Player player;
 	
 	public Screen() {
 		setPreferredSize(new Dimension(screenWidth, screenHeight));
 		setBackground(Color.blue);
+		setFocusable(true);
+		requestFocusInWindow();
 		
-		//Array to hold all the objects in the level.
+		//Array to hold all the actors in the level.
+		actors = new ArrayList<Actor>();
+		// Array to hold all of the objects in the level, including stationary ones like ground and boxes.
 		objects = new ArrayList<LevelObject>();
 		
 		// Create Player
@@ -39,14 +51,12 @@ public class Screen extends JPanel{
 		Dimension playerSize = new Dimension(30,50);
 		boolean playerVisibility = true;
 		Vector playerVelocity = new Vector(0,0);
-		Player player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
+		player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
+		actors.add(player);
+		this.addKeyListener(this);
 		
-		objects.add(player);
-		
-		
-		//Start level timer at window creation.
-		//timer.start();
-		
+		timer = new Timer(30, new TimerListener());
+		timer.start();
 	}
 	
 	
@@ -56,11 +66,86 @@ public class Screen extends JPanel{
 		super.paintComponent(g);
 		
 		g.drawImage(backgroundImg.getImage(), 0, 0, screenWidth, screenHeight, null);
-		// draw objects
-		for (LevelObject obj : objects) {
+		// draw actors
+		for (Actor obj : actors) {
 			obj.draw(g);
 		}
 		
-		repaint();
+	}
+
+
+
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	public void keyPressed(KeyEvent e) {
+		   int keyCode = e.getKeyCode();
+		    switch( keyCode ) { 
+		        case KeyEvent.VK_UP:
+		        case KeyEvent.VK_W:
+		        case KeyEvent.VK_SPACE:
+		            // handle jump 
+		        	player.getVelocity().setDY((player.getVelocity().getDY())-3);
+		            break;
+		        //  Move Left
+		        case KeyEvent.VK_LEFT:
+		        case KeyEvent.VK_A:
+		        	player.velocity.setDX((player.getVelocity().getDX())-3);
+		            break;
+		        // Move Right
+		        case KeyEvent.VK_RIGHT :
+		        case KeyEvent.VK_D:
+		        	player.velocity.setDX((player.getVelocity().getDX())+3);
+		            break;
+		     }
+		    repaint();
+		
+	}
+
+	
+	public void keyReleased(KeyEvent e) {
+		while (player.getVelocity().getDX() != 0){
+			if(player.getVelocity().getDX() > 0){
+				player.velocity.setDX((player.getVelocity().getDX())-1);
+			}
+			else if(player.getVelocity().getDX() < 0){
+				player.velocity.setDX((player.getVelocity().getDX())+1);
+			}
+		}
+		
+	}
+	
+	private class TimerListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			// move each Actor
+			for (Actor ob: actors) {
+				Actor ob2 = (Actor) ob;
+				ob2.move();
+			}
+			for (LevelObject obj: objects) {
+				obj.move();
+			}
+			
+			repaint();
+			
+		}
+		
+	}
+	
+	/**
+	 * @return the timer
+	 */
+	public javax.swing.Timer getTimer() {
+		return timer;
+	}
+	/**
+	 * @param timer the timer to set
+	 */
+	public void setTimer(javax.swing.Timer timer) {
+		this.timer = timer;
 	}
 }

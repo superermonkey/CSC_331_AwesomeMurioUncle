@@ -32,4 +32,12 @@ public class Ground extends LevelObject{
 		// TODO Auto-generated method stub
 		
 	}
+	/* (non-Javadoc)
+	 * @see LevelObject#move()
+	 */
+	@Override
+	public void move() {
+		// TODO Auto-generated method stub
+		
+	}
 }

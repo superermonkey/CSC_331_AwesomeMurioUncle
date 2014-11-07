@@ -73,4 +73,6 @@ public abstract class LevelObject {
 	// Abstract so all subclasses must implement.
 	abstract public void draw(Graphics g);
 	
+	abstract public void move();
+	
 }

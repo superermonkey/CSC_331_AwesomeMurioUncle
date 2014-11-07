@@ -49,5 +49,14 @@ public class Enemy extends Actor{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see Actor#move()
+	 */
+	@Override
+	public void move() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

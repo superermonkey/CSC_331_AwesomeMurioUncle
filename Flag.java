@@ -32,4 +32,13 @@ public class Flag extends LevelObject{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see LevelObject#move()
+	 */
+	@Override
+	public void move() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

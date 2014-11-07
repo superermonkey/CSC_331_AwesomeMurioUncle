@@ -15,31 +15,33 @@ import java.awt.Point;
  */
 public class Player extends Actor{
 
-	private double angle;
 	/**
 	 * @param l
 	 * @param d
 	 * @param v
 	 * @param vector
 	 */
-	public Player(Point l, Dimension d, boolean v, Vector vector, Image i) {
-		super(l, d, v, vector, i);
-		angle = 0;
+	public Player(Point l, Dimension d, boolean v, Vector velocity, Image i) {
+		super(l, d, v, velocity, i);
 	}
-
-	/**
-	 * @return the angle
-	 */
-	public double getAngle() {
-		return angle;
-	}
-
-	/**
-	 * @param angle the angle to set
-	 */
-	public void setAngle(double angle) {
-		this.angle = angle;
-
+	
+	public void move(){
+		location.x += velocity.getDX();
+		location.y += velocity.getDY();
+		
+		if (location.x > Screen.screenWidth) {
+			location.x -= Screen.screenWidth;
+		}
+		if (location.x < 0) {
+			location.x += Screen.screenWidth;
+		}
+		
+		if (location.y > Screen.screenHeight) {
+			location.y -= Screen.screenHeight;
+		}
+		if (location.y < 0) {
+			location.y += Screen.screenHeight;
+		}
 	}
 
 	/* (non-Javadoc)
