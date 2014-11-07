@@ -14,7 +14,8 @@ import java.awt.Point;
  *
  */
 public class Player extends Actor{
-
+	public static final double MAX_SPEED = 10;
+	
 	/**
 	 * @param l
 	 * @param d
@@ -26,6 +27,13 @@ public class Player extends Actor{
 	}
 	
 	public void move(){
+		if (velocity.getDX() < MAX_SPEED){
+			velocity.setDX(velocity.getDX()+acceleration.getDX());
+		}
+		if (velocity.getDY() < MAX_SPEED){
+			velocity.setDY(velocity.getDY()+acceleration.getDY());
+		}
+		
 		location.x += velocity.getDX();
 		location.y += velocity.getDY();
 		

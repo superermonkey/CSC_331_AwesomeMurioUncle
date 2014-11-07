@@ -10,8 +10,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 
@@ -55,6 +59,7 @@ public class Screen extends JPanel implements KeyListener{
 		actors.add(player);
 		this.addKeyListener(this);
 		
+		
 		timer = new Timer(30, new TimerListener());
 		timer.start();
 	}
@@ -89,17 +94,17 @@ public class Screen extends JPanel implements KeyListener{
 		        case KeyEvent.VK_W:
 		        case KeyEvent.VK_SPACE:
 		            // handle jump 
-		        	player.getVelocity().setDY((player.getVelocity().getDY())-3);
+		        	player.getVelocity().setDY((player.getAcceleration().getDY())-10);
 		            break;
 		        //  Move Left
 		        case KeyEvent.VK_LEFT:
 		        case KeyEvent.VK_A:
-		        	player.velocity.setDX((player.getVelocity().getDX())-3);
+		        	player.velocity.setDX((player.getAcceleration().getDX())-3);
 		            break;
 		        // Move Right
 		        case KeyEvent.VK_RIGHT :
 		        case KeyEvent.VK_D:
-		        	player.velocity.setDX((player.getVelocity().getDX())+3);
+		        	player.velocity.setDX((player.getAcceleration().getDX())+3);
 		            break;
 		     }
 		    repaint();
@@ -108,15 +113,6 @@ public class Screen extends JPanel implements KeyListener{
 
 	
 	public void keyReleased(KeyEvent e) {
-		while (player.getVelocity().getDX() != 0){
-			if(player.getVelocity().getDX() > 0){
-				player.velocity.setDX((player.getVelocity().getDX())-1);
-			}
-			else if(player.getVelocity().getDX() < 0){
-				player.velocity.setDX((player.getVelocity().getDX())+1);
-			}
-		}
-		
 	}
 	
 	private class TimerListener implements ActionListener {
