@@ -1,3 +1,8 @@
+# SMB 1-1 reproduction tilemap
+# By Dean Antel
+# Tiles:
+# (A-Z) Stationary Tiles
+# (0-9) Actors
 A
 A
 A
