@@ -20,31 +20,40 @@ import javax.swing.Timer;
 
 
 /**
+ * Create a Screen object to serve as the current level in the Murio game.
+ * Instantiates the LevelObjects and serves as the main game loop.
+ * Contains the ArrayLists that contain LevelObjects and actors.
+ * Contains the KeyListeners for controlling Murio.
  * 
- */
-
-/**
- * @author Monkey
+ * @author RyanPierce
  *
  */
 public class Screen extends JPanel implements KeyListener{
 	// Set Screen width and height.
 	public static Dimension screenSize = new Dimension(700, 500);
-	//public static int screenWidth = 700;
-	//public static int screenHeight = 500;
+	// The background image to use for the level.
 	public static ImageIcon backgroundImg = new ImageIcon("img/happy_background.jpg");
+	//  The current image for the main playable character.
 	public static ImageIcon playerImg = new ImageIcon("img/Mario_walk.gif");
-	
+	// ArrayList containing all of the moving Actor objects for the level.
 	private ArrayList<Actor> actors;
+	// ArrayList containing all of the non-moving Tile objects for the game.
 	private ArrayList<LevelObject> objects;
+	// The level timer.
 	private Timer timer;
-	
+	// The player object for first player.
 	private Player player;
+	//  The Ground object.
 	private Ground ground;
 	
+	/**
+	 * Create the Screen which will serve as the current level.
+	 */
 	public Screen() {
+		// Set Screen size based on Dimension object.
 		setPreferredSize(screenSize);
 		setBackground(Color.blue);
+		//  Allows KeyboardListener to be used in the level.
 		setFocusable(true);
 		requestFocusInWindow();
 		
@@ -53,7 +62,7 @@ public class Screen extends JPanel implements KeyListener{
 		// Array to hold all of the objects in the level, including stationary ones like ground and boxes.
 		objects = new ArrayList<LevelObject>();
 		
-		// Create Player
+		// Create Player.
 		Point playerLocation = new Point(50,200);
 		Dimension playerSize = new Dimension(30,50);
 		boolean playerVisibility = true;
@@ -66,7 +75,7 @@ public class Screen extends JPanel implements KeyListener{
 		Dimension groundSize = new Dimension(500, GroundSection.BLOCK_SIZE.height);
 		boolean groundVisibility = true;
 		ground = new Ground(groundLocation, groundSize, groundVisibility, playerImg.getImage());
-		ground.buildGround((int)groundSize.width/10);
+		ground.buildGround((int)groundSize.width/25);
 		
 		// Add static objects (ground, bricks, boxes) to objects ArrayList.
 		// Add moving objects (players, enemies, shrooms) to actors ArrayList.
