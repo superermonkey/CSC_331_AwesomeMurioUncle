@@ -101,6 +101,7 @@ public class Screen extends JPanel implements KeyListener{
 		for (Actor obj : actors) {
 			obj.draw(g);
 		}
+		// draw LevelObjects.
 		for (LevelObject ob : objects) {
 			ob.draw(g);
 		}
@@ -110,11 +111,9 @@ public class Screen extends JPanel implements KeyListener{
 
 
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+		// not used.
 		
 	}
-
-
 
 	public void keyPressed(KeyEvent e) {
 		   int keyCode = e.getKeyCode();
@@ -155,10 +154,15 @@ public class Screen extends JPanel implements KeyListener{
 	
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			
+			// Check for collisions.
 			for (LevelObject currentObject: objects) {
 				if (player.collide(currentObject)){
+					player.acceleration.setDY(0);
 					player.velocity.setDY(0);
+					player.location.y = currentObject.location.y - player.size.height;
+				}
+				if (player.location.y != currentObject.location.y - player.size.height){
+					player.acceleration.setDY(player.GRAVITY);
 				}
 			}
 			
