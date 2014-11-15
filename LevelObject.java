@@ -55,10 +55,8 @@ public abstract class LevelObject{
 	public boolean collide(LevelObject other) {
 		// Current LevelObject.
 		Rectangle thisObject = new Rectangle(this.location.x, this.location.y, this.size.width, this.size.height);
-		//System.out.println("thisObject.location: " + this.location.x);
 		// Another LevelObject to check.
-		Rectangle thatObject = new Rectangle(other.location.x+globalOffset.x, other.location.y, other.size.width, other.size.height);
-		System.out.println("thatObject.location: " + thatObject.x);
+		Rectangle thatObject = new Rectangle(other.location.x-other.globalOffset.x, other.location.y, other.size.width, other.size.height);
 		if(thisObject.intersects(thatObject)){
 			return true;
 		}

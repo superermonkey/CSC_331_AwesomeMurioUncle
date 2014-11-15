@@ -113,27 +113,35 @@ public class Level{
 						this.tiles.add(this.QUESTION_MARK_BOX);
 					}
 					else if (type == 'A'){
+						this.levelObjects.add(new MetalBox(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.METAL_BOX));
 						this.tiles.add(this.METAL_BOX);
 					}
 					else if (type == 'I'){
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_LEFT_PIPE));
 						this.tiles.add(this.TOP_LEFT_PIPE);
 					}
 					else if (type == 'O'){
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_RIGHT_PIPE));
 						this.tiles.add(this.TOP_RIGHT_PIPE);
 					}
 					else if (type == 'K'){
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.LEFT_PIPE));
 						this.tiles.add(this.LEFT_PIPE);
 					}
 					else if (type == 'L'){
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.RIGHT_PIPE));
 						this.tiles.add(this.RIGHT_PIPE);
 					}
 					else if (type == 'H'){
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.BEVELED_BRICK));
 						this.tiles.add(this.BEVELED_BRICK);
 					}
 					else if (type == 'P'){
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.POLE));
 						this.tiles.add(this.POLE);
 					}
 					else if (type == 'S'){
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_POLE));
 						this.tiles.add(this.TOP_POLE);
 					}
 					else
@@ -174,7 +182,7 @@ public class Level{
 	
 	public void setGlobalOffset(Point gblOffset) {
 		for (int i=0; i < levelObjects.size(); i++){
-			levelObjects.get(i).setGlobalOffset(gblOffset);
+			levelObjects.get(i).setGlobalOffset(new Point(levelObjects.get(i).getGlobalOffset().x+gblOffset.x, levelObjects.get(i).getGlobalOffset().y));
 		}
 	}
 

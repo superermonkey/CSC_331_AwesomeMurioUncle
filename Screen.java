@@ -29,6 +29,26 @@ import javax.swing.Timer;
  *
  */
 public class Screen extends JPanel implements KeyListener{
+	
+	/*
+	 * Set the file to be used for the level.
+	 */
+	public final String LEVEL_NAME = "levels/level1_2.txt";
+	
+	/*
+	 *  Set the style layout for the level.
+	 *  Can be 0, 2, 4, or 6.
+	 *  0 = Basic Level.
+	 *  2 = Dark Level.
+	 *  4 = Dungeon Level.
+	 *  6 = Underwater Level.
+	 *  Odd numbers can produce weird things if you want.
+	 */
+	public final int LEVEL_STYLE = 6;
+	
+	
+	
+	
 	// Set Screen width and height.
 	public static Dimension screenSize = new Dimension(700, 500);
 	// The background image to use for the level.
@@ -43,7 +63,6 @@ public class Screen extends JPanel implements KeyListener{
 	protected Timer timer;
 	// The player object for first player.
 	protected Player player;
-	public Point globalOffset = new Point((int)screenSize.width/2,(int)screenSize.height/2);
 	protected ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
 	
 	protected Level currentLevel;
@@ -81,12 +100,11 @@ public class Screen extends JPanel implements KeyListener{
 		this.addKeyListener(this);
 		
 		//Initialize Level
-		currentLevel = new Level(0, 0, 0, "levels/level1_1.txt", tileImages);
+		currentLevel = new Level(0, 0, LEVEL_STYLE, LEVEL_NAME, tileImages);
 		// Add static objects (ground, bricks, boxes) to objects ArrayList.
 		for (int i = 0; i < currentLevel.getLevelObjects().size(); i++){
 			this.objects.add(currentLevel.getLevelObjects().get(i));
 		}
-		System.out.println(objects.size());
 		// Add a Timer for the Level
 		timer = new Timer(30, new TimerListener());
 		timer.start();
@@ -105,13 +123,23 @@ public class Screen extends JPanel implements KeyListener{
 		}
 		
 		g.drawImage(backgroundImg.getImage(), 0, 0, screenSize.width, screenSize.height, null);
+		
+		
 		/*
+		 * Used to draw the actual TileMap for the background.
+		 * Used for debugging purposes, in case things are coming out screwy.
+		 * 
+		 * No Collision accounted for on tile map.
+		 * 
+		 * 
 		for (int i = 0; i < currentLevel.getWidth(); i++){
 			for (int j = 0; j < currentLevel.getHeight(); j++){
 				g.drawImage(currentLevel.getTile(i, j), (int)(i*currentLevel.getImageWidth()+currentLevel.getLevelOffset().getX()), (int)(j*currentLevel.getImageHeight()+currentLevel.getLevelOffset().getY()), currentLevel.getImageWidth(), currentLevel.getImageHeight(), null);
 			}
 		}
 		*/
+		
+		
 		// draw actors
 		for (Actor obj : actors) {
 			obj.draw(g);
@@ -129,7 +157,6 @@ public class Screen extends JPanel implements KeyListener{
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
 		currentLevel.setLevelOffset(new Point((int)currentLevel.getLevelOffset().getX()-2, (int)currentLevel.getLevelOffset().getY()));
 		currentLevel.setGlobalOffset(new Point((int)currentLevel.getGlobalOffset().getX()+2, (int)currentLevel.getGlobalOffset().getY()));
-		System.out.println(currentLevel.getLevelOffset().x);
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -179,21 +206,34 @@ public class Screen extends JPanel implements KeyListener{
 					player.velocity.setDY(0);
 					player.location.y = currentObject.location.y - player.size.height;
 				}
+				else if (player.collide(currentObject) && (player.getLocation().y + player.getSize().height) == currentObject.getLocation().y){
+					player.acceleration.setDY(0);
+					player.velocity.setDY(0);
+					player.location.y = currentObject.location.y - player.size.height;
+				}
+				else if(player.collide(currentObject) && (player.getLocation().x + player.getSize().width) == currentObject.getLocation().x){
+					player.acceleration.setDX(0);
+					player.velocity.setDX(0);
+					player.location.x = currentObject.location.x - player.size.width;
+				}
+				/*
+				else if(player.collide(currentObject) && (player.getLocation().x == currentObject.getLocation().x + currentObject.getLocation().x){
+					player.acceleration.setDX(0);
+					player.velocity.setDX(0);
+					player.location.x = currentObject.location.x + player.size.width;
+				}
+				*/
 				if (player.location.y != currentObject.location.y - player.size.height){
 					player.acceleration.setDY(player.GRAVITY);
 				}
+				
 			}
-			
 			
 			// move each Actor
 			for (Actor ob: actors) {
 				Actor ob2 = (Actor) ob;
 				ob2.move();
-			}
-
-			
-			repaint();
-			
+			}			
 		}
 		
 	}
