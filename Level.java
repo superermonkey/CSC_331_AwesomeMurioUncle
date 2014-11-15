@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 
 public class Level extends Screen{
 	private BufferedImage[][] tiles;
-	private ArrayList<Actor> actors;
+	private ArrayList<Actor> actors = new ArrayList<Actor>();
 	private BufferedImage GROUND;
 	private BufferedImage BRICK;
 	private BufferedImage METAL_BOX;
@@ -20,7 +20,6 @@ public class Level extends Screen{
 	
 	public Level(int width, int height, int lvlType, String mapFileName){
 		tiles = new BufferedImage[width][height];
-		actors = new ArrayList<Actor>();
 		this.setLevelConstants(lvlType);
 		this.readMap(mapFileName);
 	}
@@ -38,20 +37,19 @@ public class Level extends Screen{
 	}
 	
 	public Image getTile(int x, int y) {
-		return null;
-		
+		return tiles[x][y];
 	}
 	
 	private void setLevelConstants(int levelType){
 		this.GROUND = tileImages.getImages().get((levelType * tileImages.getRows()) + 0);
 		this.BRICK = tileImages.getImages().get((levelType * tileImages.getRows()) + 2);
 		this.METAL_BOX = tileImages.getImages().get((levelType * tileImages.getRows()) + 3);;
-		this.QUESTION_MARK_BOX = tileImages.getImages().get((levelType * tileImages.getRows()) + 23);;
+		this.QUESTION_MARK_BOX = tileImages.getImages().get((levelType * tileImages.getRows()) + 23);
 		
 		switch(levelType){
 		//Basic Level Type
 
-		case 1: {
+		case 0: {
 			break;
 		}
 		// Dark Level type
@@ -99,10 +97,11 @@ public class Level extends Screen{
 					}
 				}
 			}
+			reader.close();
+			
 			int width = Integer.parseInt(widest);
 			int height = lines.size();
-			
-			
+			/*
 			for (int y = 0; y < height; y++){
 				String line = lines.get(y);
 				for (int x = 0; x <line.length(); x++){
@@ -120,7 +119,7 @@ public class Level extends Screen{
 						this.tiles[x][y] = this.METAL_BOX;
 					}
 				}
-			}
+			}*/
 		}
 		catch(IOException e){
 			System.out.println("Invalid Level Input File!! Level.readMap(String fileName) " + fileName);

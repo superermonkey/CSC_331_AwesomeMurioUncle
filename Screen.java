@@ -48,6 +48,8 @@ public class Screen extends JPanel implements KeyListener{
 	
 	protected ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
 	
+	protected Level currentLevel;
+	
 	/**
 	 * Create the Screen which will serve as the current level.
 	 */
@@ -87,6 +89,9 @@ public class Screen extends JPanel implements KeyListener{
 		// Add a KeyListener for keyboard input.
 		this.addKeyListener(this);
 		
+		//Initialize Level
+		currentLevel = new Level(200, 50, 0, "levels/level1_1.txt");
+		
 		// Add a Timer for the Level
 		timer = new Timer(30, new TimerListener());
 		timer.start();
@@ -99,9 +104,18 @@ public class Screen extends JPanel implements KeyListener{
 		super.paintComponent(g);
 		
 		g.drawImage(backgroundImg.getImage(), 0, 0, screenSize.width, screenSize.height, null);
+		/*
 		for (int i = 0; i < tileImages.getImages().size(); i++){
 			g.drawImage(tileImages.getImages().get(i), i*32, 0, 32, 32, null);
 		}
+		
+		for (int i = 0; i < currentLevel.getHeight(); i++){
+			for (int j = 0; j < currentLevel.getWidth(); j++){
+				g.drawImage(currentLevel.getTile(j, i), i*32, j*32, 32, 32, null);
+			}
+		}
+		*/
+		//g.drawImage(currentLevel.getTile(1, 1), 0, 0, 32, 32, null);
 		// draw actors
 		for (Actor obj : actors) {
 			obj.draw(g);
