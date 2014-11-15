@@ -1,4 +1,5 @@
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,6 +21,12 @@ public class Level{
 	private BufferedImage BRICK;
 	private BufferedImage METAL_BOX;
 	private BufferedImage QUESTION_MARK_BOX;
+	private BufferedImage TOP_LEFT_PIPE;
+	private BufferedImage TOP_RIGHT_PIPE;
+	private BufferedImage LEFT_PIPE;
+	private BufferedImage RIGHT_PIPE;
+	
+	private Point levelOffset = new Point(0,0);
 	private int width = 20;
 	private int height = 16;
 	
@@ -33,34 +40,15 @@ public class Level{
 	
 
 	private void setLevelConstants(int levelType){
-		this.GROUND = tileImageDictionary.getImages().get((levelType * tileImageDictionary.getRows()) + 0);
-		this.BRICK = tileImageDictionary.getImages().get((levelType * tileImageDictionary.getRows()) + 2);
-		this.METAL_BOX = tileImageDictionary.getImages().get((levelType * tileImageDictionary.getRows()) + 3);
-		this.QUESTION_MARK_BOX = tileImageDictionary.getImages().get((levelType * tileImageDictionary.getRows()) + 24);
-		
-		switch(levelType){
-		//Basic Level Type
-
-		case 0: {
-			break;
-		}
-		// Dark Level type
-		case 2: {
-			break;
-		}
-		//Snow Level Type
-		case 3:{
-			break;
-		}
-		// Green Level Type
-		case 4:{
-			break;
-		}
-		default:{
-			break;
-		}
-		
-		}
+		this.GROUND = tileImageDictionary.get(0, 0);
+		this.BRICK = tileImageDictionary.get(1, 0);
+		this.METAL_BOX = tileImageDictionary.get(4, 0);
+		this.QUESTION_MARK_BOX = tileImageDictionary.get(24, 0);
+		this.TOP_LEFT_PIPE = tileImageDictionary.get(0, 8);
+		this.TOP_RIGHT_PIPE = tileImageDictionary.get(1, 8);
+		this.LEFT_PIPE = tileImageDictionary.get(0, 9);
+		this.RIGHT_PIPE = tileImageDictionary.get(1, 9);
+				
 	}
 	/**\
 	 * readMap reads the level in from a text file and creates the corresponding Level object.
@@ -106,9 +94,22 @@ public class Level{
 					else if (type == 'Q'){
 						this.tiles.add(this.QUESTION_MARK_BOX);
 					}
-					else if (type == 'K'){
+					else if (type == 'H'){
 						this.tiles.add(this.METAL_BOX);
 					}
+					else if (type == 'I'){
+						this.tiles.add(this.TOP_LEFT_PIPE);
+					}
+					else if (type == 'O'){
+						this.tiles.add(this.TOP_RIGHT_PIPE);
+					}
+					else if (type == 'K'){
+						this.tiles.add(this.LEFT_PIPE);
+					}
+					else if (type == 'L'){
+						this.tiles.add(this.RIGHT_PIPE);
+					}
+					
 					else
 						this.tiles.add(null);
 				}
@@ -123,6 +124,24 @@ public class Level{
 	}
 	
 	
+	/**
+	 * @return the levelOffset
+	 */
+	public Point getLevelOffset() {
+		return levelOffset;
+	}
+
+
+	/**
+	 * @param levelOffset the levelOffset to set
+	 */
+	public void setLevelOffset(Point lvlOffset) {
+		if (lvlOffset.getX() < this.getWidth() && lvlOffset.getY() < this.getHeight()){
+			this.levelOffset = lvlOffset;
+		}
+	}
+
+
 	/**
 	 * @return the tiles
 	 */

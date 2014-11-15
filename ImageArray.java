@@ -77,6 +77,10 @@ public class ImageArray {
 		}
 		return images;
 	}
+	
+	public BufferedImage get(int x, int y){
+		return images.get(y*this.getCols() + (x));
+	}
 
 	/**
 	 * @return the images

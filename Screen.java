@@ -104,21 +104,19 @@ public class Screen extends JPanel implements KeyListener{
 		screenSize.height = this.getHeight();
 		super.paintComponent(g);
 		
-		g.drawImage(backgroundImg.getImage(), 0, 0, screenSize.width, screenSize.height, null);
-		/*
-		for (int i = 0; i < tileImages.getImages().size(); i++){
-			g.drawImage(tileImages.getImages().get(i), i*32, 0, 32, 32, null);
-		}
-		*/
-		for (int i = 0; i < currentLevel.getWidth(); i++){
-			for (int j = 0; j < currentLevel.getHeight(); j++){
-				g.drawImage(currentLevel.getTile(i, j), i*32, j*32, 32, 32, null);
-			}
+		int xOffset = (int)player.location.getX();
+		
+		if (xOffset > screenSize.width/2){
+			shiftLeft(g);
 		}
 		
-		System.out.println(currentLevel.getWidth() + "  " + currentLevel.getHeight());
-		System.out.println(currentLevel.getTiles().size());
-		g.drawImage(currentLevel.getTile(211, 15), 0, 0, 32, 32, null);
+		g.drawImage(backgroundImg.getImage(), 0, 0, screenSize.width, screenSize.height, null);
+
+		for (int i = 0; i < currentLevel.getWidth(); i++){
+			for (int j = 0; j < currentLevel.getHeight(); j++){
+				g.drawImage(currentLevel.getTile(i, j), (int)(i*32+currentLevel.getLevelOffset().getX()), (int)(j*32+currentLevel.getLevelOffset().getY()), 32, 32, null);
+			}
+		}
 		// draw actors
 		for (Actor obj : actors) {
 			obj.draw(g);
@@ -127,38 +125,12 @@ public class Screen extends JPanel implements KeyListener{
 		for (LevelObject ob : objects) {
 			ob.draw(g);
 		}
-		
+		repaint();
 	}
-
 	
-	public void buildLevel(int levelType){
-		switch(levelType){
-		//Basic Level Type
-		case 1: {
-			
-			break;
-		}
-		// Dark Level type
-		case 2: {
-			break;
-		}
-		//Snow Level Type
-		case 3:{
-			break;
-		}
-		// Green Level Type
-		case 4:
-			break;
-		default:
-			break;
-		
-		}
-	}
-
-
-	public void keyTyped(KeyEvent e) {
-		// not used.
-		
+	public void shiftLeft(Graphics g){
+		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
+		currentLevel.setLevelOffset(new Point((int)currentLevel.getLevelOffset().getX() - 2, (int)currentLevel.getLevelOffset().getY()));
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -226,6 +198,10 @@ public class Screen extends JPanel implements KeyListener{
 			
 		}
 		
+	}
+	
+	public void keyTyped(KeyEvent e) {
+		// not used.	
 	}
 	
 	/**
