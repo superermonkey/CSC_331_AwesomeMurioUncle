@@ -33,6 +33,7 @@ public class Level{
 	private BufferedImage POLE;
 	
 	private Point levelOffset = new Point(0,0);
+	protected Point globalOffset = new Point (0,0);
 	private int width;
 	private int height;
 	private int imageHeight = 32;
@@ -52,17 +53,17 @@ public class Level{
 	
 
 	private void setLevelConstants(int levelType){
-		this.GROUND = tileImageDictionary.get(0, 0);
-		this.BRICK = tileImageDictionary.get(1, 0);
-		this.METAL_BOX = tileImageDictionary.get(3, 0);
-		this.QUESTION_MARK_BOX = tileImageDictionary.get(24, 0);
-		this.TOP_LEFT_PIPE = tileImageDictionary.get(0, 8);
-		this.TOP_RIGHT_PIPE = tileImageDictionary.get(1, 8);
-		this.LEFT_PIPE = tileImageDictionary.get(0, 9);
-		this.RIGHT_PIPE = tileImageDictionary.get(1, 9);
-		this.BEVELED_BRICK = tileImageDictionary.get(0, 1);
-		this.POLE = tileImageDictionary.get(16, 9);
-		this.TOP_POLE = tileImageDictionary.get(16, 8);
+		this.GROUND = tileImageDictionary.get(0, 0+levelType);
+		this.BRICK = tileImageDictionary.get(1, 0+levelType);
+		this.METAL_BOX = tileImageDictionary.get(3, 0+levelType);
+		this.QUESTION_MARK_BOX = tileImageDictionary.get(24, 0+levelType);
+		this.TOP_LEFT_PIPE = tileImageDictionary.get(0, 8+levelType);
+		this.TOP_RIGHT_PIPE = tileImageDictionary.get(1, 8+levelType);
+		this.LEFT_PIPE = tileImageDictionary.get(0, 9+levelType);
+		this.RIGHT_PIPE = tileImageDictionary.get(1, 9+levelType);
+		this.BEVELED_BRICK = tileImageDictionary.get(0, 1+levelType);
+		this.POLE = tileImageDictionary.get(16, 9+levelType);
+		this.TOP_POLE = tileImageDictionary.get(16, 8+levelType);
 	}
 	/**\
 	 * readMap reads the level in from a text file and creates the corresponding Level object.
@@ -164,11 +165,16 @@ public class Level{
 	public void setLevelOffset(Point lvlOffset) {
 		for (int i=0; i < levelObjects.size(); i++){
 			levelObjects.get(i).setLevelOffset(lvlOffset);
-			levelObjects.get(i).setLocation(new Point((int)(levelObjects.get(i).getLocation().x + lvlOffset.x), (int)(levelObjects.get(i).getLocation().y + lvlOffset.y)));
 		}
 		if (lvlOffset.getX() < this.getWidth() && lvlOffset.getY() < this.getHeight()){
 			this.levelOffset = lvlOffset;
 
+		}
+	}
+	
+	public void setGlobalOffset(Point gblOffset) {
+		for (int i=0; i < levelObjects.size(); i++){
+			levelObjects.get(i).setGlobalOffset(gblOffset);
 		}
 	}
 
@@ -297,6 +303,12 @@ public class Level{
 		this.imageWidth = imageWidth;
 	}
 
+	/**
+	 * @return the globalOffset
+	 */
+	public Point getGlobalOffset() {
+		return globalOffset;
+	}
 
 
 

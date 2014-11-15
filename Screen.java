@@ -43,7 +43,7 @@ public class Screen extends JPanel implements KeyListener{
 	protected Timer timer;
 	// The player object for first player.
 	protected Player player;
-	
+	public Point globalOffset = new Point((int)screenSize.width/2,(int)screenSize.height/2);
 	protected ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
 	
 	protected Level currentLevel;
@@ -70,6 +70,7 @@ public class Screen extends JPanel implements KeyListener{
 		boolean playerVisibility = true;
 		Vector playerVelocity = new Vector(0,0);
 		player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
+		
 		
 		
 		
@@ -127,6 +128,8 @@ public class Screen extends JPanel implements KeyListener{
 	public void shiftLeft(Graphics g){
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
 		currentLevel.setLevelOffset(new Point((int)currentLevel.getLevelOffset().getX()-2, (int)currentLevel.getLevelOffset().getY()));
+		currentLevel.setGlobalOffset(new Point((int)currentLevel.getGlobalOffset().getX()+2, (int)currentLevel.getGlobalOffset().getY()));
+		System.out.println(currentLevel.getLevelOffset().x);
 	}
 
 	public void keyPressed(KeyEvent e) {

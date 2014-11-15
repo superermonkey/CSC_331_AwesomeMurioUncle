@@ -30,6 +30,7 @@ public abstract class LevelObject{
 	protected Image image;
 	protected boolean isSolidAndStationary;
 	protected Point levelOffset = new Point (0,0);
+	protected Point globalOffset = new Point (0,0);
 	
 	/**
 	 * Constructor for the LevelObject.
@@ -54,9 +55,10 @@ public abstract class LevelObject{
 	public boolean collide(LevelObject other) {
 		// Current LevelObject.
 		Rectangle thisObject = new Rectangle(this.location.x, this.location.y, this.size.width, this.size.height);
+		//System.out.println("thisObject.location: " + this.location.x);
 		// Another LevelObject to check.
-		Rectangle thatObject = new Rectangle(other.location.x, other.location.y, other.size.width, other.size.height);
-		
+		Rectangle thatObject = new Rectangle(other.location.x+globalOffset.x, other.location.y, other.size.width, other.size.height);
+		System.out.println("thatObject.location: " + thatObject.x);
 		if(thisObject.intersects(thatObject)){
 			return true;
 		}
@@ -65,9 +67,13 @@ public abstract class LevelObject{
 		}
 		
 	}
-	
+
+
 	// Abstract so all subclasses must implement.
 	public void draw(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		this.image = this.getImage();
+		g2.drawImage(this.image, this.location.x+this.levelOffset.x, this.location.y+this.levelOffset.y, this.size.height, this.size.width, null);
 	}
 
 
@@ -143,4 +149,18 @@ public abstract class LevelObject{
 		this.levelOffset = levelOffset;
 	}
 
+	/**
+	 * @return the globalOffset
+	 */
+	public Point getGlobalOffset() {
+		return globalOffset;
+	}
+
+	/**
+	 * @param globalOffset the globalOffset to set
+	 */
+	public void setGlobalOffset(Point globalOffset) {
+		this.globalOffset = globalOffset;
+	}
+	
 }

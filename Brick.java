@@ -30,9 +30,7 @@ public class Brick extends InteractiveBox{
 	 */
 	@Override
 	public void draw(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
-		this.image = this.getImage();
-		g2.drawImage(this.image, this.location.x, this.location.y, this.size.height, this.size.width, null);
+		super.draw(g);
 	}
 
 }
