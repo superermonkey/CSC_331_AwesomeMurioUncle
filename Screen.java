@@ -99,7 +99,9 @@ public class Screen extends JPanel implements KeyListener{
 		super.paintComponent(g);
 		
 		g.drawImage(backgroundImg.getImage(), 0, 0, screenSize.width, screenSize.height, null);
-		g.drawImage(tileImages.getImages().get(2), 0, 0, screenSize.width, screenSize.height, null);
+		for (int i = 0; i < tileImages.getImages().size(); i++){
+			g.drawImage(tileImages.getImages().get(i), i*32, 0, 32, 32, null);
+		}
 		// draw actors
 		for (Actor obj : actors) {
 			obj.draw(g);
