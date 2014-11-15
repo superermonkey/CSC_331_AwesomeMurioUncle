@@ -36,17 +36,17 @@ public class Screen extends JPanel implements KeyListener{
 	//  The current image for the main playable character.
 	public static ImageIcon playerImg = new ImageIcon("img/Mario_walk.gif");
 	// ArrayList containing all of the moving Actor objects for the level.
-	private ArrayList<Actor> actors;
+	protected ArrayList<Actor> actors;
 	// ArrayList containing all of the non-moving Tile objects for the game.
-	private ArrayList<LevelObject> objects;
+	protected ArrayList<LevelObject> objects;
 	// The level timer.
-	private Timer timer;
+	protected Timer timer;
 	// The player object for first player.
-	private Player player;
+	protected Player player;
 	//  The Ground object.
-	private Ground ground;
+	protected Ground ground;
 	
-	private ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
+	protected ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
 	
 	/**
 	 * Create the Screen which will serve as the current level.
@@ -113,6 +113,30 @@ public class Screen extends JPanel implements KeyListener{
 		
 	}
 
+	
+	public void buildLevel(int levelType){
+		switch(levelType){
+		//Basic Level Type
+		case 1: {
+			
+			break;
+		}
+		// Dark Level type
+		case 2: {
+			break;
+		}
+		//Snow Level Type
+		case 3:{
+			break;
+		}
+		// Green Level Type
+		case 4:
+			break;
+		default:
+			break;
+		
+		}
+	}
 
 
 	public void keyTyped(KeyEvent e) {
