@@ -90,7 +90,8 @@ public class Screen extends JPanel implements KeyListener{
 		this.addKeyListener(this);
 		
 		//Initialize Level
-		currentLevel = new Level(200, 50, 0, "levels/level1_1.txt");
+		currentLevel = new Level(200, 50, 0, "levels/level1_1.txt", tileImages);
+		
 		
 		// Add a Timer for the Level
 		timer = new Timer(30, new TimerListener());
@@ -108,14 +109,16 @@ public class Screen extends JPanel implements KeyListener{
 		for (int i = 0; i < tileImages.getImages().size(); i++){
 			g.drawImage(tileImages.getImages().get(i), i*32, 0, 32, 32, null);
 		}
-		
-		for (int i = 0; i < currentLevel.getHeight(); i++){
-			for (int j = 0; j < currentLevel.getWidth(); j++){
-				g.drawImage(currentLevel.getTile(j, i), i*32, j*32, 32, 32, null);
+		*/
+		for (int i = 0; i < currentLevel.getWidth(); i++){
+			for (int j = 0; j < currentLevel.getHeight(); j++){
+				g.drawImage(currentLevel.getTile(i, j), i*32, j*32, 32, 32, null);
 			}
 		}
-		*/
-		//g.drawImage(currentLevel.getTile(1, 1), 0, 0, 32, 32, null);
+		
+		System.out.println(currentLevel.getWidth() + "  " + currentLevel.getHeight());
+		System.out.println(currentLevel.getTiles().size());
+		g.drawImage(currentLevel.getTile(211, 15), 0, 0, 32, 32, null);
 		// draw actors
 		for (Actor obj : actors) {
 			obj.draw(g);
