@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,8 @@ public class Level{
 	private ImageArray tileImageDictionary = new ImageArray();
 	
 	private ArrayList<Actor> actors = new ArrayList<Actor>();
+	private ArrayList<LevelObject> levelObjects = new ArrayList<LevelObject>();
+	
 	private BufferedImage GROUND;
 	private BufferedImage BRICK;
 	private BufferedImage METAL_BOX;
@@ -25,10 +28,19 @@ public class Level{
 	private BufferedImage TOP_RIGHT_PIPE;
 	private BufferedImage LEFT_PIPE;
 	private BufferedImage RIGHT_PIPE;
+	private BufferedImage BEVELED_BRICK;
+	private BufferedImage TOP_POLE;
+	private BufferedImage POLE;
 	
 	private Point levelOffset = new Point(0,0);
-	private int width = 20;
-	private int height = 16;
+	private int width;
+	private int height;
+	private int imageHeight = 32;
+	private int imageWidth = 32;
+	
+	public Level(){
+		
+	}
 	
 	public Level(int w, int h, int lvlType, String mapFileName, ImageArray tileImageDictionary){
 		this.width = w;
@@ -42,13 +54,15 @@ public class Level{
 	private void setLevelConstants(int levelType){
 		this.GROUND = tileImageDictionary.get(0, 0);
 		this.BRICK = tileImageDictionary.get(1, 0);
-		this.METAL_BOX = tileImageDictionary.get(4, 0);
+		this.METAL_BOX = tileImageDictionary.get(3, 0);
 		this.QUESTION_MARK_BOX = tileImageDictionary.get(24, 0);
 		this.TOP_LEFT_PIPE = tileImageDictionary.get(0, 8);
 		this.TOP_RIGHT_PIPE = tileImageDictionary.get(1, 8);
 		this.LEFT_PIPE = tileImageDictionary.get(0, 9);
 		this.RIGHT_PIPE = tileImageDictionary.get(1, 9);
-				
+		this.BEVELED_BRICK = tileImageDictionary.get(0, 1);
+		this.POLE = tileImageDictionary.get(16, 9);
+		this.TOP_POLE = tileImageDictionary.get(16, 8);
 	}
 	/**\
 	 * readMap reads the level in from a text file and creates the corresponding Level object.
@@ -86,15 +100,18 @@ public class Level{
 				for (int x = 0; x <line.length(); x++){
 					char type = line.charAt(x);  
 					if (type == 'G'){
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.GROUND));
 						this.tiles.add(this.GROUND);
 					}
 					else if (type == 'B'){
+						this.levelObjects.add(new Brick(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.BRICK));
 						this.tiles.add(this.BRICK);
 					}
 					else if (type == 'Q'){
+						this.levelObjects.add(new QuestionMarkBox(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.QUESTION_MARK_BOX));
 						this.tiles.add(this.QUESTION_MARK_BOX);
 					}
-					else if (type == 'H'){
+					else if (type == 'A'){
 						this.tiles.add(this.METAL_BOX);
 					}
 					else if (type == 'I'){
@@ -109,8 +126,17 @@ public class Level{
 					else if (type == 'L'){
 						this.tiles.add(this.RIGHT_PIPE);
 					}
-					
+					else if (type == 'H'){
+						this.tiles.add(this.BEVELED_BRICK);
+					}
+					else if (type == 'P'){
+						this.tiles.add(this.POLE);
+					}
+					else if (type == 'S'){
+						this.tiles.add(this.TOP_POLE);
+					}
 					else
+						//this.levelObjects.add(null);
 						this.tiles.add(null);
 				}
 			}
@@ -136,8 +162,13 @@ public class Level{
 	 * @param levelOffset the levelOffset to set
 	 */
 	public void setLevelOffset(Point lvlOffset) {
+		for (int i=0; i < levelObjects.size(); i++){
+			levelObjects.get(i).setLevelOffset(lvlOffset);
+			levelObjects.get(i).setLocation(new Point((int)(levelObjects.get(i).getLocation().x + lvlOffset.x), (int)(levelObjects.get(i).getLocation().y + lvlOffset.y)));
+		}
 		if (lvlOffset.getX() < this.getWidth() && lvlOffset.getY() < this.getHeight()){
 			this.levelOffset = lvlOffset;
+
 		}
 	}
 
@@ -153,6 +184,11 @@ public class Level{
 	public BufferedImage getTile(int x, int y){
 		return tiles.get(y*this.getWidth() + (x));
 	}
+	
+	public BufferedImage getTile(int i){
+		return tiles.get(i);
+	}
+
 
 	/**
 	 * @param tiles the tiles to set
@@ -180,6 +216,20 @@ public class Level{
 	}
 
 
+
+	/**
+	 * @return the levelObjects
+	 */
+	public ArrayList<LevelObject> getLevelObjects() {
+		return levelObjects;
+	}
+
+	/**
+	 * @param levelObjects the levelObjects to set
+	 */
+	public void setLevelObjects(ArrayList<LevelObject> levelObjects) {
+		this.levelObjects = levelObjects;
+	}
 
 	/**
 	 * @return the width
@@ -213,6 +263,38 @@ public class Level{
 	 */
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+
+	/**
+	 * @return the imageHeight
+	 */
+	public int getImageHeight() {
+		return imageHeight;
+	}
+
+
+	/**
+	 * @param imageHeight the imageHeight to set
+	 */
+	public void setImageHeight(int imageHeight) {
+		this.imageHeight = imageHeight;
+	}
+
+
+	/**
+	 * @return the imageWidth
+	 */
+	public int getImageWidth() {
+		return imageWidth;
+	}
+
+
+	/**
+	 * @param imageWidth the imageWidth to set
+	 */
+	public void setImageWidth(int imageWidth) {
+		this.imageWidth = imageWidth;
 	}
 
 

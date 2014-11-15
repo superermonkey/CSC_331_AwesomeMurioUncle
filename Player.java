@@ -37,19 +37,21 @@ public class Player extends Actor{
 		location.x += velocity.getDX();
 		location.y += velocity.getDY();
 		
-		if (location.x > Screen.screenSize.getWidth()) {
-			location.x -= Screen.screenSize.getWidth();
+		if (location.x > Screen.screenSize.getWidth()-this.size.getWidth()) {
+			location.x = (int)(Screen.screenSize.getWidth()-this.size.getWidth());
+			this.velocity.setDX(0);
 		}
 		if (location.x < 0) {
-			location.x += Screen.screenSize.getWidth();
+			location.x = 1;
 		}
 		
 		if (location.y > Screen.screenSize.getHeight()) {
-			location.y -= Screen.screenSize.getHeight();
+			location.y = (int)Screen.screenSize.getHeight()-1;
 		}
 		if (location.y < 0) {
-			location.y += Screen.screenSize.getHeight();
+			location.y = 1;
 		}
+		
 	}
 
 	/* (non-Javadoc)

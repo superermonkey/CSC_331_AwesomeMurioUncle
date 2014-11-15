@@ -16,6 +16,6 @@ A-------------------------------------------------------------------------------
 A---------------Q---BQBQB---------------------IO---------IO------------------BQB--------------B-----BB----Q--Q--Q-----B----------BB------H--H----------HH--H------------BBQB------------HHHHHH--------P---CNNNC-----
 A-------------------------------------IO------KL---------KL-----------------------------------------------------------------------------HH--HH--------HHH--HH--------------------------HHHHHHH--------P---DDFDD-----
 A---------------------------IO--------KL------KL---------KL----------------------------------------------------------------------------HHH--HHH------HHHH--HHH-----IO--------------IO-HHHHHHHH--------P---DDJDD-----
-A---------------------------KL-------KL------KL---------KL---------------------------------------------------------------------------HHHH--HHHH----HHHHH--HHHH----KL--------------KLHHHHHHHHH--------H---DDJDD-----
+A---------------------------KL--------KL------KL---------KL---------------------------------------------------------------------------HHHH--HHHH----HHHHH--HHHH----KL--------------KLHHHHHHHHH--------H---DDJDD-----
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG--GGGGGGGGGGGGGGG---GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG--GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG--GGGGGGGGGGGGGGG---GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG--GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG

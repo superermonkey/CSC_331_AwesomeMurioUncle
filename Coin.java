@@ -23,23 +23,12 @@ public class Coin extends LevelObject{
 		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see LevelObject#draw(java.awt.Graphics)
-	 */
-	@Override
+
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
-		
+		super.draw(g);
 	}
 
-	/* (non-Javadoc)
-	 * @see LevelObject#move()
-	 */
-	@Override
-	public void move() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 
 

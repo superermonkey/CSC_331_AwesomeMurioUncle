@@ -1,5 +1,6 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 
 
@@ -18,8 +19,8 @@ public class MetalBox extends Box{
 	 * @param d
 	 * @param v
 	 */
-	public MetalBox(Point l, Dimension d, boolean v) {
-		super(l, d, v);
+	public MetalBox(Point l, Dimension d, boolean v, Image i) {
+		super(l, d, v, i);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -28,19 +29,9 @@ public class MetalBox extends Box{
 	 */
 	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
+		super.draw(g);
 		
 	}
-
-	/* (non-Javadoc)
-	 * @see LevelObject#move()
-	 */
-	@Override
-	public void move() {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 
 }

@@ -71,6 +71,7 @@ public abstract class Actor extends LevelObject{
 		
 	}
 	
-	public abstract void move();
+	// All classes must implement.
+	abstract public void move();
 
 }

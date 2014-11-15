@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 
-
 /**
  * 
  */
@@ -13,14 +12,14 @@ import java.awt.Point;
  * @author Monkey
  *
  */
-public class Brick extends InteractiveBox{
+public class StaticObject extends LevelObject {
 
 	/**
 	 * @param l
 	 * @param d
 	 * @param v
 	 */
-	public Brick(Point l, Dimension d, boolean v, Image i) {
+	public StaticObject(Point l, Dimension d, boolean v, Image i) {
 		super(l, d, v, i);
 		// TODO Auto-generated constructor stub
 	}
@@ -34,5 +33,6 @@ public class Brick extends InteractiveBox{
 		this.image = this.getImage();
 		g2.drawImage(this.image, this.location.x, this.location.y, this.size.height, this.size.width, null);
 	}
+
 
 }

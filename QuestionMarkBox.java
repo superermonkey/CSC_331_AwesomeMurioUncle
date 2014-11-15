@@ -1,5 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 
 
@@ -18,24 +20,17 @@ public class QuestionMarkBox extends InteractiveBox{
 	 * @param d
 	 * @param v
 	 */
-	public QuestionMarkBox(Point l, Dimension d, boolean v) {
-		super(l, d, v);
+	public QuestionMarkBox(Point l, Dimension d, boolean v, Image i) {
+		super(l, d, v, i);
 		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see LevelObject#draw(java.awt.Graphics)
-	 */
-	@Override
+
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
-		
+		super.draw(g);
 	}
 
-	/* (non-Javadoc)
-	 * @see LevelObject#move()
-	 */
-	@Override
+
 	public void move() {
 		// TODO Auto-generated method stub
 		

@@ -1,5 +1,6 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -18,7 +19,7 @@ import java.awt.Rectangle;
  * @author Monkey
  *
  */
-public abstract class LevelObject {
+public abstract class LevelObject{
 	// The visibility of the object.
 	protected boolean isVisible;
 	// The size of the object, contained in a Dimension with width and height.
@@ -28,6 +29,7 @@ public abstract class LevelObject {
 	// An image for the object.
 	protected Image image;
 	protected boolean isSolidAndStationary;
+	protected Point levelOffset = new Point (0,0);
 	
 	/**
 	 * Constructor for the LevelObject.
@@ -37,11 +39,35 @@ public abstract class LevelObject {
 	 * @param i the Image for the object.
 	 */
 	public LevelObject(Point l, Dimension d, boolean v, Image i){
-		super();
 		this.location = l;
 		this.size = d;
 		this.isVisible = v;
-		this.image = i;
+		this.image = (Image)i;
+	}
+
+	/**
+	 * Check to see if a collision occurs between LevelObjects.
+	 * @param other The object this object is colliding with.
+	 * @return Whether or not a collision occurred.
+	 */
+	
+	public boolean collide(LevelObject other) {
+		// Current LevelObject.
+		Rectangle thisObject = new Rectangle(this.location.x, this.location.y, this.size.width, this.size.height);
+		// Another LevelObject to check.
+		Rectangle thatObject = new Rectangle(other.location.x, other.location.y, other.size.width, other.size.height);
+		
+		if(thisObject.intersects(thatObject)){
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+	}
+	
+	// Abstract so all subclasses must implement.
+	public void draw(Graphics g) {
 	}
 
 
@@ -104,29 +130,17 @@ public abstract class LevelObject {
 	}
 
 	/**
-	 * Check to see if a collision occurs between LevelObjects.
-	 * @param other The object this object is colliding with.
-	 * @return Whether or not a collision occurred.
+	 * @return the levelOffset
 	 */
-	public boolean collide(LevelObject other) {
-		// Current LevelObject.
-		Rectangle thisObject = new Rectangle(this.location.x, this.location.y, this.size.width, this.size.height);
-		// Another LevelObject to check.
-		Rectangle thatObject = new Rectangle(other.location.x, other.location.y, other.size.width, other.size.height);
-		
-		if(thisObject.intersects(thatObject)){
-			return true;
-		}
-		else{
-			return false;
-		}
-		
+	public Point getLevelOffset() {
+		return levelOffset;
 	}
-	
-	// Abstract so all subclasses must implement.
-	abstract public void draw(Graphics g);
-	
-	// All classes must implement.
-	abstract public void move();
-	
+
+	/**
+	 * @param levelOffset the levelOffset to set
+	 */
+	public void setLevelOffset(Point levelOffset) {
+		this.levelOffset = levelOffset;
+	}
+
 }

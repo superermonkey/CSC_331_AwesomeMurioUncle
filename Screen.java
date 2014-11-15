@@ -43,8 +43,6 @@ public class Screen extends JPanel implements KeyListener{
 	protected Timer timer;
 	// The player object for first player.
 	protected Player player;
-	//  The Ground object.
-	protected Ground ground;
 	
 	protected ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
 	
@@ -74,25 +72,20 @@ public class Screen extends JPanel implements KeyListener{
 		player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
 		
 		
-		// Create Ground
-		Point groundLocation = new Point(0, 450);
-		Dimension groundSize = new Dimension(500, GroundSection.BLOCK_SIZE.height);
-		boolean groundVisibility = true;
-		ground = new Ground(groundLocation, groundSize, groundVisibility, playerImg.getImage());
-		ground.buildGround((int)groundSize.width/25);
 		
-		// Add static objects (ground, bricks, boxes) to objects ArrayList.
 		// Add moving objects (players, enemies, shrooms) to actors ArrayList.
-		objects.add(ground);
 		actors.add(player);
 		
 		// Add a KeyListener for keyboard input.
 		this.addKeyListener(this);
 		
 		//Initialize Level
-		currentLevel = new Level(200, 50, 0, "levels/level1_1.txt", tileImages);
-		
-		
+		currentLevel = new Level(0, 0, 0, "levels/level1_1.txt", tileImages);
+		// Add static objects (ground, bricks, boxes) to objects ArrayList.
+		for (int i = 0; i < currentLevel.getLevelObjects().size(); i++){
+			this.objects.add(currentLevel.getLevelObjects().get(i));
+		}
+		System.out.println(objects.size());
 		// Add a Timer for the Level
 		timer = new Timer(30, new TimerListener());
 		timer.start();
@@ -111,12 +104,13 @@ public class Screen extends JPanel implements KeyListener{
 		}
 		
 		g.drawImage(backgroundImg.getImage(), 0, 0, screenSize.width, screenSize.height, null);
-
+		/*
 		for (int i = 0; i < currentLevel.getWidth(); i++){
 			for (int j = 0; j < currentLevel.getHeight(); j++){
-				g.drawImage(currentLevel.getTile(i, j), (int)(i*32+currentLevel.getLevelOffset().getX()), (int)(j*32+currentLevel.getLevelOffset().getY()), 32, 32, null);
+				g.drawImage(currentLevel.getTile(i, j), (int)(i*currentLevel.getImageWidth()+currentLevel.getLevelOffset().getX()), (int)(j*currentLevel.getImageHeight()+currentLevel.getLevelOffset().getY()), currentLevel.getImageWidth(), currentLevel.getImageHeight(), null);
 			}
 		}
+		*/
 		// draw actors
 		for (Actor obj : actors) {
 			obj.draw(g);
@@ -125,12 +119,14 @@ public class Screen extends JPanel implements KeyListener{
 		for (LevelObject ob : objects) {
 			ob.draw(g);
 		}
+		
+		//  This keeps scrolling and player movement in sync.
 		repaint();
 	}
 	
 	public void shiftLeft(Graphics g){
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
-		currentLevel.setLevelOffset(new Point((int)currentLevel.getLevelOffset().getX() - 2, (int)currentLevel.getLevelOffset().getY()));
+		currentLevel.setLevelOffset(new Point((int)currentLevel.getLevelOffset().getX()-2, (int)currentLevel.getLevelOffset().getY()));
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -173,6 +169,7 @@ public class Screen extends JPanel implements KeyListener{
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			// Check for collisions.
+			
 			for (LevelObject currentObject: objects) {
 				if (player.collide(currentObject)){
 					player.acceleration.setDY(0);
@@ -190,9 +187,7 @@ public class Screen extends JPanel implements KeyListener{
 				Actor ob2 = (Actor) ob;
 				ob2.move();
 			}
-			for (LevelObject obj: objects) {
-				obj.move();
-			}
+
 			
 			repaint();
 			
