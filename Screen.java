@@ -46,6 +46,8 @@ public class Screen extends JPanel implements KeyListener{
 	//  The Ground object.
 	private Ground ground;
 	
+	private ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
+	
 	/**
 	 * Create the Screen which will serve as the current level.
 	 */
@@ -97,6 +99,7 @@ public class Screen extends JPanel implements KeyListener{
 		super.paintComponent(g);
 		
 		g.drawImage(backgroundImg.getImage(), 0, 0, screenSize.width, screenSize.height, null);
+		g.drawImage(tileImages.getImages().get(2), 0, 0, screenSize.width, screenSize.height, null);
 		// draw actors
 		for (Actor obj : actors) {
 			obj.draw(g);
