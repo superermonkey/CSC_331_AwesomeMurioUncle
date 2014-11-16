@@ -12,7 +12,7 @@ import java.awt.Point;
  * @author Monkey
  *
  */
-public class MetalBox extends Box{
+public class MetalBox extends InteractiveBox{
 
 	/**
 	 * @param l

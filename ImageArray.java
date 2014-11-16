@@ -1,156 +1,202 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 
 /**
+ * Create an array of BufferedImages from a given sprite sheet, or general larger image.
+ * Images are extracted based on number of rows and columns expected from larger image,
+ * followed by the size to pull from each cell, in pixels.
  * 
- */
-
-/**
- * @author Monkey
+ * @author RyanPierce
  *
  */
 public class ImageArray {
+	
+	/*
+	 * The ArrayList that will hold each of the sub-images, in order of extraction.
+	 * Cells are filled from left to right and wrap to the next column based on the
+	 * specified width in the constructor.
+	 */
 	private ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
+	
+	/*
+	 * The number of rows to extract from the source image.
+	 */
 	private int rows;
+	
+	/*
+	 * The number of columns to extract from the source image.
+	 */
 	private int cols;
+	
+	/*
+	 * The width, in pixels, of each sub-image to extract.
+	 */
 	private int width;
+	
+	/*
+	 * The height, in pixels, of each sub-image to extract.
+	 */
 	private int height;
 	
-	public ImageArray(){
-		
+	/**
+	 * The default constructor.
+	 */
+	public ImageArray(){	
 	}
 	
+	/**
+	 * Builds a new ImageArray based of the given parameters.
+	 * 
+	 * @param rows The number or rows to generate from the source image.
+	 * @param columns The number of columns expected from the source image.
+	 * @param w The width of each sub image to be extracted.
+	 * @param h The height of each sub image to be extracted.
+	 * @param filePath The relative path of the source image.
+	 */
 	public ImageArray(int rows, int columns, int w, int h, String filePath){
-		try{
+		
+		/*
+		 * Block to catch missing files.
+		 */
+		try
+		{
+			//  The source image.
 			BufferedImage bigImage = ImageIO.read(new File(filePath));
 			
+			// The other parameters.
 			this.width = w;
 			this.height = h;
 			this.rows = rows;
 			this.cols = columns;
 			
-			for (int i = 0; i < rows; i++)
+			/*
+			 *  Iterate through the source image and obtain sub images.
+			 *  Add each sub image to the ArrayList of BufferedImages.
+			 */
+			for (int currentRow = 0; currentRow < rows; currentRow++)
 			{
-			    for (int j = 0; j < cols; j++)
+			    for (int currentColumn = 0; currentColumn < cols; currentColumn++)
 			    {
 			        images.add(bigImage.getSubimage(
-			            j * width,
-			            i * height,
-			            width,
-			            height
+			        	currentColumn * this.width,
+			            currentRow * this.height,
+			            this.width,
+			            this.height
 			        ));
 			    }
 			}
 		}
-		catch(Exception e){
-			System.out.println("Invalid File");
+		/*
+		 * Kick here if the specified file does not exist.
+		 */
+		catch(Exception e)
+		{
+			System.out.println("Invalid File. The source image " + filePath + " does not exist.");
 		}
 	}
-	
-	public ArrayList<BufferedImage> build(int rows, int columns, int w, int h, String filePath){
-		try{
-			BufferedImage bigImage = ImageIO.read(new File(filePath));
-			
-			this.width = w;
-			this.height = h;
-			this.rows = rows;
-			this.cols = columns;
-	
-			for (int i = 0; i < rows; i++)
-			{
-			    for (int j = 0; j < cols; j++)
-			    {
-			        images.add(bigImage.getSubimage(
-			            j * width,
-			            i * height,
-			            width,
-			            height
-			        ));
-			    }
-			}
+
+	/**
+	 * Returns the BufferedImage at the specified location(row, column) if it exists.
+	 * If the requested image is out of bounds, the default BufferedImage at (0,0) is returned.
+	 * 
+	 * @param row The row of the requested BufferedImage.
+	 * @param column The column of the specified BufferedImage.
+	 * @return The BufferedImage at the specified row and column.
+	 */
+	public BufferedImage get(int row, int column){
+		if (row*column <= this.getImages().size()){
+			return images.get(row*this.getCols() + column);
 		}
-		catch(Exception e){
-			System.out.println("Invalid File");
+		else{
+			return this.get(0, 0);
 		}
+	}
+
+	//
+	//
+	//
+	// MINDLESS GETTERS AND SETTERS AFTER THIS POINT...!!!
+	//
+	//
+	//
+	
+	
+	/**
+	 * Returns the entire ArrayList of BufferedImages.
+	 * @return The entire ArrayList of BufferedImages.
+	 */
+	public ArrayList<BufferedImage> getImages() 
+	{
 		return images;
 	}
-	
-	public BufferedImage get(int x, int y){
-		return images.get(y*this.getCols() + (x));
-	}
 
 	/**
-	 * @return the images
+	 * @return The number of rows in the ImageArray.
 	 */
-	public ArrayList<BufferedImage> getImages() {
-		return images;
-	}
-
-	/**
-	 * @param images the images to set
-	 */
-	public void setImages(ArrayList<BufferedImage> images) {
-		this.images = images;
-	}
-
-	/**
-	 * @return the rows
-	 */
-	public int getRows() {
+	public int getRows() 
+	{
 		return rows;
 	}
 
 	/**
-	 * @param rows the rows to set
+	 * Set the number of rows in the ImageArray.
+	 * @param rows The new number of rows in the ImageArray.
 	 */
-	public void setRows(int rows) {
-		this.rows = rows;
+	public void setRows(int r) 
+	{
+		this.rows = r;
 	}
 
 	/**
-	 * @return the cols
+	 * @return The number of columns in the ImageArray.
 	 */
-	public int getCols() {
+	public int getCols() 
+	{
 		return cols;
 	}
 
 	/**
-	 * @param cols the cols to set
+	 * Set The number of columns in the ImageArray.
+	 * @param cols Set The number of columns in the ImageArray.
 	 */
-	public void setCols(int cols) {
+	public void setCols(int cols) 
+	{
 		this.cols = cols;
 	}
 
 	/**
-	 * @return the width
+	 * The width of the sub images to extract/that have been extracted.
+	 * @return The width of the sub images to extract/that have been extracted.
 	 */
-	public int getWidth() {
+	public int getWidth() 
+	{
 		return width;
 	}
 
-	/**
-	 * @param width the width to set
+	/**Set The width of the sub images to extract.
+	 * @param width Set The width of the sub images to extract.
 	 */
-	public void setWidth(int width) {
+	public void setWidth(int width) 
+	{
 		this.width = width;
 	}
 
 	/**
-	 * @return the height
+	 * The height of the sub images to extract/that have been extracted.
+	 * @return The height of the sub images to extract/that have been extracted.
 	 */
-	public int getHeight() {
+	public int getHeight() 
+	{
 		return height;
 	}
 
-	/**
-	 * @param height the height to set
+	/**Set The height of the sub images to extract.
+	 * @param height Set the height of the sub images to extract.
 	 */
-	public void setHeight(int height) {
+	public void setHeight(int height) 
+	{
 		this.height = height;
 	}
-
-	
 }

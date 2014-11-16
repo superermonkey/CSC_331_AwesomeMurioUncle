@@ -67,7 +67,7 @@ public abstract class LevelObject{
 	}
 
 
-	// Abstract so all subclasses must implement.
+
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		this.image = this.getImage();

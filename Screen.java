@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -33,7 +34,7 @@ public class Screen extends JPanel implements KeyListener{
 	/*
 	 * Set the file to be used for the level.
 	 */
-	public final String LEVEL_NAME = "levels/level1_2.txt";
+	public final String LEVEL_NAME = "levels/level1_3.txt";
 	
 	/*
 	 *  Set the style layout for the level.
@@ -44,7 +45,7 @@ public class Screen extends JPanel implements KeyListener{
 	 *  6 = Underwater Level.
 	 *  Odd numbers can produce weird things if you want.
 	 */
-	public final int LEVEL_STYLE = 6;
+	public final int LEVEL_STYLE = 0;
 	
 	
 	
@@ -157,6 +158,11 @@ public class Screen extends JPanel implements KeyListener{
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
 		currentLevel.setLevelOffset(new Point((int)currentLevel.getLevelOffset().getX()-2, (int)currentLevel.getLevelOffset().getY()));
 		currentLevel.setGlobalOffset(new Point((int)currentLevel.getGlobalOffset().getX()+2, (int)currentLevel.getGlobalOffset().getY()));
+	    int min = 0;
+	    int max = 8;
+		Random rand = new Random();
+	    int randomNum = rand.nextInt((max - min) + 1) + min;
+		currentLevel.setLevelType(randomNum);
 	}
 
 	public void keyPressed(KeyEvent e) {
