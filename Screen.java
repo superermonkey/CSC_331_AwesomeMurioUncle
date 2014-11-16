@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -110,7 +111,8 @@ public class Screen extends JPanel implements KeyListener{
 		timer = new Timer(30, new TimerListener());
 		timer.start();
 	}
-	
+	public int speed = 0;
+	Image image;
 	
 	public void paintComponent(Graphics g) {
 		screenSize.width= this.getWidth();
@@ -122,8 +124,20 @@ public class Screen extends JPanel implements KeyListener{
 		if (xOffset > screenSize.width/2){
 			shiftLeft(g);
 		}
+
+		image = backgroundImg.getImage();
+		if (true) {
+            int iw = image.getWidth(this);
+            int ih = image.getHeight(this);
+            if (iw > 0 && ih > 0) {
+                for (int x = speed; x < getWidth(); x += iw) {
+                    for (int y = 0; y < getHeight(); y += ih) {
+                        g.drawImage(image, x, y, iw, screenSize.height, null);
+                    }
+                }
+            }
+        }
 		
-		g.drawImage(backgroundImg.getImage(), 0, 0, screenSize.width, screenSize.height, null);
 		
 		
 		/*
@@ -158,11 +172,7 @@ public class Screen extends JPanel implements KeyListener{
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
 		currentLevel.setLevelOffset(new Point((int)currentLevel.getLevelOffset().getX()-2, (int)currentLevel.getLevelOffset().getY()));
 		currentLevel.setGlobalOffset(new Point((int)currentLevel.getGlobalOffset().getX()+2, (int)currentLevel.getGlobalOffset().getY()));
-	    int min = 0;
-	    int max = 8;
-		Random rand = new Random();
-	    int randomNum = rand.nextInt((max - min) + 1) + min;
-		currentLevel.setLevelType(randomNum);
+	    speed -= 1;
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -205,7 +215,6 @@ public class Screen extends JPanel implements KeyListener{
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			// Check for collisions.
-			
 			for (LevelObject currentObject: objects) {
 				if (player.collide(currentObject)){
 					player.acceleration.setDY(0);
