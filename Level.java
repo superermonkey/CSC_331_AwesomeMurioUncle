@@ -75,14 +75,6 @@ public class Level{
 	private BufferedImage BEVELED_BRICK;
 	private BufferedImage TOP_POLE;
 	private BufferedImage POLE;
-	private BufferedImage CASTLE_TOP;
-	private BufferedImage CASTLE_WINDOW_LEFT;
-	private BufferedImage CASTLE_WINDOW_CENTER;
-	private BufferedImage CASTLE_WINDOW_RIGHT;
-	private BufferedImage CASTLE_INTERIOR_TOP;
-	private BufferedImage CASTLE_DOOR_TOP;
-	private BufferedImage CASTLE_DOOR;
-	
 	
 	/*
 	 * Contains the levelOffset, in Point(x,y) form, to be used for scrolling purposes.
@@ -177,14 +169,6 @@ public class Level{
 		this.BEVELED_BRICK = tileImageDictionary.get(1+levelType, 0);
 		this.POLE = tileImageDictionary.get(9+levelType, 16);
 		this.TOP_POLE = tileImageDictionary.get(8+levelType, 16);
-		this.CASTLE_TOP = tileImageDictionary.get(0+levelType, 11);
-		this.CASTLE_WINDOW_LEFT = tileImageDictionary.get(0+levelType, 12);
-		this.CASTLE_WINDOW_CENTER = tileImageDictionary.get(0+levelType, 13);
-		this.CASTLE_WINDOW_RIGHT = tileImageDictionary.get(0+levelType, 14);
-		this.CASTLE_INTERIOR_TOP = tileImageDictionary.get(1+levelType, 11);
-		this.CASTLE_DOOR_TOP = tileImageDictionary.get(1+levelType, 12);
-		this.CASTLE_DOOR = tileImageDictionary.get(1+levelType, 13);
-		
 	}
 	
 	/**
@@ -310,42 +294,6 @@ public class Level{
 						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_POLE));
 						this.tiles.add(this.TOP_POLE);
 					}
-					else if (type == 'C')
-					{
-						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_TOP));
-						this.tiles.add(this.CASTLE_TOP);
-					}
-					else if (type == 'E')
-					{
-						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_LEFT));
-						this.tiles.add(this.CASTLE_WINDOW_LEFT);
-					}
-					else if (type == 'D')
-					{
-						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_CENTER));
-						this.tiles.add(this.CASTLE_WINDOW_CENTER);
-					}
-					else if (type == 'M')
-					{
-						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_RIGHT));
-						this.tiles.add(this.CASTLE_WINDOW_RIGHT);
-					}
-					else if (type == 'N')
-					{
-						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_INTERIOR_TOP));
-						this.tiles.add(this.CASTLE_INTERIOR_TOP);
-					}
-					else if (type == 'F')
-					{
-						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR_TOP));
-						this.tiles.add(this.CASTLE_DOOR_TOP);
-					}
-					else if (type == 'J')
-					{
-						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR));
-						this.tiles.add(this.CASTLE_DOOR);
-					}
-					
 					/*
 					 * If the given character cannot be found, simply create a null filler for the "map".
 					 */
