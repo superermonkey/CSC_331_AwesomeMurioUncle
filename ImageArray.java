@@ -113,6 +113,10 @@ public class ImageArray {
 			return this.get(0, 0);
 		}
 	}
+	
+	public void clear(){
+		this.images.clear();
+	}
 
 	//
 	//
