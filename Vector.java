@@ -39,6 +39,7 @@ public class Vector {
 	 */
 	public void setDX(double dX) {
 		this.dX = dX;
+		this.speed  = this.dX / Math.sin(Math.toRadians(this.direction));
 	}
 
 	/**
@@ -53,6 +54,7 @@ public class Vector {
 	 */
 	public void setDY(double dY) {
 		this.dY = dY;
+		this.speed  = this.dY / Math.sin(Math.toRadians(this.direction));
 	}
 
 	/**
@@ -67,6 +69,8 @@ public class Vector {
 	 */
 	public void setSpeed(double speed) {
 		this.speed = speed;
+		this.dX = this.speed * Math.cos(Math.toRadians(this.direction));
+		this.dY = this.speed * Math.sin(Math.toRadians(this.direction));
 	}
 
 	/**
@@ -81,6 +85,8 @@ public class Vector {
 	 */
 	public void setDirection(double direction) {
 		this.direction = direction;
+		this.dX = this.speed * Math.cos(Math.toRadians(this.direction));
+		this.dY = this.speed * Math.sin(Math.toRadians(this.direction));
 	}
 	
 	

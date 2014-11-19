@@ -9,6 +9,7 @@ import javax.swing.JFrame;
  *
  */
 
+@SuppressWarnings("serial")
 public class GameWindow extends JFrame{
 
 	/**
@@ -28,7 +29,7 @@ public class GameWindow extends JFrame{
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GameWindow window = new GameWindow();
+		new GameWindow();
 
 	}
 

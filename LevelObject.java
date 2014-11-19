@@ -29,7 +29,6 @@ public abstract class LevelObject{
 	// An image for the object.
 	protected Image image;
 	protected boolean isSolidAndStationary;
-	protected Point levelOffset = new Point (0,0);
 	protected Point globalOffset = new Point (0,0);
 	
 	/**
@@ -67,11 +66,10 @@ public abstract class LevelObject{
 	}
 
 
-
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		this.image = this.getImage();
-		g2.drawImage(this.image, this.location.x+this.levelOffset.x, this.location.y+this.levelOffset.y, this.size.height, this.size.width, null);
+		g2.drawImage(this.image, this.location.x-this.globalOffset.x, this.location.y-this.globalOffset.y, this.size.height, this.size.width, null);
 	}
 
 
@@ -136,16 +134,6 @@ public abstract class LevelObject{
 	/**
 	 * @return the levelOffset
 	 */
-	public Point getLevelOffset() {
-		return levelOffset;
-	}
-
-	/**
-	 * @param levelOffset the levelOffset to set
-	 */
-	public void setLevelOffset(Point levelOffset) {
-		this.levelOffset = levelOffset;
-	}
 
 	/**
 	 * @return the globalOffset

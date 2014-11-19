@@ -59,6 +59,7 @@ public class Screen extends JPanel implements KeyListener{
 	// The player object for first player.
 	protected Player player;
 	protected ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
+
 	
 	protected Level currentLevel;
 	
@@ -154,7 +155,9 @@ public class Screen extends JPanel implements KeyListener{
 		}
 		// draw LevelObjects.
 		for (LevelObject ob : objects) {
-			ob.draw(g);
+			if (ob.getLocation().x - ob.getGlobalOffset().x < 700){
+				ob.draw(g);	
+			}
 		}
 		
 		//  This keeps scrolling and player movement in sync.
@@ -163,7 +166,6 @@ public class Screen extends JPanel implements KeyListener{
 	
 	public void shiftLeft(Graphics g){
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
-		currentLevel.setLevelOffset(new Point((int)currentLevel.getLevelOffset().getX()-2, (int)currentLevel.getLevelOffset().getY()));
 		currentLevel.setGlobalOffset(new Point((int)currentLevel.getGlobalOffset().getX()+2, (int)currentLevel.getGlobalOffset().getY()));
 	    speed -= 1;
 	}
@@ -209,11 +211,34 @@ public class Screen extends JPanel implements KeyListener{
 		public void actionPerformed(ActionEvent arg0) {
 			// Check for collisions.
 			for (LevelObject currentObject: objects) {
-				if (player.collide(currentObject)){
-					player.acceleration.setDY(0);
-					player.velocity.setDY(0);
-					player.location.y = currentObject.location.y - player.size.height;
+				if (player.collide(currentObject) && player.velocity.getSpeed() != 0){
+					// Player is to the right of object.
+					if(player.getLocation().x < currentObject.getLocation().x + currentObject.getSize().width){
+						player.location.x +=5;
+						player.velocity.setSpeed(0);
+						player.acceleration.setSpeed(0);
+					}
+					// Player is to the Left of object.
+					else if(player.getLocation().x + player.getSize().width > currentObject.getLocation().x){
+						player.location.x -=5;
+						player.velocity.setSpeed(0);
+						player.acceleration.setSpeed(0);
+					}
+					// Player is Below object.
+					else if(player.getLocation().y < currentObject.getLocation().y + currentObject.size.height){
+						player.location.y +=5;
+						player.velocity.setSpeed(0);
+						player.acceleration.setSpeed(0);
+					}
+					// Player is on top of object.
+					else if(player.getLocation().y + player.getSize().height > currentObject.getLocation().y){
+						player.location.y -=5;
+						player.velocity.setSpeed(0);
+						player.acceleration.setSpeed(0);
+					}
+					//player.location.y = currentObject.location.y - player.size.height;
 				}
+				/*
 				else if (player.collide(currentObject) && (player.getLocation().y + player.getSize().height) == currentObject.getLocation().y){
 					player.acceleration.setDY(0);
 					player.velocity.setDY(0);
@@ -224,7 +249,6 @@ public class Screen extends JPanel implements KeyListener{
 					player.velocity.setDX(0);
 					player.location.x = currentObject.location.x - player.size.width;
 				}
-				/*
 				else if(player.collide(currentObject) && (player.getLocation().x == currentObject.getLocation().x + currentObject.getLocation().x){
 					player.acceleration.setDX(0);
 					player.velocity.setDX(0);
