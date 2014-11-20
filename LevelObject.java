@@ -56,13 +56,13 @@ public abstract class LevelObject{
 		Point thisLeft = new Point (this.getLocation().x, (this.getLocation().y+this.getSize().height)/2);
 		Point thisRight = new Point ((this.getLocation().x+ this.size.width),(this.getLocation().y+this.getSize().height)/2);
 		
-		Rectangle thatObject = new Rectangle(other.location.x+Level.GLOBAL_OFFSET.x+5, other.location.y+Level.GLOBAL_OFFSET.y+5, other.size.width-10, other.size.height);
+		Rectangle thatObject = new Rectangle(other.location.x+Level.GLOBAL_OFFSET.x, other.location.y+Level.GLOBAL_OFFSET.y, other.size.width, other.size.height);
 		
-		if(thatObject.contains(thisTop)){
-			return "TOP_COLLISION";
-		}
-		else if(thatObject.contains(thisBottom)){
+		if(thatObject.contains(thisBottom)){
 			return "BOTTOM_COLLISION";
+		}
+		else if(thatObject.contains(thisTop)){
+			return "TOP_COLLISION";
 		}
 		else if(thatObject.contains(thisLeft)){
 			return "LEFT_COLLISION";

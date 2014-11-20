@@ -4,10 +4,12 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -23,7 +25,7 @@ import javax.swing.Timer;
  * @author RyanPierce
  *
  */
-public class Screen extends JPanel implements KeyListener{
+public class Screen extends JPanel implements KeyListener, Runnable{
 	
 
 
@@ -74,6 +76,8 @@ public class Screen extends JPanel implements KeyListener{
 		
 		
 		// Add a KeyListener for keyboard input.
+		Thread t1 = new Thread();
+		t1.start();
 		this.addKeyListener(this);
 		
 		//Initialize Level
@@ -86,7 +90,7 @@ public class Screen extends JPanel implements KeyListener{
 	public int speed = 0;
 	Image image;
 	
-	public void paintComponent(Graphics g) {
+	public synchronized void paintComponent(Graphics g) {
 
 
 		screenSize.width= this.getWidth();
@@ -111,32 +115,49 @@ public class Screen extends JPanel implements KeyListener{
                     }
                 }
             }
-  
+		}
 		
 		// draw actors
 		for (Actor obj : currentLevel.getActors()) {
 			obj.draw(g);
 		}
 		// draw LevelObjects.
+		currentLevel.updateOnScreenObjects();
 		for (LevelObject ob : currentLevel.getLevelObjects()) {
 			if (ob.getLocation().x + currentLevel.GLOBAL_OFFSET.x < 700){
 				ob.draw(g);	
 			}
 		}
 		
-		//  This keeps scrolling and player movement in sync.
-		repaint();
+		/*
+		 * Test print level tiles for testing where collisions SHOULD be.
+		 * 
+		int count = 0;
+		for (int y=0; y < currentLevel.getHeight(); y++){
+			for (int x=0; x < currentLevel.getWidth(); x++){
+				g.drawImage(currentLevel.getTiles().get(count), x*32, y*32, 32, 32, null);
+				count++;
+			}
 		}
+		*
+		*
+		*/
+		//  This keeps scrolling and player movement in sync.
+        new Thread(new Runnable() {
+            public void run() {
+            	repaint();
+            }
+        }).start();
 	}
 	
-	public void shiftLeft(Graphics g){
+	public synchronized void shiftLeft(Graphics g){
 		currentLevel.player.setLocation(new Point((int)currentLevel.player.getLocation().getX()-2, (int)currentLevel.player.getLocation().getY()));
-		currentLevel.GLOBAL_OFFSET.x -=2;
-		System.out.println(currentLevel.GLOBAL_OFFSET.x);
+		currentLevel.setGlobalOffset(new Point((currentLevel.getGlobalOffset().x-2), currentLevel.getGlobalOffset().y));
+		System.out.println(currentLevel.getGlobalOffset().x-2);
 	    speed -= 1;
 	}
 
-	public void keyPressed(KeyEvent e) {
+	public synchronized void keyPressed(KeyEvent e) {
 		   int keyCode = e.getKeyCode();
 		    switch( keyCode ) { 
 		        case KeyEvent.VK_UP:
@@ -148,12 +169,14 @@ public class Screen extends JPanel implements KeyListener{
 		        //  Move Left
 		        case KeyEvent.VK_LEFT:
 		        case KeyEvent.VK_A:
-		        	currentLevel.player.velocity.setDX(currentLevel.player.velocity.getDX()-1);
+		        	currentLevel.player.setAcceleration(new Vector(0, currentLevel.player.getAcceleration().getDirection()));
+		        	currentLevel.player.setAcceleration(new Vector(currentLevel.player.getAcceleration().getDX()-.25, currentLevel.player.getAcceleration().getDirection()));
 		            break;
 		        // Move Right
 		        case KeyEvent.VK_RIGHT :
 		        case KeyEvent.VK_D:
-		        	currentLevel.player.velocity.setDX(currentLevel.player.velocity.getDX()+1);
+		        	currentLevel.player.setAcceleration(new Vector(0, currentLevel.player.getAcceleration().getDirection()));
+		        	currentLevel.player.setAcceleration(new Vector(currentLevel.player.getAcceleration().getDX()+.25, currentLevel.player.getAcceleration().getDirection()));
 		            break;
 		     }
 		    repaint();
@@ -161,43 +184,48 @@ public class Screen extends JPanel implements KeyListener{
 	}
 
 	
-	public void keyReleased(KeyEvent e) {	
+	public synchronized void keyReleased(KeyEvent e) {	
 	}
 	
 	private class TimerListener implements ActionListener {
-		public void actionPerformed(ActionEvent arg0) {
+		public synchronized void actionPerformed(ActionEvent arg0) {
 			// Check for collisions.
-			for (LevelObject currentObject: currentLevel.getLevelObjects()) {
-				// Player is to the Right of the current object.
-				if(currentLevel.player.collide(currentObject).equals("LEFT_COLLISION")){
-					currentLevel.player.acceleration.setMagnitude(0);
-					currentLevel.player.velocity.setMagnitude(0);
-					currentLevel.player.location.x +=2;
-				}
-				// Player is to the Left of object.
-				if(currentLevel.player.collide(currentObject).equals("RIGHT_COLLISION")){
-					currentLevel.player.acceleration.setMagnitude(0);
-					currentLevel.player.velocity.setMagnitude(0);
-					currentLevel.player.location.x -=2;
-				}
-				// Player is Below object.
-				if(currentLevel.player.collide(currentObject).equals("TOP_COLLISION")){
-					currentLevel.player.acceleration.setMagnitude(0);
-					currentLevel.player.velocity.setMagnitude(0);
-					currentLevel.player.location.y +=2;
-				}
-				// Player is on top of object.
-				if(currentLevel.player.collide(currentObject).equals("BOTTOM_COLLISION")){
-					currentLevel.player.acceleration.setMagnitude(0);
-					currentLevel.player.velocity.setMagnitude(0);
-					currentLevel.player.location.y -=2;
-				}
-				
-				else{// (player.location.y != currentObject.location.y - player.size.height){
-					currentLevel.player.acceleration.setDY(currentLevel.player.GRAVITY);
-				}
-				
-			}
+	        new Thread(new Runnable() {
+	            public void run() {
+	            	try{
+						for (LevelObject currentObject: currentLevel.getLevelObjects()) {
+							// Player is to the Right of the current object.
+							if(currentLevel.player.collide(currentObject).equals("LEFT_COLLISION")){
+								currentLevel.player.location.x +=5;
+							}
+							// Player is to the Left of object.
+							if(currentLevel.player.collide(currentObject).equals("RIGHT_COLLISION")){
+								currentLevel.player.location.x -=5;
+							}
+							// Player is Below object.
+							if(currentLevel.player.collide(currentObject).equals("TOP_COLLISION")){
+								currentLevel.player.acceleration.setMagnitude(0);
+								currentLevel.player.velocity.setMagnitude(0);
+								currentLevel.player.location.y +=5;
+							}
+							// Player is on top of object.
+							if(currentLevel.player.collide(currentObject).equals("BOTTOM_COLLISION")){
+								currentLevel.player.acceleration.setMagnitude(0);
+								currentLevel.player.velocity.setMagnitude(0);
+								currentLevel.player.location.y -=5;
+							}
+							
+							else{// (player.location.y != currentObject.location.y - player.size.height){
+								currentLevel.player.acceleration.setDY(currentLevel.player.GRAVITY);
+							}
+							
+						}
+	            	}
+	            	catch (ConcurrentModificationException e){
+	            		//
+	            	}
+	            }
+	        }).start();
 			
 			// move each Actor
 			for (Actor ob: currentLevel.getActors()) {
@@ -205,7 +233,6 @@ public class Screen extends JPanel implements KeyListener{
 				ob2.move();
 			}			
 		}
-		
 	}
 	
 	public void keyTyped(KeyEvent e) {
@@ -215,13 +242,22 @@ public class Screen extends JPanel implements KeyListener{
 	/**
 	 * @return the timer
 	 */
-	public javax.swing.Timer getTimer() {
+	public synchronized javax.swing.Timer getTimer() {
 		return timer;
 	}
 	/**
 	 * @param timer the timer to set
 	 */
-	public void setTimer(javax.swing.Timer timer) {
+	public synchronized void setTimer(javax.swing.Timer timer) {
 		this.timer = timer;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }
