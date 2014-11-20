@@ -26,3 +26,6 @@
 /ImageArray.class
 /Level.class
 /StaticObject.class
+/Movement.class
+/Acceleration.class
+/KinematicEquations.class

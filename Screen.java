@@ -24,11 +24,13 @@ import javax.swing.Timer;
  *
  */
 public class Screen extends JPanel implements KeyListener{
-	
+
+	private static final long serialVersionUID = -3859645292224232330L;
+
 	/*
 	 * Set the file to be used for the level.
 	 */
-	public final String LEVEL_NAME = "levels/level1_3.txt";
+	public final String LEVEL_NAME = "levels/level1_2.txt";
 	
 	/*
 	 *  Set the style layout for the level.
@@ -48,16 +50,9 @@ public class Screen extends JPanel implements KeyListener{
 	public static Dimension screenSize = new Dimension(700, 500);
 	// The background image to use for the level.
 	public static ImageIcon backgroundImg = new ImageIcon("img/happy_background.jpg");
-	//  The current image for the main playable character.
-	public static ImageIcon playerImg = new ImageIcon("img/Mario_walk.gif");
-	// ArrayList containing all of the moving Actor objects for the level.
-	protected ArrayList<Actor> actors;
-	// ArrayList containing all of the non-moving Tile objects for the game.
-	protected ArrayList<LevelObject> objects;
+
 	// The level timer.
 	protected Timer timer;
-	// The player object for first player.
-	protected Player player;
 	protected ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
 
 	
@@ -74,33 +69,14 @@ public class Screen extends JPanel implements KeyListener{
 		setFocusable(true);
 		requestFocusInWindow();
 		
-		//Array to hold all the actors in the level.
-		actors = new ArrayList<Actor>();
-		// Array to hold all of the objects in the level, including stationary ones like ground and boxes.
-		objects = new ArrayList<LevelObject>();
 		
-		// Create Player.
-		Point playerLocation = new Point(50,200);
-		Dimension playerSize = new Dimension(30,50);
-		boolean playerVisibility = true;
-		Vector playerVelocity = new Vector(0,0);
-		player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
-		
-		
-		
-		
-		// Add moving objects (players, enemies, shrooms) to actors ArrayList.
-		actors.add(player);
 		
 		// Add a KeyListener for keyboard input.
 		this.addKeyListener(this);
 		
 		//Initialize Level
 		currentLevel = new Level(0, 0, LEVEL_STYLE, LEVEL_NAME, tileImages);
-		// Add static objects (ground, bricks, boxes) to objects ArrayList.
-		for (int i = 0; i < currentLevel.getLevelObjects().size(); i++){
-			this.objects.add(currentLevel.getLevelObjects().get(i));
-		}
+
 		// Add a Timer for the Level
 		timer = new Timer(30, new TimerListener());
 		timer.start();
@@ -113,12 +89,13 @@ public class Screen extends JPanel implements KeyListener{
 		screenSize.height = this.getHeight();
 		super.paintComponent(g);
 		
-		int xOffset = (int)player.location.getX();
+		int xOffset = (int)currentLevel.player.location.getX();
 		
 		if (xOffset > screenSize.width/2){
 			shiftLeft(g);
 		}
 
+		// Draw and tile background image.
 		image = backgroundImg.getImage();
 		if (true) {
             int iw = image.getWidth(this);
@@ -133,29 +110,13 @@ public class Screen extends JPanel implements KeyListener{
         }
 		
 		
-		
-		/*
-		 * Used to draw the actual TileMap for the background.
-		 * Used for debugging purposes, in case things are coming out screwy.
-		 * 
-		 * No Collision accounted for on tile map.
-		 * 
-		 * 
-		for (int i = 0; i < currentLevel.getWidth(); i++){
-			for (int j = 0; j < currentLevel.getHeight(); j++){
-				g.drawImage(currentLevel.getTile(i, j), (int)(i*currentLevel.getImageWidth()+currentLevel.getLevelOffset().getX()), (int)(j*currentLevel.getImageHeight()+currentLevel.getLevelOffset().getY()), currentLevel.getImageWidth(), currentLevel.getImageHeight(), null);
-			}
-		}
-		*/
-		
-		
 		// draw actors
-		for (Actor obj : actors) {
+		for (Actor obj : currentLevel.getActors()) {
 			obj.draw(g);
 		}
 		// draw LevelObjects.
-		for (LevelObject ob : objects) {
-			if (ob.getLocation().x - ob.getGlobalOffset().x < 700){
+		for (LevelObject ob : currentLevel.getLevelObjects()) {
+			if (ob.getLocation().x + currentLevel.GLOBAL_OFFSET.x < 700){
 				ob.draw(g);	
 			}
 		}
@@ -165,8 +126,9 @@ public class Screen extends JPanel implements KeyListener{
 	}
 	
 	public void shiftLeft(Graphics g){
-		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
-		currentLevel.setGlobalOffset(new Point((int)currentLevel.getGlobalOffset().getX()+2, (int)currentLevel.getGlobalOffset().getY()));
+		currentLevel.player.setLocation(new Point((int)currentLevel.player.getLocation().getX()-2, (int)currentLevel.player.getLocation().getY()));
+		currentLevel.GLOBAL_OFFSET.x -=2;
+		System.out.println(currentLevel.GLOBAL_OFFSET.x);
 	    speed -= 1;
 	}
 
@@ -177,17 +139,17 @@ public class Screen extends JPanel implements KeyListener{
 		        case KeyEvent.VK_W:
 		        case KeyEvent.VK_SPACE:
 		            // handle jump 
-		        	player.getVelocity().setDY((player.getAcceleration().getDY())-10);
+		        	currentLevel.player.getVelocity().setDY((currentLevel.player.getAcceleration().getDY())-12);
 		            break;
 		        //  Move Left
 		        case KeyEvent.VK_LEFT:
 		        case KeyEvent.VK_A:
-		        	player.velocity.setDX((player.getAcceleration().getDX())-3);
+		        	currentLevel.player.velocity.setDX(currentLevel.player.velocity.getDX()-1);
 		            break;
 		        // Move Right
 		        case KeyEvent.VK_RIGHT :
 		        case KeyEvent.VK_D:
-		        	player.velocity.setDX((player.getAcceleration().getDX())+3);
+		        	currentLevel.player.velocity.setDX(currentLevel.player.velocity.getDX()+1);
 		            break;
 		     }
 		    repaint();
@@ -195,74 +157,46 @@ public class Screen extends JPanel implements KeyListener{
 	}
 
 	
-	public void keyReleased(KeyEvent e) {
-	while (player.getAcceleration().getDX() != 0){
-			if(player.getAcceleration().getDX() > 0){
-				player.acceleration.setDX((player.getAcceleration().getDX())-1);
-			}
-			else if(player.getAcceleration().getDX() < 0){
-				player.acceleration.setDX((player.getAcceleration().getDX())+1);
-			}
-		}
-	
+	public void keyReleased(KeyEvent e) {	
 	}
 	
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			// Check for collisions.
-			for (LevelObject currentObject: objects) {
-				if (player.collide(currentObject) && player.velocity.getSpeed() != 0){
-					// Player is to the right of object.
-					if(player.getLocation().x < currentObject.getLocation().x + currentObject.getSize().width){
-						player.location.x +=5;
-						player.velocity.setSpeed(0);
-						player.acceleration.setSpeed(0);
-					}
-					// Player is to the Left of object.
-					else if(player.getLocation().x + player.getSize().width > currentObject.getLocation().x){
-						player.location.x -=5;
-						player.velocity.setSpeed(0);
-						player.acceleration.setSpeed(0);
-					}
-					// Player is Below object.
-					else if(player.getLocation().y < currentObject.getLocation().y + currentObject.size.height){
-						player.location.y +=5;
-						player.velocity.setSpeed(0);
-						player.acceleration.setSpeed(0);
-					}
-					// Player is on top of object.
-					else if(player.getLocation().y + player.getSize().height > currentObject.getLocation().y){
-						player.location.y -=5;
-						player.velocity.setSpeed(0);
-						player.acceleration.setSpeed(0);
-					}
-					//player.location.y = currentObject.location.y - player.size.height;
+			for (LevelObject currentObject: currentLevel.getLevelObjects()) {
+				// Player is to the Right of the current object.
+				if(currentLevel.player.collide(currentObject).equals("LEFT_COLLISION")){
+					currentLevel.player.acceleration.setMagnitude(0);
+					currentLevel.player.velocity.setMagnitude(0);
+					currentLevel.player.location.x +=2;
 				}
-				/*
-				else if (player.collide(currentObject) && (player.getLocation().y + player.getSize().height) == currentObject.getLocation().y){
-					player.acceleration.setDY(0);
-					player.velocity.setDY(0);
-					player.location.y = currentObject.location.y - player.size.height;
+				// Player is to the Left of object.
+				if(currentLevel.player.collide(currentObject).equals("RIGHT_COLLISION")){
+					currentLevel.player.acceleration.setMagnitude(0);
+					currentLevel.player.velocity.setMagnitude(0);
+					currentLevel.player.location.x -=2;
 				}
-				else if(player.collide(currentObject) && (player.getLocation().x + player.getSize().width) == currentObject.getLocation().x){
-					player.acceleration.setDX(0);
-					player.velocity.setDX(0);
-					player.location.x = currentObject.location.x - player.size.width;
+				// Player is Below object.
+				if(currentLevel.player.collide(currentObject).equals("TOP_COLLISION")){
+					currentLevel.player.acceleration.setMagnitude(0);
+					currentLevel.player.velocity.setMagnitude(0);
+					currentLevel.player.location.y +=2;
 				}
-				else if(player.collide(currentObject) && (player.getLocation().x == currentObject.getLocation().x + currentObject.getLocation().x){
-					player.acceleration.setDX(0);
-					player.velocity.setDX(0);
-					player.location.x = currentObject.location.x + player.size.width;
+				// Player is on top of object.
+				if(currentLevel.player.collide(currentObject).equals("BOTTOM_COLLISION")){
+					currentLevel.player.acceleration.setMagnitude(0);
+					currentLevel.player.velocity.setMagnitude(0);
+					currentLevel.player.location.y -=2;
 				}
-				*/
-				if (player.location.y != currentObject.location.y - player.size.height){
-					player.acceleration.setDY(player.GRAVITY);
+				
+				else{// (player.location.y != currentObject.location.y - player.size.height){
+					currentLevel.player.acceleration.setDY(currentLevel.player.GRAVITY);
 				}
 				
 			}
 			
 			// move each Actor
-			for (Actor ob: actors) {
+			for (Actor ob: currentLevel.getActors()) {
 				Actor ob2 = (Actor) ob;
 				ob2.move();
 			}			

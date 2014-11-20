@@ -28,8 +28,6 @@ public abstract class LevelObject{
 	protected Point location;
 	// An image for the object.
 	protected Image image;
-	protected boolean isSolidAndStationary;
-	protected Point globalOffset = new Point (0,0);
 	
 	/**
 	 * Constructor for the LevelObject.
@@ -51,25 +49,36 @@ public abstract class LevelObject{
 	 * @return Whether or not a collision occurred.
 	 */
 	
-	public boolean collide(LevelObject other) {
-		// Current LevelObject.
-		Rectangle thisObject = new Rectangle(this.location.x, this.location.y, this.size.width, this.size.height);
-		// Another LevelObject to check.
-		Rectangle thatObject = new Rectangle(other.location.x-other.globalOffset.x, other.location.y, other.size.width, other.size.height);
-		if(thisObject.intersects(thatObject)){
-			return true;
+	public String collide(LevelObject other) {
+		Point thisTop = new Point ((this.getLocation().x+ this.size.width)/2, this.getLocation().y);
+		Point thisBottom = new Point ((this.getLocation().x+ this.size.width)/2, (this.getLocation().y+this.getSize().height));
+		Point thisLeft = new Point (this.getLocation().x, (this.getLocation().y+this.getSize().height)/2);
+		Point thisRight = new Point ((this.getLocation().x+ this.size.width),(this.getLocation().y+this.getSize().height)/2);
+		
+		Rectangle thatObject = new Rectangle(other.location.x+Level.GLOBAL_OFFSET.x+5, other.location.y+Level.GLOBAL_OFFSET.y+5, other.size.width-10, other.size.height);
+		
+		if(thatObject.contains(thisTop)){
+			return "TOP_COLLISION";
+		}
+		else if(thatObject.contains(thisBottom)){
+			return "BOTTOM_COLLISION";
+		}
+		else if(thatObject.contains(thisLeft)){
+			return "LEFT_COLLISION";
+		}
+		else if(thatObject.contains(thisRight)){
+			return "RIGHT_COLLISION";
 		}
 		else{
-			return false;
+			return "COLLISION_ERROR";
 		}
-		
 	}
 
 
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		this.image = this.getImage();
-		g2.drawImage(this.image, this.location.x-this.globalOffset.x, this.location.y-this.globalOffset.y, this.size.height, this.size.width, null);
+		g2.drawImage(this.image, this.location.x+Level.GLOBAL_OFFSET.x, this.location.y+Level.GLOBAL_OFFSET.y, this.size.height, this.size.width, null);
 	}
 
 
@@ -131,22 +140,4 @@ public abstract class LevelObject{
 		this.image = image;
 	}
 
-	/**
-	 * @return the levelOffset
-	 */
-
-	/**
-	 * @return the globalOffset
-	 */
-	public Point getGlobalOffset() {
-		return globalOffset;
-	}
-
-	/**
-	 * @param globalOffset the globalOffset to set
-	 */
-	public void setGlobalOffset(Point globalOffset) {
-		this.globalOffset = globalOffset;
-	}
-	
 }

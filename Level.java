@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+
 /**
  * Create a Level "map" to be used in the Screen when it builds the level.
  * Level contains all of the definitions for what each block should be.
@@ -75,6 +77,13 @@ public class Level{
 	private BufferedImage BEVELED_BRICK;
 	private BufferedImage TOP_POLE;
 	private BufferedImage POLE;
+	private BufferedImage CASTLE_TOP;
+	private BufferedImage CASTLE_WINDOW_LEFT;
+	private BufferedImage CASTLE_WINDOW_CENTER;
+	private BufferedImage CASTLE_WINDOW_RIGHT;
+	private BufferedImage CASTLE_INTERIOR_TOP;
+	private BufferedImage CASTLE_DOOR_TOP;
+	private BufferedImage CASTLE_DOOR;
 	
 
 	/*
@@ -82,7 +91,7 @@ public class Level{
 	 * As Murio moves across the Screen, it keeps track of the WORLD x and y offset, to compensate for
 	 * vertical or horizontal scrolling and allow collision to appear as if it is occurring normally.
 	 */
-	protected Point globalOffset = new Point (0,0);
+	public static Point GLOBAL_OFFSET = new Point(0,0);
 	
 	/*
 	 * Used to overall width and height (in characters from the text file) of the whole Level.
@@ -102,6 +111,8 @@ public class Level{
 	private int imageHeight = 32;
 	private int imageWidth = 32;
 	
+	// The player object for first player.
+	protected Player player;
 	
 	/**
 	 * The default constructor.
@@ -142,6 +153,17 @@ public class Level{
 		 * If an unspecified character is encountered, it defaults to null.
 		 */
 		this.readMap(mapFileName);
+		
+		// Create Player.
+		//  The current image for the main playable character.
+		final ImageIcon playerImg = new ImageIcon("img/Mario_walk.gif");
+		Point playerLocation = new Point(50,200);
+		Dimension playerSize = new Dimension(35,55);
+		boolean playerVisibility = true;
+		Vector playerVelocity = new Vector(0,0);
+		player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
+		actors.add(player);
+				
 	}
 	
 	/*
@@ -163,6 +185,13 @@ public class Level{
 		this.BEVELED_BRICK = tileImageDictionary.get(1+levelType, 0);
 		this.POLE = tileImageDictionary.get(9+levelType, 16);
 		this.TOP_POLE = tileImageDictionary.get(8+levelType, 16);
+		this.CASTLE_TOP = tileImageDictionary.get(0+levelType, 11);
+		this.CASTLE_WINDOW_LEFT = tileImageDictionary.get(0+levelType, 12);
+		this.CASTLE_WINDOW_CENTER = tileImageDictionary.get(0+levelType, 13);
+		this.CASTLE_WINDOW_RIGHT = tileImageDictionary.get(0+levelType, 14);
+		this.CASTLE_INTERIOR_TOP = tileImageDictionary.get(1+levelType, 11);
+		this.CASTLE_DOOR_TOP = tileImageDictionary.get(1+levelType, 12);
+		this.CASTLE_DOOR = tileImageDictionary.get(1+levelType, 13);
 	}
 	
 	/**
@@ -288,6 +317,41 @@ public class Level{
 						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_POLE));
 						this.tiles.add(this.TOP_POLE);
 					}
+					else if (type == 'C')
+					{
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_TOP));
+						this.tiles.add(this.CASTLE_TOP);
+					}
+					else if (type == 'E')
+					{
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_LEFT));
+						this.tiles.add(this.CASTLE_WINDOW_LEFT);
+					}
+					else if (type == 'D')
+					{
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_CENTER));
+						this.tiles.add(this.CASTLE_WINDOW_CENTER);
+					}
+					else if (type == 'M')
+					{
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_RIGHT));
+						this.tiles.add(this.CASTLE_WINDOW_RIGHT);
+					}
+					else if (type == 'N')
+					{
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_INTERIOR_TOP));
+						this.tiles.add(this.CASTLE_INTERIOR_TOP);
+					}
+					else if (type == 'F')
+					{
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR_TOP));
+						this.tiles.add(this.CASTLE_DOOR_TOP);
+					}
+					else if (type == 'J')
+					{
+						this.levelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR));
+						this.tiles.add(this.CASTLE_DOOR);
+					}
 					/*
 					 * If the given character cannot be found, simply create a null filler for the "map".
 					 */
@@ -312,9 +376,7 @@ public class Level{
 
 	
 	public void setGlobalOffset(Point gblOffset) {
-		for (int i=0; i < levelObjects.size(); i++){
-			levelObjects.get(i).setGlobalOffset(new Point(levelObjects.get(i).getGlobalOffset().x+gblOffset.x, levelObjects.get(i).getGlobalOffset().y));
-		}
+		
 	}
 
 	/**
@@ -459,6 +521,6 @@ public class Level{
 	 * @return the globalOffset
 	 */
 	public Point getGlobalOffset() {
-		return globalOffset;
+		return GLOBAL_OFFSET;
 	}
 }

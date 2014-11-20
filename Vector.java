@@ -7,23 +7,23 @@
  *
  */
 public class Vector {
-	private double speed;
+	private double magnitude;
 	private double direction;
-	// The change in the X-Component of Velocity
+	// The change in the X-Component of Magnitude
 	private double dX;
-	// The change in the Y-Component of Velocity
+	// The change in the Y-Component of Magnitude
 	private double dY;
 	
 	/**
-	 * Create a 2D vector with a speed component and a direction component
+	 * Create a 2D vector with a magnitude component and a direction component
 	 * @param s Speed, in m/s
 	 * @param d Direction, an angle in degrees
 	 */
 	public Vector(double s, double d){
-		this.speed = s;
+		this.magnitude = s;
 		this.direction = d;
-		this.dX = this.speed * Math.cos(Math.toRadians(d));
-		this.dY = this.speed * Math.sin(Math.toRadians(d));
+		this.dX = this.magnitude * Math.cos(Math.toRadians(d));
+		this.dY = this.magnitude * Math.sin(Math.toRadians(d));
 		
 	}
 
@@ -39,7 +39,8 @@ public class Vector {
 	 */
 	public void setDX(double dX) {
 		this.dX = dX;
-		this.speed  = this.dX / Math.sin(Math.toRadians(this.direction));
+		this.direction = Math.atan(this.dY / this.dX);
+		this.magnitude  = this.dY / Math.sin(Math.toRadians(this.direction));
 	}
 
 	/**
@@ -54,25 +55,26 @@ public class Vector {
 	 */
 	public void setDY(double dY) {
 		this.dY = dY;
-		this.speed  = this.dY / Math.sin(Math.toRadians(this.direction));
+		this.direction = Math.atan(this.dY / this.dX);
+		this.magnitude  = this.dY / Math.sin(Math.toRadians(this.direction));
 	}
 
 	/**
-	 * @return the speed
+	 * @return the magnitude
 	 */
-	public double getSpeed() {
-		return speed;
+	public double getMagnitude(double acceleration) {
+		return magnitude;
 	}
 
 	/**
-	 * @param speed the speed to set
+	 * @param magnitude the magnitude to set
 	 */
-	public void setSpeed(double speed) {
-		this.speed = speed;
-		this.dX = this.speed * Math.cos(Math.toRadians(this.direction));
-		this.dY = this.speed * Math.sin(Math.toRadians(this.direction));
+	public void setMagnitude(double spd) {
+		this.magnitude = spd;
+		this.dY = this.magnitude * Math.sin(Math.toRadians(this.direction));
+		this.dX = this.magnitude * Math.cos(Math.toRadians(this.direction));
 	}
-
+	
 	/**
 	 * @return the direction
 	 */
@@ -85,10 +87,9 @@ public class Vector {
 	 */
 	public void setDirection(double direction) {
 		this.direction = direction;
-		this.dX = this.speed * Math.cos(Math.toRadians(this.direction));
-		this.dY = this.speed * Math.sin(Math.toRadians(this.direction));
+		this.dX = this.magnitude * Math.cos(Math.toRadians(this.direction));
+		this.dY = this.magnitude * Math.sin(Math.toRadians(this.direction));
 	}
-	
-	
+
 
 }
