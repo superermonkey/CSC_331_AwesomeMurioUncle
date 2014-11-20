@@ -50,6 +50,7 @@ public abstract class LevelObject{
 	 */
 	
 	public String collide(LevelObject other) {
+		
 		Point thisTop = new Point ((this.getLocation().x+ this.size.width)/2, this.getLocation().y);
 		Point thisBottom = new Point ((this.getLocation().x+ this.size.width)/2, (this.getLocation().y+this.getSize().height));
 		Point thisLeft = new Point (this.getLocation().x, (this.getLocation().y+this.getSize().height)/2);
@@ -70,7 +71,7 @@ public abstract class LevelObject{
 			return "RIGHT_COLLISION";
 		}
 		else{
-			return "COLLISION_ERROR";
+			return "";
 		}
 	}
 

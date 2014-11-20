@@ -24,6 +24,8 @@ import javax.swing.Timer;
  *
  */
 public class Screen extends JPanel implements KeyListener{
+	
+
 
 	private static final long serialVersionUID = -3859645292224232330L;
 
@@ -85,6 +87,8 @@ public class Screen extends JPanel implements KeyListener{
 	Image image;
 	
 	public void paintComponent(Graphics g) {
+
+
 		screenSize.width= this.getWidth();
 		screenSize.height = this.getHeight();
 		super.paintComponent(g);
@@ -107,8 +111,7 @@ public class Screen extends JPanel implements KeyListener{
                     }
                 }
             }
-        }
-		
+  
 		
 		// draw actors
 		for (Actor obj : currentLevel.getActors()) {
@@ -123,6 +126,7 @@ public class Screen extends JPanel implements KeyListener{
 		
 		//  This keeps scrolling and player movement in sync.
 		repaint();
+		}
 	}
 	
 	public void shiftLeft(Graphics g){

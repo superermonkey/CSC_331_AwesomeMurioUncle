@@ -29,3 +29,9 @@
 /Movement.class
 /Acceleration.class
 /KinematicEquations.class
+/GameThread.class
+/GameThread$MessageLoop.class
+/Screen$1.class
+/Screen$2.class
+/Screen$TimerListener$1.class
+/Screen$1TimerListener.class
