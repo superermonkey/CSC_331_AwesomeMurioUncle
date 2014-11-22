@@ -52,10 +52,10 @@ public abstract class LevelObject{
 	 */
 	
 	public String collide(LevelObject other) {
-		Point thisTop = new Point ((this.getLocation().x+ this.size.width)/2, this.getLocation().y);
-		Point thisBottom = new Point ((this.getLocation().x+ this.size.width)/2, (this.getLocation().y+this.getSize().height));
-		Point thisLeft = new Point (this.getLocation().x, (this.getLocation().y+this.getSize().height)/2);
-		Point thisRight = new Point ((this.getLocation().x+ this.size.width),(this.getLocation().y+this.getSize().height)/2);
+		Point thisTop = new Point ((2*(this.getLocation().x)+ this.size.width)/2, this.getLocation().y);
+		Point thisBottom = new Point ((2*(this.getLocation().x) + this.size.width)/2, (this.getLocation().y+this.getSize().height));
+		Point thisLeft = new Point (this.getLocation().y, (2*(this.getLocation().y)+this.getSize().height)/2);
+		Point thisRight = new Point ((2*(this.getLocation().x)+ this.size.width),(2*(this.getLocation().y)+this.getSize().height)/2);
 		
 		Rectangle thatObject = new Rectangle(other.location.x, other.location.y, other.size.width, other.size.height);
 

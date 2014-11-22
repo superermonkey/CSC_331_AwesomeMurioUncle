@@ -455,12 +455,7 @@ public class Level{
 		return levelObjects;
 	}
 
-	/**
-	 * @param levelObjects the levelObjects to set
-	 */
-	public void setLevelObjects(ArrayList<LevelObject> levelObjects) {
-		this.levelObjects = levelObjects;
-	}
+
 
 	/**
 	 * @return the width

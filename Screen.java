@@ -133,11 +133,12 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	}
 	
 	public synchronized void shiftLeft(Graphics g){
-		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
 		currentLevel.setGlobalOffset(currentLevel.getGlobalOffset()-2);
-		//for (LevelObject ob : currentLevel.getLevelObjects()) {
-			//ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET, ob.getOriginalLocation().y)));
-		//}
+		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
+		
+		for (LevelObject ob : currentLevel.getLevelObjects()) {
+			ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET -350, ob.getOriginalLocation().y)));
+		}
 	    speed -= 1;
 	    repaint();
 	}
