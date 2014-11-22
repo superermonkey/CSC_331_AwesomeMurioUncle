@@ -100,7 +100,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		screenSize.width= this.getWidth();
 		screenSize.height = this.getHeight();
 		
-		if (currentLevel.player.location.getX() > screenSize.width/2){
+		if (player.location.getX() > screenSize.width/2){
 			shiftLeft(g);
 		}
 
@@ -127,17 +127,17 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		
 		currentLevel.updateOnScreenObjects();
 		for (LevelObject ob : currentLevel.getLevelObjects()) {
-			ob.setLocation(new Point((int)(ob.getOriginalLocation().getX() + currentLevel.getGlobalOffset().x), (int)(ob.getOriginalLocation().getY() + currentLevel.getGlobalOffset().y)));
+			ob.setLocation(new Point((int)(ob.getOriginalLocation().getX() + currentLevel.getGlobalOffset()), (int)(ob.getOriginalLocation().getY())));
 			ob.draw(g);
 		}
 	}
 	
 	public synchronized void shiftLeft(Graphics g){
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
-		currentLevel.setGlobalOffset(new Point((currentLevel.getGlobalOffset().x-2), currentLevel.getGlobalOffset().y));
-		for (LevelObject ob : currentLevel.getLevelObjects()) {
-			ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET.x, ob.getOriginalLocation().y + currentLevel.GLOBAL_OFFSET.y)));
-		}
+		currentLevel.setGlobalOffset(currentLevel.getGlobalOffset()-2);
+		//for (LevelObject ob : currentLevel.getLevelObjects()) {
+			//ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET, ob.getOriginalLocation().y)));
+		//}
 	    speed -= 1;
 	    repaint();
 	}
@@ -154,7 +154,6 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		        //  Move Left
 		        case KeyEvent.VK_LEFT:
 		        case KeyEvent.VK_A:
-		        	//player.setVelocity(new Vector(0, player.getAcceleration().getDirection()));
 		        	player.setVelocity(new Vector(player.getAcceleration().getDX()-6, player.getAcceleration().getDirection()));
 		            break;
 		        // Move Right
@@ -174,22 +173,25 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	        new Thread(new Runnable() {
 	            public void run() {
 	            	try{
+	            		Image image = backgroundImg.getImage();
 						for (LevelObject currentObject: currentLevel.getLevelObjects()) {
 							// Player is to the Right of the current object.
 							if(player.collide(currentObject).equals("LEFT_COLLISION")){
-								System.out.println("LEFT COLLISION");
+								//System.out.println("LEFT COLLISION");
+								currentObject.setImage(image);
 								player.location.x +=5;
 								repaint();
 							}
 							// Player is to the Left of object.
 							if(player.collide(currentObject).equals("RIGHT_COLLISION")){
-								System.out.println("RIGHT COLLISION");
+								//System.out.println("RIGHT COLLISION");
 								player.location.x -=5;
 								repaint();
 							}
 							// Player is Below object.
 							if(player.collide(currentObject).equals("TOP_COLLISION")){
-								System.out.println("TOP COLLISION");
+								//System.out.println("TOP COLLISION");
+								currentObject.setImage(image);
 								player.acceleration.setMagnitude(0);
 								player.velocity.setMagnitude(0);
 								player.location.y +=5;
@@ -197,7 +199,8 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 							}
 							// Player is on top of object.
 							if(player.collide(currentObject).equals("BOTTOM_COLLISION")){
-								System.out.println("BOTTOM COLLISION");
+								//System.out.println("BOTTOM COLLISION");
+								currentObject.setImage(image);
 								player.acceleration.setMagnitude(0);
 								player.velocity.setMagnitude(0);
 								player.location.y -=5;

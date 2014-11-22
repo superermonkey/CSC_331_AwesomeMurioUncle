@@ -58,18 +58,28 @@ public abstract class LevelObject{
 		Point thisRight = new Point ((this.getLocation().x+ this.size.width),(this.getLocation().y+this.getSize().height)/2);
 		
 		Rectangle thatObject = new Rectangle(other.location.x, other.location.y, other.size.width, other.size.height);
-		
+
+		if(thatObject.contains(thisLeft)){
+			if(thatObject.contains(thisBottom)){
+				return "BOTTOM_COLLISION";
+			}
+			else{
+				return "LEFT_COLLISION";
+			}
+		}
+		if(thatObject.contains(thisRight)){
+			if(thatObject.contains(thisBottom)){
+				return "BOTTOM_COLLISION";
+			}
+			else{
+				return "RIGHT_COLLISION";
+			}
+		}
 		if(thatObject.contains(thisBottom)){
 			return "BOTTOM_COLLISION";
 		}
-		else if(thatObject.contains(thisTop)){
+		if(thatObject.contains(thisTop)){
 			return "TOP_COLLISION";
-		}
-		else if(thatObject.contains(thisLeft)){
-			return "LEFT_COLLISION";
-		}
-		else if(thatObject.contains(thisRight)){
-			return "RIGHT_COLLISION";
 		}
 		else{
 			return "";
@@ -80,7 +90,7 @@ public abstract class LevelObject{
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		this.image = this.getImage();
-		g2.drawImage(this.image, this.originalLocation.x+Level.GLOBAL_OFFSET.x, this.originalLocation.y+Level.GLOBAL_OFFSET.y, this.size.height, this.size.width, null);
+		g2.drawImage(this.image, this.originalLocation.x+Level.GLOBAL_OFFSET, this.originalLocation.y, this.size.height, this.size.width, null);
 	}
 
 	/**

@@ -92,7 +92,7 @@ public class Level{
 	 * As Murio moves across the Screen, it keeps track of the WORLD x and y offset, to compensate for
 	 * vertical or horizontal scrolling and allow collision to appear as if it is occurring normally.
 	 */
-	public static Point GLOBAL_OFFSET = new Point(0,0);
+	public static int GLOBAL_OFFSET = 0;
 	
 	/*
 	 * Used to overall width and height (in characters from the text file) of the whole Level.
@@ -264,12 +264,13 @@ public class Level{
 					 */
 					if (type == 'G')
 					{	
-
+						
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.GROUND));
 						this.tiles.add(this.GROUND);
 					}
 					else if (type == 'B')
 					{
+						System.out.println(y*this.imageHeight);
 						this.allLevelObjects.add(new Brick(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.BRICK));
 						this.tiles.add(this.BRICK);
 					}
@@ -372,10 +373,10 @@ public class Level{
 	
 	public void updateOnScreenObjects(){
 		for (LevelObject ob : allLevelObjects) {
-			if (ob.getOriginalLocation().x + GLOBAL_OFFSET.x < 700 && !levelObjects.contains(ob)){
+			if (ob.getOriginalLocation().x + GLOBAL_OFFSET < 700 && !levelObjects.contains(ob)){
 				levelObjects.add(ob);
 			}
-			if (ob.getOriginalLocation().x + GLOBAL_OFFSET.x < 0- this.getImageWidth() && levelObjects.contains(ob)){
+			if (ob.getOriginalLocation().x + GLOBAL_OFFSET < 0- this.getImageWidth() && levelObjects.contains(ob)){
 				levelObjects.remove(ob);
 			}
 		}
@@ -385,7 +386,7 @@ public class Level{
 	/**
 	 * @return the levelOffset
 	 */
-	public void setGlobalOffset(Point gblOffset) {
+	public void setGlobalOffset(int gblOffset) {
 		this.GLOBAL_OFFSET = gblOffset;
 	}
 
@@ -530,7 +531,7 @@ public class Level{
 	/**
 	 * @return the globalOffset
 	 */
-	public Point getGlobalOffset() {
+	public int getGlobalOffset() {
 		return GLOBAL_OFFSET;
 	}
 }
