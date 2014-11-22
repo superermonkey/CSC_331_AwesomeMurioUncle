@@ -153,7 +153,6 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	public synchronized void shiftLeft(Graphics g){
 		currentLevel.player.setLocation(new Point((int)currentLevel.player.getLocation().getX()-2, (int)currentLevel.player.getLocation().getY()));
 		currentLevel.setGlobalOffset(new Point((currentLevel.getGlobalOffset().x-2), currentLevel.getGlobalOffset().y));
-		System.out.println(currentLevel.getGlobalOffset().x-2);
 	    speed -= 1;
 	}
 
@@ -169,14 +168,15 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		        //  Move Left
 		        case KeyEvent.VK_LEFT:
 		        case KeyEvent.VK_A:
-		        	currentLevel.player.setAcceleration(new Vector(0, currentLevel.player.getAcceleration().getDirection()));
-		        	currentLevel.player.setAcceleration(new Vector(currentLevel.player.getAcceleration().getDX()-.25, currentLevel.player.getAcceleration().getDirection()));
+		        	//currentLevel.player.setVelocity(new Vector(0, currentLevel.player.getAcceleration().getDirection()));
+		        	currentLevel.player.setVelocity(new Vector(0, currentLevel.player.getVelocity().getDirection()));
+		        	currentLevel.player.setVelocity(new Vector(currentLevel.player.getAcceleration().getDX()-8, currentLevel.player.getAcceleration().getDirection()));
 		            break;
 		        // Move Right
 		        case KeyEvent.VK_RIGHT :
 		        case KeyEvent.VK_D:
-		        	currentLevel.player.setAcceleration(new Vector(0, currentLevel.player.getAcceleration().getDirection()));
-		        	currentLevel.player.setAcceleration(new Vector(currentLevel.player.getAcceleration().getDX()+.25, currentLevel.player.getAcceleration().getDirection()));
+		        	currentLevel.player.setVelocity(new Vector(0, currentLevel.player.getVelocity().getDirection()));
+		        	currentLevel.player.setVelocity(new Vector(currentLevel.player.getAcceleration().getDX()+8, currentLevel.player.getAcceleration().getDirection()));
 		            break;
 		     }
 		    repaint();
@@ -218,7 +218,6 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 							else{// (player.location.y != currentObject.location.y - player.size.height){
 								currentLevel.player.acceleration.setDY(currentLevel.player.GRAVITY);
 							}
-							
 						}
 	            	}
 	            	catch (ConcurrentModificationException e){
