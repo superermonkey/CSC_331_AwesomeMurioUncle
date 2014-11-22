@@ -25,6 +25,7 @@ public abstract class LevelObject{
 	// The size of the object, contained in a Dimension with width and height.
 	protected Dimension size;
 	// The location of the object, contained in a Point object with X and Y coordinates of the top-left corner
+	protected Point originalLocation;
 	protected Point location;
 	// An image for the object.
 	protected Image image;
@@ -38,6 +39,7 @@ public abstract class LevelObject{
 	 */
 	public LevelObject(Point l, Dimension d, boolean v, Image i){
 		this.location = l;
+		this.originalLocation = l;
 		this.size = d;
 		this.isVisible = v;
 		this.image = (Image)i;
@@ -50,13 +52,12 @@ public abstract class LevelObject{
 	 */
 	
 	public String collide(LevelObject other) {
-		
 		Point thisTop = new Point ((this.getLocation().x+ this.size.width)/2, this.getLocation().y);
 		Point thisBottom = new Point ((this.getLocation().x+ this.size.width)/2, (this.getLocation().y+this.getSize().height));
 		Point thisLeft = new Point (this.getLocation().x, (this.getLocation().y+this.getSize().height)/2);
 		Point thisRight = new Point ((this.getLocation().x+ this.size.width),(this.getLocation().y+this.getSize().height)/2);
 		
-		Rectangle thatObject = new Rectangle(other.location.x+Level.GLOBAL_OFFSET.x, other.location.y+Level.GLOBAL_OFFSET.y, other.size.width, other.size.height);
+		Rectangle thatObject = new Rectangle(other.location.x, other.location.y, other.size.width, other.size.height);
 		
 		if(thatObject.contains(thisBottom)){
 			return "BOTTOM_COLLISION";
@@ -79,9 +80,8 @@ public abstract class LevelObject{
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		this.image = this.getImage();
-		g2.drawImage(this.image, this.location.x+Level.GLOBAL_OFFSET.x, this.location.y+Level.GLOBAL_OFFSET.y, this.size.height, this.size.width, null);
+		g2.drawImage(this.image, this.originalLocation.x+Level.GLOBAL_OFFSET.x, this.originalLocation.y+Level.GLOBAL_OFFSET.y, this.size.height, this.size.width, null);
 	}
-
 
 	/**
 	 * @return whether the LevelObject is visible.
@@ -127,6 +127,20 @@ public abstract class LevelObject{
 	
 	
 	/**
+	 * @return the originalLocation
+	 */
+	public Point getOriginalLocation() {
+		return originalLocation;
+	}
+
+	/**
+	 * @param originalLocation the originalLocation to set
+	 */
+	public void setOriginalLocation(Point originalLocation) {
+		this.originalLocation = originalLocation;
+	}
+
+	/**
 	 * @return the image used for the LevelObject.
 	 */
 	public Image getImage() {
@@ -140,5 +154,5 @@ public abstract class LevelObject{
 	public void setImage(Image image) {
 		this.image = image;
 	}
-
+	
 }

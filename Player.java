@@ -59,6 +59,7 @@ public class Player extends Actor{
 	 */
 	@Override
 	public void draw(Graphics g) {
+		super.draw(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.drawImage(this.image, location.x, location.y, size.width, size.height, null);
 	}

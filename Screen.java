@@ -26,15 +26,10 @@ import javax.swing.Timer;
  *
  */
 public class Screen extends JPanel implements KeyListener, Runnable{
-	
-
-
+	// Make Eclipse stop yelling at me.
 	private static final long serialVersionUID = -3859645292224232330L;
-
-	/*
-	 * Set the file to be used for the level.
-	 */
-	public final String LEVEL_NAME = "levels/level1_2.txt";
+	// Set the file to be used for the level.
+	public final String LEVEL_NAME = "levels/level1_1.txt";
 	
 	/*
 	 *  Set the style layout for the level.
@@ -46,65 +41,71 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	 *  Odd numbers can produce weird things if you want.
 	 */
 	public final int LEVEL_STYLE = 0;
-	
-	
-	
-	
 	// Set Screen width and height.
 	public static Dimension screenSize = new Dimension(700, 500);
 	// The background image to use for the level.
 	public static ImageIcon backgroundImg = new ImageIcon("img/happy_background.jpg");
-
 	// The level timer.
 	protected Timer timer;
+	/* Set up the images from the specified sprite sheet.
+	 * Specify:
+	 * 		Number of rows of Images in sprite sheet.
+	 * 		Number of columns of Images in the sprite sheet.
+	 * 		Width in pixels of each Image on sprite sheet.
+	 * 		Height of each Image on sprite sheet.
+	 * 		The file name of the sprite sheet.
+	 */
 	protected ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
-
-	
+	// Initialize Player for Player 1.
+	protected Player player;
+	// Initialize the current level.
 	protected Level currentLevel;
 	
 	/**
-	 * Create the Screen which will serve as the current level.
+	 * Create the Screen which will display as the current level.
 	 */
 	public Screen() {
 		// Set Screen size based on Dimension object.
 		setPreferredSize(screenSize);
+		// Set default background color.
 		setBackground(Color.blue);
 		//  Allows KeyboardListener to be used in the level.
 		setFocusable(true);
-		requestFocusInWindow();
-		
-		
+		requestFocusInWindow();		
 		
 		// Add a KeyListener for keyboard input.
-		Thread t1 = new Thread();
-		t1.start();
 		this.addKeyListener(this);
 		
 		//Initialize Level
 		currentLevel = new Level(0, 0, LEVEL_STYLE, LEVEL_NAME, tileImages);
+		player = currentLevel.player;
 
 		// Add a Timer for the Level
 		timer = new Timer(30, new TimerListener());
 		timer.start();
 	}
-	public int speed = 0;
-	Image image;
 	
+	// Speed of background image scroll.
+	public int speed = 0;
+	
+	/**
+	 * Used for painting movements on Screen.
+	 * 
+	 * @param g The Graphics object for drawing.
+	 */
 	public synchronized void paintComponent(Graphics g) {
-
-
-		screenSize.width= this.getWidth();
-		screenSize.height = this.getHeight();
 		super.paintComponent(g);
 		
-		int xOffset = (int)currentLevel.player.location.getX();
+		//  Get width and height of screen.
+		screenSize.width= this.getWidth();
+		screenSize.height = this.getHeight();
 		
-		if (xOffset > screenSize.width/2){
+		if (currentLevel.player.location.getX() > screenSize.width/2){
 			shiftLeft(g);
 		}
 
 		// Draw and tile background image.
-		image = backgroundImg.getImage();
+		Image image = backgroundImg.getImage();
 		if (true) {
             int iw = image.getWidth(this);
             int ih = image.getHeight(this);
@@ -122,38 +123,23 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 			obj.draw(g);
 		}
 		// draw LevelObjects.
+		
+		
 		currentLevel.updateOnScreenObjects();
 		for (LevelObject ob : currentLevel.getLevelObjects()) {
-			if (ob.getLocation().x + currentLevel.GLOBAL_OFFSET.x < 700){
-				ob.draw(g);	
-			}
+			ob.setLocation(new Point((int)(ob.getOriginalLocation().getX() + currentLevel.getGlobalOffset().x), (int)(ob.getOriginalLocation().getY() + currentLevel.getGlobalOffset().y)));
+			ob.draw(g);
 		}
-		
-		/*
-		 * Test print level tiles for testing where collisions SHOULD be.
-		 * 
-		int count = 0;
-		for (int y=0; y < currentLevel.getHeight(); y++){
-			for (int x=0; x < currentLevel.getWidth(); x++){
-				g.drawImage(currentLevel.getTiles().get(count), x*32, y*32, 32, 32, null);
-				count++;
-			}
-		}
-		*
-		*
-		*/
-		//  This keeps scrolling and player movement in sync.
-        new Thread(new Runnable() {
-            public void run() {
-            	repaint();
-            }
-        }).start();
 	}
 	
 	public synchronized void shiftLeft(Graphics g){
-		currentLevel.player.setLocation(new Point((int)currentLevel.player.getLocation().getX()-2, (int)currentLevel.player.getLocation().getY()));
+		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
 		currentLevel.setGlobalOffset(new Point((currentLevel.getGlobalOffset().x-2), currentLevel.getGlobalOffset().y));
+		for (LevelObject ob : currentLevel.getLevelObjects()) {
+			ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET.x, ob.getOriginalLocation().y + currentLevel.GLOBAL_OFFSET.y)));
+		}
 	    speed -= 1;
+	    repaint();
 	}
 
 	public synchronized void keyPressed(KeyEvent e) {
@@ -163,30 +149,25 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		        case KeyEvent.VK_W:
 		        case KeyEvent.VK_SPACE:
 		            // handle jump 
-		        	currentLevel.player.getVelocity().setDY((currentLevel.player.getAcceleration().getDY())-12);
+		        	player.getVelocity().setDY((player.getAcceleration().getDY())-12);
 		            break;
 		        //  Move Left
 		        case KeyEvent.VK_LEFT:
 		        case KeyEvent.VK_A:
-		        	//currentLevel.player.setVelocity(new Vector(0, currentLevel.player.getAcceleration().getDirection()));
-		        	currentLevel.player.setVelocity(new Vector(0, currentLevel.player.getVelocity().getDirection()));
-		        	currentLevel.player.setVelocity(new Vector(currentLevel.player.getAcceleration().getDX()-8, currentLevel.player.getAcceleration().getDirection()));
+		        	//player.setVelocity(new Vector(0, player.getAcceleration().getDirection()));
+		        	player.setVelocity(new Vector(player.getAcceleration().getDX()-6, player.getAcceleration().getDirection()));
 		            break;
 		        // Move Right
 		        case KeyEvent.VK_RIGHT :
 		        case KeyEvent.VK_D:
-		        	currentLevel.player.setVelocity(new Vector(0, currentLevel.player.getVelocity().getDirection()));
-		        	currentLevel.player.setVelocity(new Vector(currentLevel.player.getAcceleration().getDX()+8, currentLevel.player.getAcceleration().getDirection()));
+		        	player.setVelocity(new Vector(player.getAcceleration().getDX()+6, player.getAcceleration().getDirection()));
 		            break;
-		     }
-		    repaint();
-		
+		     }		
 	}
 
 	
 	public synchronized void keyReleased(KeyEvent e) {	
 	}
-	
 	private class TimerListener implements ActionListener {
 		public synchronized void actionPerformed(ActionEvent arg0) {
 			// Check for collisions.
@@ -195,28 +176,37 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	            	try{
 						for (LevelObject currentObject: currentLevel.getLevelObjects()) {
 							// Player is to the Right of the current object.
-							if(currentLevel.player.collide(currentObject).equals("LEFT_COLLISION")){
-								currentLevel.player.location.x +=5;
+							if(player.collide(currentObject).equals("LEFT_COLLISION")){
+								System.out.println("LEFT COLLISION");
+								player.location.x +=5;
+								repaint();
 							}
 							// Player is to the Left of object.
-							if(currentLevel.player.collide(currentObject).equals("RIGHT_COLLISION")){
-								currentLevel.player.location.x -=5;
+							if(player.collide(currentObject).equals("RIGHT_COLLISION")){
+								System.out.println("RIGHT COLLISION");
+								player.location.x -=5;
+								repaint();
 							}
 							// Player is Below object.
-							if(currentLevel.player.collide(currentObject).equals("TOP_COLLISION")){
-								currentLevel.player.acceleration.setMagnitude(0);
-								currentLevel.player.velocity.setMagnitude(0);
-								currentLevel.player.location.y +=5;
+							if(player.collide(currentObject).equals("TOP_COLLISION")){
+								System.out.println("TOP COLLISION");
+								player.acceleration.setMagnitude(0);
+								player.velocity.setMagnitude(0);
+								player.location.y +=5;
+								repaint();
 							}
 							// Player is on top of object.
-							if(currentLevel.player.collide(currentObject).equals("BOTTOM_COLLISION")){
-								currentLevel.player.acceleration.setMagnitude(0);
-								currentLevel.player.velocity.setMagnitude(0);
-								currentLevel.player.location.y -=5;
+							if(player.collide(currentObject).equals("BOTTOM_COLLISION")){
+								System.out.println("BOTTOM COLLISION");
+								player.acceleration.setMagnitude(0);
+								player.velocity.setMagnitude(0);
+								player.location.y -=5;
+								repaint();
 							}
 							
-							else{// (player.location.y != currentObject.location.y - player.size.height){
-								currentLevel.player.acceleration.setDY(currentLevel.player.GRAVITY);
+							else{
+								player.acceleration.setDY(player.GRAVITY);
+								repaint();
 							}
 						}
 	            	}

@@ -372,10 +372,10 @@ public class Level{
 	
 	public void updateOnScreenObjects(){
 		for (LevelObject ob : allLevelObjects) {
-			if (ob.getLocation().x + GLOBAL_OFFSET.x < 700 && !levelObjects.contains(ob)){
+			if (ob.getOriginalLocation().x + GLOBAL_OFFSET.x < 700 && !levelObjects.contains(ob)){
 				levelObjects.add(ob);
 			}
-			if (ob.getLocation().x + GLOBAL_OFFSET.x < 0- this.getImageWidth() && levelObjects.contains(ob)){
+			if (ob.getOriginalLocation().x + GLOBAL_OFFSET.x < 0- this.getImageWidth() && levelObjects.contains(ob)){
 				levelObjects.remove(ob);
 			}
 		}

@@ -30,8 +30,6 @@ public class Brick extends InteractiveBox{
 		super(l, d, v, i);
 	}
 
-	
-
 	//
 	//
 	//
