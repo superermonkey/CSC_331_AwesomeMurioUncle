@@ -22,7 +22,6 @@ import javax.swing.ImageIcon;
  *
  */
 public class Level{
-	
 	/*
 	 * The ArrayList tiles contains a set of the BufferedImages, arranged
 	 * and laid out according to the characters from the level text file.
@@ -160,9 +159,9 @@ public class Level{
 		
 		// Create Player.
 		//  The current image for the main playable character.
-		final ImageIcon playerImg = new ImageIcon("img/Mario_walk.gif");
+		final ImageIcon playerImg = new ImageIcon("tiles/tile_3.png");
 		Point playerLocation = new Point(50,200);
-		Dimension playerSize = new Dimension(35,55);
+		Dimension playerSize = new Dimension(30,50);
 		boolean playerVisibility = true;
 		Vector playerVelocity = new Vector(0,0);
 		player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
@@ -207,15 +206,12 @@ public class Level{
 	private void readMap(String fileName){
 		// ArrayList to hold the lines of the map file.
 		ArrayList<String> lines = new ArrayList<String>();
-		
 		// Protect against missing text file.
 		try
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
-			
 			// Level cannot be negative width.
 			int widest = 0;
-			
 			// While there are still lines to be read.
 			while (true) {
 				// Read in the next line.
@@ -259,7 +255,7 @@ public class Level{
 			{
 				String line = lines.get(y);
 				for (int x = 0; x <line.length(); x++)
-				{
+				{	
 					char type = line.charAt(x); 
 					/*
 					 * Nested loop that iterates over each character to determine which type of tile it should be.
@@ -267,97 +263,116 @@ public class Level{
 					 */
 					if (type == 'G')
 					{	
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.GROUND));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.GROUND));
 						this.levelTiles.add(this.GROUND);
 					}
 					else if (type == 'B')
 					{
-						this.allLevelObjects.add(new Brick(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.BRICK));
+						this.allLevelObjects.add(new Brick(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.BRICK));
 						this.levelTiles.add(this.BRICK);
 					}
 					else if (type == 'Q')
 					{
-						this.allLevelObjects.add(new QuestionMarkBox(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.QUESTION_MARK_BOX));
+						this.allLevelObjects.add(new QuestionMarkBox(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.QUESTION_MARK_BOX));
 						this.levelTiles.add(this.QUESTION_MARK_BOX);
 					}
 					else if (type == 'A')
 					{
-						this.allLevelObjects.add(new MetalBox(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.METAL_BOX));
+						this.allLevelObjects.add(new MetalBox(new Point(x*this.imageWidth, y*this.imageHeight), 
+								new Dimension(this.imageWidth, this.imageHeight), true, this.METAL_BOX));
 						this.levelTiles.add(this.METAL_BOX);
 					}
 					else if (type == 'I')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_LEFT_PIPE));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_LEFT_PIPE));
 						this.levelTiles.add(this.TOP_LEFT_PIPE);
 					}
 					else if (type == 'O')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_RIGHT_PIPE));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_RIGHT_PIPE));
 						this.levelTiles.add(this.TOP_RIGHT_PIPE);
 					}
 					else if (type == 'K')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.LEFT_PIPE));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.LEFT_PIPE));
 						this.levelTiles.add(this.LEFT_PIPE);
 					}
 					else if (type == 'L')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.RIGHT_PIPE));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.RIGHT_PIPE));
 						this.levelTiles.add(this.RIGHT_PIPE);
 					}
 					else if (type == 'H')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.BEVELED_BRICK));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.BEVELED_BRICK));
 						this.levelTiles.add(this.BEVELED_BRICK);
 					}
 					else if (type == 'P')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.POLE));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.POLE));
 						this.levelTiles.add(this.POLE);
 					}
 					else if (type == 'S')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_POLE));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_POLE));
 						this.levelTiles.add(this.TOP_POLE);
 					}
 					else if (type == 'C')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_TOP));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_TOP));
 						this.levelTiles.add(this.CASTLE_TOP);
 					}
 					else if (type == 'E')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_LEFT));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_LEFT));
 						this.levelTiles.add(this.CASTLE_WINDOW_LEFT);
 					}
 					else if (type == 'D')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_CENTER));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_CENTER));
 						this.levelTiles.add(this.CASTLE_WINDOW_CENTER);
 					}
 					else if (type == 'M')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_RIGHT));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_RIGHT));
 						this.levelTiles.add(this.CASTLE_WINDOW_RIGHT);
 					}
 					else if (type == 'N')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_INTERIOR_TOP));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_INTERIOR_TOP));
 						this.levelTiles.add(this.CASTLE_INTERIOR_TOP);
 					}
 					else if (type == 'F')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR_TOP));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR_TOP));
 						this.levelTiles.add(this.CASTLE_DOOR_TOP);
 					}
 					else if (type == 'J')
 					{
-						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR));
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR));
 						this.levelTiles.add(this.CASTLE_DOOR);
 					}
 					else if (type == '1')
 					{
-						this.allLevelObjects.add(new Coin(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.COIN));
+						this.allLevelObjects.add(new Coin(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, this.COIN));
 						this.itemTiles.add(this.COIN);
 					}
 					/*
@@ -416,111 +431,72 @@ public class Level{
 	public ArrayList<BufferedImage> getLevelTiles() {
 		return levelTiles;
 	}
-	
-	
 	public BufferedImage getTile(int x, int y){
 		return levelTiles.get(y*this.getWidth() + (x));
 	}
-	
 	public BufferedImage getTile(int i){
 		return levelTiles.get(i);
 	}
-
-
-
 	/**
 	 * @return the actors
 	 */
 	public ArrayList<Actor> getActors() {
 		return actors;
 	}
-
-
-
-	/**
-	 * @param actors the actors to set
-	 */
-	public void setActors(ArrayList<Actor> actors) {
-		this.actors = actors;
-	}
-
-
-
 	/**
 	 * @return the levelObjects
 	 */
 	public ArrayList<LevelObject> getLevelObjects() {
 		return levelObjects;
 	}
-
-
-
 	/**
 	 * @return the width
 	 */
 	public int getWidth() {
 		return width;
 	}
-
-
-
 	/**
 	 * @param width the width to set
 	 */
 	public void setWidth(int width) {
 		this.width = width;
 	}
-
-
-
 	/**
 	 * @return the height
 	 */
 	public int getHeight() {
 		return height;
 	}
-
-
-
 	/**
 	 * @param height the height to set
 	 */
 	public void setHeight(int height) {
 		this.height = height;
 	}
-
-
 	/**
 	 * @return the imageHeight
 	 */
 	public int getImageHeight() {
 		return imageHeight;
 	}
-
-
 	/**
 	 * @param imageHeight the imageHeight to set
 	 */
 	public void setImageHeight(int imageHeight) {
 		this.imageHeight = imageHeight;
 	}
-
-
 	/**
 	 * @return the imageWidth
 	 */
 	public int getImageWidth() {
 		return imageWidth;
 	}
-
-
 	/**
 	 * @param imageWidth the imageWidth to set
 	 */
 	public void setImageWidth(int imageWidth) {
 		this.imageWidth = imageWidth;
 	}
-
 	/**
 	 * @return the globalOffset
 	 */

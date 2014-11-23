@@ -4,13 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 
-
 /**
- * 
- */
-
-/**
- * @author Monkey
+ * @author RyanPierce
  *
  */
 public class Player extends Actor{
@@ -54,21 +49,17 @@ public class Player extends Actor{
 		}
 		
 	}
-
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g);
-		Graphics2D g2 = (Graphics2D) g;
-		g2.drawImage(this.image, location.x, location.y, size.width, size.height, null);
+		g.drawImage(this.image, location.x, location.y, size.width, size.height, null);
 	}
-
 	/**
 	 * @return the coinCount
 	 */
 	public int getCoinCount() {
 		return coinCount;
 	}
-
 	/**
 	 * @param coinCount the coinCount to set
 	 */
@@ -82,5 +73,4 @@ public class Player extends Actor{
 	public void addPoints(int pointValue) {
 		this.points += pointValue;
 	}
-	
 }

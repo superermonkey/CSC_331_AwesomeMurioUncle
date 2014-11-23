@@ -8,10 +8,6 @@ import java.awt.geom.Line2D;
 
 
 /**
- * 
- */
-
-/**
  * Any object that exists in the Murio Level.  Can be static or moving(Actor).
  * Each LevelObject has a visibility variable.
  * Each LevelObject has a size, in the for of a Dimension bounding box width and height.
@@ -51,7 +47,6 @@ public abstract class LevelObject{
 	 * @param other The object this object is colliding with.
 	 * @return Whether or not a collision occurred.
 	 */
-	
 	public String collide(LevelObject other) {
 		int midX = (2*(this.getLocation().x)+ this.size.width)/2;
 		int midY = (2*(this.getLocation().y)+this.getSize().height)/2;
@@ -59,7 +54,6 @@ public abstract class LevelObject{
 		Point thisBottom = new Point ((2*(this.getLocation().x) + this.size.width)/2, (this.getLocation().y+this.getSize().height));
 		Point thisLeft = new Point (this.getLocation().y, midY);
 		Point thisRight = new Point (midX,midY);
-		
 		
 		
 		Rectangle thatObject = new Rectangle(other.location.x-1, other.location.y-1, other.size.width+2, other.size.height+2);
@@ -103,86 +97,68 @@ public abstract class LevelObject{
 		else if (thatObject.contains(thisTop)){ 
 			return "TOP_COLLISION";
 		}
-		
-		
 		else{
 			return "";
 		}
-		
 	}
-
-
 	public void draw(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
 		this.image = this.getImage();
-		g2.drawImage(this.image, this.originalLocation.x+Level.GLOBAL_OFFSET, this.originalLocation.y, this.size.height, this.size.width, null);
+		g.drawImage(this.image, this.originalLocation.x+Level.GLOBAL_OFFSET, this.originalLocation.y, this.size.height, this.size.width, null);
 	}
-
 	/**
 	 * @return whether the LevelObject is visible.
 	 */
 	public boolean isVisible() {
 		return isVisible;
 	}
-
 	/**
 	 * @param isVisible Set the object as visible or not.
 	 */
 	public void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
 	}
-
 	/**
 	 * @return the size, in Dimension form (width and height).
 	 */
 	public Dimension getSize() {
 		return size;
 	}
-
 	/**
 	 * @param size set the size of the object, in Dimension form (width and height).
 	 */
 	public void setSize(Dimension size) {
 		this.size = size;
 	}
-
 	/**
 	 * @return the location of the object in Point form (x and y).
 	 */
 	public Point getLocation() {
 		return location;
 	}
-
 	/**
 	 * @param location set the location of the object in Point form (x and y).
 	 */
 	public void setLocation(Point location) {
 		this.location = location;
 	}
-	
-	
 	/**
 	 * @return the originalLocation
 	 */
 	public Point getOriginalLocation() {
 		return originalLocation;
 	}
-
 	/**
 	 * @param originalLocation the originalLocation to set
 	 */
 	public void setOriginalLocation(Point originalLocation) {
 		this.originalLocation = originalLocation;
 	}
-
 	/**
 	 * @return the image used for the LevelObject.
 	 */
 	public Image getImage() {
 		return image;
 	}
-
-
 	/**
 	 * @param image Set the Image for the LevelObject.
 	 */

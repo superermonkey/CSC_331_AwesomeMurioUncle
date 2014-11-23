@@ -26,7 +26,6 @@ import javax.swing.Timer;
  *
  */
 public class Screen extends JPanel implements KeyListener, Runnable{
-	// Make Eclipse stop yelling at me.
 	private static final long serialVersionUID = -3859645292224232330L;
 	// Set the file to be used for the level.
 	public final String LEVEL_NAME = "levels/level1_1.txt";
@@ -112,9 +111,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
             int ih = image.getHeight(this);
             if (iw > 0 && ih > 0) {
                 for (int x = speed; x < getWidth(); x += iw) {
-                    for (int y = 0; y < getHeight(); y += ih) {
-                        g.drawImage(image, x, y, iw, screenSize.height, null);
-                    }
+                    g.drawImage(image, x, 1, iw, screenSize.height, null);
                 }
             }
 		}
@@ -126,8 +123,6 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 			obj.draw(g);
 		}
 		// draw LevelObjects.
-		
-		
 		currentLevel.updateOnScreenObjects();
 		for (LevelObject ob : currentLevel.getLevelObjects()) {
 			ob.setLocation(new Point((int)(ob.getOriginalLocation().getX() + currentLevel.getGlobalOffset()), (int)(ob.getOriginalLocation().getY())));
@@ -142,32 +137,41 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		for (LevelObject ob : currentLevel.getLevelObjects()) {
 			ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET, ob.getOriginalLocation().y)));
 		}
+		// Set scroll speed of Background.
+		// Lower number is slower.
+		// Higher number is faster.
 	    speed -= 1;
 	    repaint();
 	}
 
+	/**
+	 * Check key input from keyboard.
+	 * Use keys to control Murio.
+	 * 
+	 * @param e The KeyEvent.
+	 */
 	public synchronized void keyPressed(KeyEvent e) {
 		   int keyCode = e.getKeyCode();
-		    switch( keyCode ) { 
+		    switch(keyCode) { 
 		        case KeyEvent.VK_UP:
 		        case KeyEvent.VK_W:
 		        case KeyEvent.VK_SPACE:
 		            // handle jump 
-		        	player.acceleration.setDY(-12);
+		        	player.acceleration.setDY(-11);
 		        	player.setAcceleration(player.acceleration);
 					player.setVelocity(player.velocity);
 		            break;
 		        //  Move Left
 		        case KeyEvent.VK_LEFT:
 		        case KeyEvent.VK_A:
-		        	player.velocity.setDX(-6);
+		        	player.velocity.setDX(-5);
 		        	player.setAcceleration(player.acceleration);
 					player.setVelocity(player.velocity);
 		            break;
 		        // Move Right
 		        case KeyEvent.VK_RIGHT :
 		        case KeyEvent.VK_D:
-		        	player.velocity.setDX(6);
+		        	player.velocity.setDX(5);
 		        	player.setAcceleration(player.acceleration);
 					player.setVelocity(player.velocity);
 		            break;
@@ -198,6 +202,34 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 								player.setAcceleration(player.acceleration);
 								player.setVelocity(player.velocity);
 								repaint();
+							}
+							else if(player.collide(currentObject).equals("COIN")){
+								player.addCoin();
+								currentLevel.allLevelObjects.remove(currentObject);
+								currentLevel.levelObjects.remove(currentObject);
+								repaint();
+							}
+							else if(player.collide(currentObject).equals("BRICK")){
+								Brick brick = (Brick)currentObject;
+								if(brick.isBreakable){
+									player.addPoints(10);
+									currentLevel.allLevelObjects.remove(currentObject);
+									currentLevel.levelObjects.remove(currentObject);
+									player.acceleration.setDY(0);
+									player.velocity.setDY(0);
+									player.location.y -=5;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								else{
+									player.acceleration.setDY(0);
+									player.velocity.setDY(0);
+									player.location.y -=5;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
 							}
 							// Player is on top of object and to its right
 							else if(player.collide(currentObject).equals("BOTTOM_LEFT_COLLISION")){
@@ -308,35 +340,6 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 								player.setVelocity(player.velocity);
 								repaint();
 							}
-							// Player is on top of object and to its right
-							else if(player.collide(currentObject).equals("COIN")){
-								player.addCoin();
-								currentLevel.allLevelObjects.remove(currentObject);
-								currentLevel.levelObjects.remove(currentObject);
-								repaint();
-							}
-							else if(player.collide(currentObject).equals("BRICK")){
-								Brick brick = (Brick)currentObject;
-								if(brick.isBreakable){
-									player.addPoints(10);
-									currentLevel.allLevelObjects.remove(currentObject);
-									currentLevel.levelObjects.remove(currentObject);
-									player.acceleration.setDY(0);
-									player.velocity.setDY(0);
-									player.location.y -=5;
-									player.setAcceleration(player.acceleration);
-									player.setVelocity(player.velocity);
-									repaint();
-								}
-								else{
-									player.acceleration.setDY(0);
-									player.velocity.setDY(0);
-									player.location.y -=5;
-									player.setAcceleration(player.acceleration);
-									player.setVelocity(player.velocity);
-									repaint();
-								}
-							}
 							else{
 								player.acceleration.setDY(player.GRAVITY);
 								repaint();
@@ -344,23 +347,19 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 						}
 	            	}
 	            	catch (ConcurrentModificationException e){
-	            		//
 	            	}
 	            }
 	        }).start();
 			
-			// move each Actor
+			//move each Actor
 			for (Actor ob: currentLevel.getActors()) {
-				Actor ob2 = (Actor) ob;
-				ob2.move();
+				ob.move();
 			}			
 		}
 	}
-	
 	public void keyTyped(KeyEvent e) {
 		// not used.	
 	}
-	
 	/**
 	 * @return the timer
 	 */
@@ -373,8 +372,6 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	public synchronized void setTimer(javax.swing.Timer timer) {
 		this.timer = timer;
 	}
-
-
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
