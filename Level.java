@@ -270,7 +270,6 @@ public class Level{
 					}
 					else if (type == 'B')
 					{
-						System.out.println(y*this.imageHeight);
 						this.allLevelObjects.add(new Brick(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.BRICK));
 						this.tiles.add(this.BRICK);
 					}

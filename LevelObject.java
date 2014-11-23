@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 
 
 /**
@@ -52,38 +53,53 @@ public abstract class LevelObject{
 	 */
 	
 	public String collide(LevelObject other) {
-		Point thisTop = new Point ((2*(this.getLocation().x)+ this.size.width)/2, this.getLocation().y);
+		int midX = (2*(this.getLocation().x)+ this.size.width)/2;
+		int midY = (2*(this.getLocation().y)+this.getSize().height)/2;
+		Point thisTop = new Point (midX, this.getLocation().y);
 		Point thisBottom = new Point ((2*(this.getLocation().x) + this.size.width)/2, (this.getLocation().y+this.getSize().height));
-		Point thisLeft = new Point (this.getLocation().y, (2*(this.getLocation().y)+this.getSize().height)/2);
-		Point thisRight = new Point ((2*(this.getLocation().x)+ this.size.width),(2*(this.getLocation().y)+this.getSize().height)/2);
+		Point thisLeft = new Point (this.getLocation().y, midY);
+		Point thisRight = new Point (midX,midY);
 		
-		Rectangle thatObject = new Rectangle(other.location.x, other.location.y, other.size.width, other.size.height);
+		
+		
+		Rectangle thatObject = new Rectangle(other.location.x-1, other.location.y-1, other.size.width+2, other.size.height+2);
 
-		if(thatObject.contains(thisLeft)){
-			if(thatObject.contains(thisBottom)){
-				return "BOTTOM_COLLISION";
-			}
-			else{
-				return "LEFT_COLLISION";
-			}
+		if(thatObject.contains(thisBottom) && thatObject.contains(thisRight)){
+			return "BOTTOM_RIGHT_COLLISION";
 		}
-		if(thatObject.contains(thisRight)){
-			if(thatObject.contains(thisBottom)){
-				return "BOTTOM_COLLISION";
-			}
-			else{
-				return "RIGHT_COLLISION";
-			}
+		else if (thatObject.contains(thisBottom) && thatObject.contains(thisLeft)){
+			return "BOTTOM_LEFT_COLLISION";
 		}
-		if(thatObject.contains(thisBottom)){
+		else if (thatObject.contains(thisTop) && thatObject.contains(thisLeft)){
+			return "TOP_LEFT_COLLISION";
+		}
+		else if (thatObject.contains(thisBottom) && thatObject.contains(thisRight)){
+			return "TOP_RIGHT_COLLISION";
+		}
+		else if (thatObject.contains(thisBottom) && thatObject.contains(thisTop)){
+			return "TOP_BOTTOM_COLLISION";
+		}
+		else if (thatObject.contains(thisRight) && thatObject.contains(thisLeft)){
+			return "LEFT_RIGHT_COLLISION";
+		}
+		else if (thatObject.contains(thisLeft)){ 
+			return "LEFT_COLLISION";
+		}
+		else if (thatObject.contains(thisRight)){ 
+			return "RIGHT_COLLISION";
+		}
+		else if (thatObject.contains(thisBottom)){ 
 			return "BOTTOM_COLLISION";
 		}
-		if(thatObject.contains(thisTop)){
+		else if (thatObject.contains(thisTop)){ 
 			return "TOP_COLLISION";
 		}
+		
+		
 		else{
 			return "";
 		}
+		
 	}
 
 

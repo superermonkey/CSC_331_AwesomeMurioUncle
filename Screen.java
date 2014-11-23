@@ -137,7 +137,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
 		
 		for (LevelObject ob : currentLevel.getLevelObjects()) {
-			ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET -350, ob.getOriginalLocation().y)));
+			ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET, ob.getOriginalLocation().y)));
 		}
 	    speed -= 1;
 	    repaint();
@@ -150,23 +150,29 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		        case KeyEvent.VK_W:
 		        case KeyEvent.VK_SPACE:
 		            // handle jump 
-		        	player.getVelocity().setDY((player.getAcceleration().getDY())-12);
+		        	player.acceleration.setDY(-12);
+		        	player.setAcceleration(player.acceleration);
+					player.setVelocity(player.velocity);
 		            break;
 		        //  Move Left
 		        case KeyEvent.VK_LEFT:
 		        case KeyEvent.VK_A:
-		        	player.setVelocity(new Vector(player.getAcceleration().getDX()-6, player.getAcceleration().getDirection()));
+		        	player.velocity.setDX(-6);
+		        	player.setAcceleration(player.acceleration);
+					player.setVelocity(player.velocity);
 		            break;
 		        // Move Right
 		        case KeyEvent.VK_RIGHT :
 		        case KeyEvent.VK_D:
-		        	player.setVelocity(new Vector(player.getAcceleration().getDX()+6, player.getAcceleration().getDirection()));
+		        	player.velocity.setDX(6);
+		        	player.setAcceleration(player.acceleration);
+					player.setVelocity(player.velocity);
 		            break;
 		     }		
 	}
 
 	
-	public synchronized void keyReleased(KeyEvent e) {	
+	public synchronized void keyReleased(KeyEvent e) {
 	}
 	private class TimerListener implements ActionListener {
 		public synchronized void actionPerformed(ActionEvent arg0) {
@@ -176,37 +182,131 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	            	try{
 	            		Image image = backgroundImg.getImage();
 						for (LevelObject currentObject: currentLevel.getLevelObjects()) {
-							// Player is to the Right of the current object.
-							if(player.collide(currentObject).equals("LEFT_COLLISION")){
-								//System.out.println("LEFT COLLISION");
+							// Player is on top of object and to its left.
+							if(player.collide(currentObject).equals("BOTTOM_RIGHT_COLLISION")){
+								//System.out.println("BOTTOM COLLISION");
 								currentObject.setImage(image);
-								player.location.x +=5;
-								repaint();
-							}
-							// Player is to the Left of object.
-							if(player.collide(currentObject).equals("RIGHT_COLLISION")){
-								//System.out.println("RIGHT COLLISION");
+								player.acceleration.setDY(0);
+								player.acceleration.setDX(0);
+								player.velocity.setDY(0);
+								player.velocity.setDX(0);
+								player.location.y -=5;
 								player.location.x -=5;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
 								repaint();
 							}
-							// Player is Below object.
-							if(player.collide(currentObject).equals("TOP_COLLISION")){
-								//System.out.println("TOP COLLISION");
+							// Player is on top of object and to its right
+							else if(player.collide(currentObject).equals("BOTTOM_LEFT_COLLISION")){
+								//System.out.println("BOTTOM COLLISION");
+								player.acceleration.setDY(0);
+								player.acceleration.setDX(0);
+								player.velocity.setDY(0);
+								player.velocity.setDX(0);
+								player.location.y -=5;
+								player.location.x +=5;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
+								repaint();
+							}
+							// Player is player is to the bottom left of the object.
+							else if(player.collide(currentObject).equals("TOP_RIGHT_COLLISION")){
+								//System.out.println("BOTTOM COLLISION");
 								currentObject.setImage(image);
-								player.acceleration.setMagnitude(0);
-								player.velocity.setMagnitude(0);
+								player.acceleration.setDY(player.GRAVITY);
+								player.acceleration.setDX(0);
+								player.velocity.setDY(player.GRAVITY);
+								player.velocity.setDX(0);
 								player.location.y +=5;
+								player.location.x -=5;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
+								repaint();
+							}
+							// Player is to the bottom right of the object.
+							else if(player.collide(currentObject).equals("TOP_LEFT_COLLISION")){
+								player.acceleration.setDY(player.GRAVITY);
+								player.acceleration.setDX(0);
+								player.velocity.setDY(player.GRAVITY);
+								player.velocity.setDX(0);
+								player.location.y +=5;
+								player.location.x +=5;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
+								repaint();
+							}
+							// Player is in the middle of the object.
+							else if(player.collide(currentObject).equals("TOP_BOTTOM_COLLISION")){
+								//System.out.println("BOTTOM COLLISION");
+								currentObject.setImage(image);
+								player.acceleration.setDY(0);
+								player.acceleration.setDX(0);
+								player.velocity.setDY(0);
+								player.velocity.setDX(0);
+								player.location.y -=33;
+								player.location.x -=33;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
+								repaint();
+							}
+							// Player is in the middle of the object
+							else if(player.collide(currentObject).equals("LEFT_RIGHT_COLLISION")){
+								//System.out.println("BOTTOM COLLISION");
+								currentObject.setImage(image);
+								player.acceleration.setDY(0);
+								player.acceleration.setDX(0);
+								player.velocity.setDY(0);
+								player.velocity.setDX(0);
+								player.location.y -=33;
+								player.location.x -=33;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
 								repaint();
 							}
 							// Player is on top of object.
-							if(player.collide(currentObject).equals("BOTTOM_COLLISION")){
+							else if(player.collide(currentObject).equals("BOTTOM_COLLISION")){
 								//System.out.println("BOTTOM COLLISION");
 								currentObject.setImage(image);
-								player.acceleration.setMagnitude(0);
-								player.velocity.setMagnitude(0);
+								player.acceleration.setDY(0);
+								player.velocity.setDY(0);
 								player.location.y -=5;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
 								repaint();
 							}
+							// Player is to the Right of the current object.
+							else if(player.collide(currentObject).equals("LEFT_COLLISION")){
+								//System.out.println("LEFT COLLISION");
+								currentObject.setImage(image);
+								player.velocity.setDX(0);
+								player.acceleration.setDX(0);
+								player.location.x +=5;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
+								repaint();
+							}
+							// Player is to the Left of object.
+							else if(player.collide(currentObject).equals("RIGHT_COLLISION")){
+								System.out.println("RIGHT COLLISION");
+								player.velocity.setDX(0);
+								player.acceleration.setDX(0);
+								player.location.x -=10;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
+								repaint();
+							}
+							// Player is Below object.
+							else if(player.collide(currentObject).equals("TOP_COLLISION")){
+								//System.out.println("TOP COLLISION");
+								currentObject.setImage(image);
+								player.acceleration.setDY(0);
+								player.velocity.setDY(0);
+								player.location.y +=10;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
+								repaint();
+							}
+
 							
 							else{
 								player.acceleration.setDY(player.GRAVITY);
@@ -245,9 +345,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		this.timer = timer;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
+
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
