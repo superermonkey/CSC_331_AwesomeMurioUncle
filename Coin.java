@@ -1,5 +1,6 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 
 
@@ -18,8 +19,8 @@ public class Coin extends LevelObject{
 	 * @param d
 	 * @param v
 	 */
-	public Coin(Point l, Dimension d, boolean v) {
-		super(l, d, v, null);
+	public Coin(Point l, Dimension d, boolean v, Image i) {
+		super(l, d, v, i);
 		// TODO Auto-generated constructor stub
 	}
 

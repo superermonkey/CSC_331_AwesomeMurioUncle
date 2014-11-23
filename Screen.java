@@ -55,7 +55,8 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	 * 		Height of each Image on sprite sheet.
 	 * 		The file name of the sprite sheet.
 	 */
-	protected ImageArray tileImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
+	protected ImageArray levelImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
+	protected ImageArray itemImages = new ImageArray(14, 36, 16, 16, "tileSets/items.png");
 	// Initialize Player for Player 1.
 	protected Player player;
 	// Initialize the current level.
@@ -77,7 +78,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		this.addKeyListener(this);
 		
 		//Initialize Level
-		currentLevel = new Level(0, 0, LEVEL_STYLE, LEVEL_NAME, tileImages);
+		currentLevel = new Level(0, 0, LEVEL_STYLE, LEVEL_NAME, levelImages, itemImages);
 		player = currentLevel.player;
 
 		// Add a Timer for the Level
@@ -99,7 +100,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		//  Get width and height of screen.
 		screenSize.width= this.getWidth();
 		screenSize.height = this.getHeight();
-		
+
 		if (player.location.getX() > screenSize.width/2){
 			shiftLeft(g);
 		}
@@ -117,7 +118,9 @@ public class Screen extends JPanel implements KeyListener, Runnable{
                 }
             }
 		}
-		
+		g.setColor(Color.BLACK);
+		g.drawString("Coins: " + player.getCoinCount(), 10, 10);
+		g.drawString("Points: " + player.getPoints(), 70, 10);
 		// draw actors
 		for (Actor obj : currentLevel.getActors()) {
 			obj.draw(g);
@@ -237,7 +240,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 							}
 							// Player is in the middle of the object.
 							else if(player.collide(currentObject).equals("TOP_BOTTOM_COLLISION")){
-								//System.out.println("BOTTOM COLLISION");
+								System.out.println("TOP BOTTOM COLLISION");
 								currentObject.setImage(image);
 								player.acceleration.setDY(0);
 								player.acceleration.setDX(0);
@@ -251,14 +254,13 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 							}
 							// Player is in the middle of the object
 							else if(player.collide(currentObject).equals("LEFT_RIGHT_COLLISION")){
-								//System.out.println("BOTTOM COLLISION");
+								System.out.println("LEFT RIGHT COLLISION");
 								currentObject.setImage(image);
 								player.acceleration.setDY(0);
 								player.acceleration.setDX(0);
 								player.velocity.setDY(0);
 								player.velocity.setDX(0);
-								player.location.y -=33;
-								player.location.x -=33;
+								player.location.setLocation(currentObject.location.x - player.getSize().getWidth(), player.location.y);
 								player.setAcceleration(player.acceleration);
 								player.setVelocity(player.velocity);
 								repaint();
@@ -280,17 +282,17 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 								currentObject.setImage(image);
 								player.velocity.setDX(0);
 								player.acceleration.setDX(0);
-								player.location.x +=5;
+								player.location.setLocation(currentObject.location.x - currentObject.getSize().getWidth(), player.location.y);
 								player.setAcceleration(player.acceleration);
 								player.setVelocity(player.velocity);
 								repaint();
 							}
 							// Player is to the Left of object.
 							else if(player.collide(currentObject).equals("RIGHT_COLLISION")){
-								System.out.println("RIGHT COLLISION");
+								//System.out.println("RIGHT COLLISION");
 								player.velocity.setDX(0);
 								player.acceleration.setDX(0);
-								player.location.x -=10;
+								player.location.setLocation(currentObject.location.x - player.getSize().getWidth(), player.location.y);
 								player.setAcceleration(player.acceleration);
 								player.setVelocity(player.velocity);
 								repaint();
@@ -306,8 +308,35 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 								player.setVelocity(player.velocity);
 								repaint();
 							}
-
-							
+							// Player is on top of object and to its right
+							else if(player.collide(currentObject).equals("COIN")){
+								player.addCoin();
+								currentLevel.allLevelObjects.remove(currentObject);
+								currentLevel.levelObjects.remove(currentObject);
+								repaint();
+							}
+							else if(player.collide(currentObject).equals("BRICK")){
+								Brick brick = (Brick)currentObject;
+								if(brick.isBreakable){
+									player.addPoints(10);
+									currentLevel.allLevelObjects.remove(currentObject);
+									currentLevel.levelObjects.remove(currentObject);
+									player.acceleration.setDY(0);
+									player.velocity.setDY(0);
+									player.location.y -=5;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								else{
+									player.acceleration.setDY(0);
+									player.velocity.setDY(0);
+									player.location.y -=5;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+							}
 							else{
 								player.acceleration.setDY(player.GRAVITY);
 								repaint();

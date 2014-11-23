@@ -15,7 +15,8 @@ import java.awt.Point;
  */
 public class Player extends Actor{
 	public static final double MAX_SPEED = 10;
-	
+	private int coinCount = 0;
+	private int points = 0;
 	/**
 	 * @param l
 	 * @param d
@@ -54,13 +55,32 @@ public class Player extends Actor{
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see LevelObject#draw(java.awt.Graphics)
-	 */
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.drawImage(this.image, location.x, location.y, size.width, size.height, null);
 	}
+
+	/**
+	 * @return the coinCount
+	 */
+	public int getCoinCount() {
+		return coinCount;
+	}
+
+	/**
+	 * @param coinCount the coinCount to set
+	 */
+	public void addCoin() {
+		this.coinCount += 1;
+	}
+	
+	public int getPoints(){
+		return this.points;
+	}
+	public void addPoints(int pointValue) {
+		this.points += pointValue;
+	}
+	
 }

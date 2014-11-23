@@ -16,7 +16,7 @@ public class Brick extends InteractiveBox{
 	 *  Determines whether box is breakable.
 	 *  All instances will be set to true when Murio is big.
 	 */ 
-	protected boolean isBreakable = false;
+	protected boolean isBreakable = true;
 	
 	/**
 	 * Create a new Brick for the Level.

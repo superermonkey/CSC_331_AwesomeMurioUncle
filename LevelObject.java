@@ -63,7 +63,16 @@ public abstract class LevelObject{
 		
 		
 		Rectangle thatObject = new Rectangle(other.location.x-1, other.location.y-1, other.size.width+2, other.size.height+2);
-
+		if (other instanceof Coin){
+			if(thatObject.contains(thisBottom) || thatObject.contains(thisRight) || thatObject.contains(thisRight)|| thatObject.contains(thisRight)){
+				return "COIN";
+			}
+		}
+		else if (other instanceof Brick){
+			if(thatObject.contains(thisTop)){
+				return "BRICK";
+			}
+		}
 		if(thatObject.contains(thisBottom) && thatObject.contains(thisRight)){
 			return "BOTTOM_RIGHT_COLLISION";
 		}

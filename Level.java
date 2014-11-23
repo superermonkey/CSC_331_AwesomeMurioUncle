@@ -35,7 +35,8 @@ public class Level{
 	 * In other words, the tiles ArrayList does not store LevelObjects,
 	 * it only stores non-interactable  BufferedImages.
 	 */
-	private ArrayList<BufferedImage> tiles = new ArrayList<BufferedImage>();
+	private ArrayList<BufferedImage> levelTiles = new ArrayList<BufferedImage>();
+	private ArrayList<BufferedImage> itemTiles = new ArrayList<BufferedImage>();
 	
 	/*
 	 * The ImageArray that contains all the possible static tiles for use in the Level.
@@ -43,7 +44,8 @@ public class Level{
 	 * Tiles in titleImageDictionary are ordered by row and column that
 	 * they existed in the original source image.
 	 */
-	private ImageArray tileImageDictionary = new ImageArray();
+	private ImageArray levelTileImageDictionary = new ImageArray();
+	private ImageArray itemTileImageDictionary = new ImageArray();
 	
 	/*
 	 * The ArrayList that contains all the possible actor tiles for use in the Level.
@@ -59,8 +61,8 @@ public class Level{
 	 * This array holds the definitions for the boxes and blocks
 	 * as well as the animation frames for those that require them. 
 	 */
-	private ArrayList<LevelObject> allLevelObjects = new ArrayList<LevelObject>();
-	private ArrayList<LevelObject> levelObjects = new ArrayList<LevelObject>();
+	public ArrayList<LevelObject> allLevelObjects = new ArrayList<LevelObject>();
+	public ArrayList<LevelObject> levelObjects = new ArrayList<LevelObject>();
 	
 	/*
 	 * The basic variables to hold the images for each tile type for the Level.
@@ -85,7 +87,7 @@ public class Level{
 	private BufferedImage CASTLE_INTERIOR_TOP;
 	private BufferedImage CASTLE_DOOR_TOP;
 	private BufferedImage CASTLE_DOOR;
-	
+	private BufferedImage COIN;
 
 	/*
 	 * Contains the globalOffset, in Point(x,y) form, to be used for interactive purposes.
@@ -134,13 +136,14 @@ public class Level{
 	 * @param h The overall height of the Level, in characters.  Can be set manually or overridden by the map file if it is larger.
 	 * @param lvlType The type of Level(0=Basic, 2=Dark, 4=Dungeon, 6=Under water).
 	 * @param mapFileName  The filename for the "map" text file.
-	 * @param tileImageDictionary The ImageArray file to use for tile image definitions.
+	 * @param levelTileImageDictionary The ImageArray file to use for tile image definitions.
 	 */
-	public Level(int w, int h, int lvlType, String mapFileName, ImageArray tileImageDictionary){
+	public Level(int w, int h, int lvlType, String mapFileName, ImageArray levelTileImageDictionary, ImageArray itemTileImageDictionary){
 		this.width = w;
 		this.height = h;
 		this.levelType = lvlType;
-		this.tileImageDictionary = tileImageDictionary;
+		this.levelTileImageDictionary = levelTileImageDictionary;
+		this.itemTileImageDictionary = itemTileImageDictionary;
 		
 		/*
 		 * Set up the dictionary of images to be used for the tiles.
@@ -164,7 +167,6 @@ public class Level{
 		Vector playerVelocity = new Vector(0,0);
 		player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());
 		actors.add(player);
-				
 	}
 	
 	/*
@@ -175,24 +177,25 @@ public class Level{
 	 * The command "get" is in get(row, column) form.
 	 */
 	private void setLevelConstants(int levelType){
-		this.GROUND = tileImageDictionary.get(0+levelType, 0);
-		this.BRICK = tileImageDictionary.get(0+levelType, 13);
-		this.METAL_BOX = tileImageDictionary.get(0+levelType, 3);
-		this.QUESTION_MARK_BOX = tileImageDictionary.get(0+levelType, 24);
-		this.TOP_LEFT_PIPE = tileImageDictionary.get(8+levelType, 0);
-		this.TOP_RIGHT_PIPE = tileImageDictionary.get(8+levelType, 1);
-		this.LEFT_PIPE = tileImageDictionary.get(9+levelType, 0);
-		this.RIGHT_PIPE = tileImageDictionary.get(9+levelType, 1);
-		this.BEVELED_BRICK = tileImageDictionary.get(1+levelType, 0);
-		this.POLE = tileImageDictionary.get(9+levelType, 16);
-		this.TOP_POLE = tileImageDictionary.get(8+levelType, 16);
-		this.CASTLE_TOP = tileImageDictionary.get(0+levelType, 11);
-		this.CASTLE_WINDOW_LEFT = tileImageDictionary.get(0+levelType, 12);
-		this.CASTLE_WINDOW_CENTER = tileImageDictionary.get(0+levelType, 13);
-		this.CASTLE_WINDOW_RIGHT = tileImageDictionary.get(0+levelType, 14);
-		this.CASTLE_INTERIOR_TOP = tileImageDictionary.get(1+levelType, 11);
-		this.CASTLE_DOOR_TOP = tileImageDictionary.get(1+levelType, 12);
-		this.CASTLE_DOOR = tileImageDictionary.get(1+levelType, 13);
+		this.GROUND = levelTileImageDictionary.get(0+levelType, 0);
+		this.BRICK = levelTileImageDictionary.get(0+levelType, 13);
+		this.METAL_BOX = levelTileImageDictionary.get(0+levelType, 3);
+		this.QUESTION_MARK_BOX = levelTileImageDictionary.get(0+levelType, 24);
+		this.TOP_LEFT_PIPE = levelTileImageDictionary.get(8+levelType, 0);
+		this.TOP_RIGHT_PIPE = levelTileImageDictionary.get(8+levelType, 1);
+		this.LEFT_PIPE = levelTileImageDictionary.get(9+levelType, 0);
+		this.RIGHT_PIPE = levelTileImageDictionary.get(9+levelType, 1);
+		this.BEVELED_BRICK = levelTileImageDictionary.get(1+levelType, 0);
+		this.POLE = levelTileImageDictionary.get(9+levelType, 16);
+		this.TOP_POLE = levelTileImageDictionary.get(8+levelType, 16);
+		this.CASTLE_TOP = levelTileImageDictionary.get(0+levelType, 11);
+		this.CASTLE_WINDOW_LEFT = levelTileImageDictionary.get(0+levelType, 12);
+		this.CASTLE_WINDOW_CENTER = levelTileImageDictionary.get(0+levelType, 13);
+		this.CASTLE_WINDOW_RIGHT = levelTileImageDictionary.get(0+levelType, 14);
+		this.CASTLE_INTERIOR_TOP = levelTileImageDictionary.get(1+levelType, 11);
+		this.CASTLE_DOOR_TOP = levelTileImageDictionary.get(1+levelType, 12);
+		this.CASTLE_DOOR = levelTileImageDictionary.get(1+levelType, 13);
+		this.COIN = itemTileImageDictionary.get(6+levelType, 0);
 	}
 	
 	/**
@@ -264,101 +267,105 @@ public class Level{
 					 */
 					if (type == 'G')
 					{	
-						
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.GROUND));
-						this.tiles.add(this.GROUND);
+						this.levelTiles.add(this.GROUND);
 					}
 					else if (type == 'B')
 					{
 						this.allLevelObjects.add(new Brick(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.BRICK));
-						this.tiles.add(this.BRICK);
+						this.levelTiles.add(this.BRICK);
 					}
 					else if (type == 'Q')
 					{
 						this.allLevelObjects.add(new QuestionMarkBox(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.QUESTION_MARK_BOX));
-						this.tiles.add(this.QUESTION_MARK_BOX);
+						this.levelTiles.add(this.QUESTION_MARK_BOX);
 					}
 					else if (type == 'A')
 					{
 						this.allLevelObjects.add(new MetalBox(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.METAL_BOX));
-						this.tiles.add(this.METAL_BOX);
+						this.levelTiles.add(this.METAL_BOX);
 					}
 					else if (type == 'I')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_LEFT_PIPE));
-						this.tiles.add(this.TOP_LEFT_PIPE);
+						this.levelTiles.add(this.TOP_LEFT_PIPE);
 					}
 					else if (type == 'O')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_RIGHT_PIPE));
-						this.tiles.add(this.TOP_RIGHT_PIPE);
+						this.levelTiles.add(this.TOP_RIGHT_PIPE);
 					}
 					else if (type == 'K')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.LEFT_PIPE));
-						this.tiles.add(this.LEFT_PIPE);
+						this.levelTiles.add(this.LEFT_PIPE);
 					}
 					else if (type == 'L')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.RIGHT_PIPE));
-						this.tiles.add(this.RIGHT_PIPE);
+						this.levelTiles.add(this.RIGHT_PIPE);
 					}
 					else if (type == 'H')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.BEVELED_BRICK));
-						this.tiles.add(this.BEVELED_BRICK);
+						this.levelTiles.add(this.BEVELED_BRICK);
 					}
 					else if (type == 'P')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.POLE));
-						this.tiles.add(this.POLE);
+						this.levelTiles.add(this.POLE);
 					}
 					else if (type == 'S')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_POLE));
-						this.tiles.add(this.TOP_POLE);
+						this.levelTiles.add(this.TOP_POLE);
 					}
 					else if (type == 'C')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_TOP));
-						this.tiles.add(this.CASTLE_TOP);
+						this.levelTiles.add(this.CASTLE_TOP);
 					}
 					else if (type == 'E')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_LEFT));
-						this.tiles.add(this.CASTLE_WINDOW_LEFT);
+						this.levelTiles.add(this.CASTLE_WINDOW_LEFT);
 					}
 					else if (type == 'D')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_CENTER));
-						this.tiles.add(this.CASTLE_WINDOW_CENTER);
+						this.levelTiles.add(this.CASTLE_WINDOW_CENTER);
 					}
 					else if (type == 'M')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_RIGHT));
-						this.tiles.add(this.CASTLE_WINDOW_RIGHT);
+						this.levelTiles.add(this.CASTLE_WINDOW_RIGHT);
 					}
 					else if (type == 'N')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_INTERIOR_TOP));
-						this.tiles.add(this.CASTLE_INTERIOR_TOP);
+						this.levelTiles.add(this.CASTLE_INTERIOR_TOP);
 					}
 					else if (type == 'F')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR_TOP));
-						this.tiles.add(this.CASTLE_DOOR_TOP);
+						this.levelTiles.add(this.CASTLE_DOOR_TOP);
 					}
 					else if (type == 'J')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR));
-						this.tiles.add(this.CASTLE_DOOR);
+						this.levelTiles.add(this.CASTLE_DOOR);
+					}
+					else if (type == '1')
+					{
+						this.allLevelObjects.add(new Coin(new Point(x*this.imageWidth, y*this.imageHeight), new Dimension(this.imageWidth, this.imageHeight), true, this.COIN));
+						this.itemTiles.add(this.COIN);
 					}
 					/*
 					 * If the given character cannot be found, simply create a null filler for the "map".
 					 */
 					else
 					{
-						this.tiles.add(null);
+						this.levelTiles.add(null);
 					}
 				}
 			}
@@ -404,27 +411,19 @@ public class Level{
 		this.setLevelConstants(levelType);
 	}
 	/**
-	 * @return the tiles
+	 * @return the levelTiles
 	 */
-	public ArrayList<BufferedImage> getTiles() {
-		return tiles;
+	public ArrayList<BufferedImage> getLevelTiles() {
+		return levelTiles;
 	}
 	
 	
 	public BufferedImage getTile(int x, int y){
-		return tiles.get(y*this.getWidth() + (x));
+		return levelTiles.get(y*this.getWidth() + (x));
 	}
 	
 	public BufferedImage getTile(int i){
-		return tiles.get(i);
-	}
-
-
-	/**
-	 * @param tiles the tiles to set
-	 */
-	public void setTiles(ArrayList<BufferedImage> tiles) {
-		this.tiles = tiles;
+		return levelTiles.get(i);
 	}
 
 
