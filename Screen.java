@@ -28,7 +28,7 @@ import javax.swing.Timer;
 public class Screen extends JPanel implements KeyListener, Runnable{
 	private static final long serialVersionUID = -3859645292224232330L;
 	// Set the file to be used for the level.
-	public final String LEVEL_NAME = "levels/level1_1.txt";
+	public final String LEVEL_NAME = "levels/level1_4.txt";
 	
 	/*
 	 *  Set the style layout for the level.
@@ -117,8 +117,10 @@ public class Screen extends JPanel implements KeyListener, Runnable{
             }
 		}
 		g.setColor(Color.BLACK);
-		g.drawString("Coins: " + player.getCoinCount(), 10, 10);
-		g.drawString("Points: " + player.getPoints(), 70, 10);
+		g.drawString("Coins: " + player.getCoinCount(), 10, 20);
+		g.drawString("Points: " + player.getPoints(), 70, 20);
+		g.drawString("Lives: " + player.getNumberOfLives(), 140, 20);
+		
 		// draw actors
 		for (Actor obj : currentLevel.getActors()) {
 			obj.draw(g);
@@ -194,22 +196,8 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	            	try{
 	            		Image image = backgroundImg.getImage();
 						for (LevelObject currentObject: currentLevel.getLevelObjects()) {
-							// Player is on top of object and to its left.
-							if(player.collide(currentObject).equals("BOTTOM_RIGHT_COLLISION")){
-								System.out.println("BOTTOM RIGHT COLLISION");
-								currentObject.setImage(image);
-								player.acceleration.setDY(0);
-								player.acceleration.setDX(0);
-								player.velocity.setDY(0);
-								player.velocity.setDX(0);
-								player.location.y -=5;
-								player.location.x -=5;
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
 							// Collide with Coin.
-							else if(player.collide(currentObject).equals("COIN")){
+							if(player.collide(currentObject).equals("COIN")){
 								player.addCoin();
 								currentLevel.allLevelObjects.remove(currentObject);
 								currentLevel.levelObjects.remove(currentObject);
@@ -224,6 +212,8 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 									currentLevel.levelObjects.remove(currentObject);
 									player.acceleration.setDY(0);
 									player.velocity.setDY(0);
+									player.acceleration.setDX(0);
+									player.velocity.setDX(0);
 									player.location.y -=5;
 									player.setAcceleration(player.acceleration);
 									player.setVelocity(player.velocity);
@@ -237,6 +227,20 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 									player.setVelocity(player.velocity);
 									repaint();
 								}
+							}
+							// Player is on top of object and to its left.
+							else if(player.collide(currentObject).equals("BOTTOM_RIGHT_COLLISION")){
+								System.out.println("BOTTOM RIGHT COLLISION");
+								currentObject.setImage(image);
+								player.acceleration.setDY(0);
+								player.acceleration.setDX(0);
+								player.velocity.setDY(0);
+								player.velocity.setDX(0);
+								player.location.y -=5;
+								player.location.x -=5;
+								player.setAcceleration(player.acceleration);
+								player.setVelocity(player.velocity);
+								repaint();
 							}
 							// Player is on top of object and to its right
 							else if(player.collide(currentObject).equals("BOTTOM_LEFT_COLLISION")){

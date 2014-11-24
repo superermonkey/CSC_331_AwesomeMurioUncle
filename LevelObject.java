@@ -10,7 +10,7 @@ import java.awt.Rectangle;
  * Each LevelObject has a size, in the for of a Dimension bounding box width and height.
  * Each has a location, based on the X-Y Coordinate of the upper-left corner of the bounding box.
  * Each has an Image associate with it.
- * @author Monkey
+ * @author RyanPierce
  *
  */
 public abstract class LevelObject{

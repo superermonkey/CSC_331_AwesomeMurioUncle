@@ -3,44 +3,36 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 /**
+ * Class for OneUp that powers up Murio not controlled by Murio.
+ * OneUp has constant horizontal movement until it goes off screen.
  * 
- */
-
-/**
- * @author Monkey
+ * @author RyanPierce
  *
  */
 public class OneUp extends PowerUp{
 
 	/**
-	 * @param l
-	 * @param d
-	 * @param v
-	 * @param vector
+	 * Create a new OneUp for the Level.
+	 * 
+	 * @param l The initial location of the OneUp, in Point(x, y) form.
+	 * @param d The size of the OneUp, in Dimension(w, h) form.
+	 * @param v The visibility boolean of the Brick.
+	 * @param vector The initial speed and direction of the OneUp.
+	 * @param i The Image to display for the OneUp.
 	 */
 	public OneUp(Point l, Dimension d, boolean v, Vector vector, Image i) {
 		super(l, d, v, vector, i);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see LevelObject#draw(java.awt.Graphics)
+	/**
+	 * @param g The Graphics object.
 	 */
-	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
-		
 	}
-
-	/* (non-Javadoc)
-	 * @see Actor#move()
+	
+	/**
+	 * The movement of the OneUp.  OneUp moves horizontally and bounces off of solid objects.
 	 */
-	@Override
 	public void move() {
-		// TODO Auto-generated method stub
-		
 	}
-
-
-
 }

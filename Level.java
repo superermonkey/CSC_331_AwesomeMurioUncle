@@ -285,7 +285,7 @@ public class Level{
 					// Metal Box
 					else if (type == 'A')
 					{
-						this.allLevelObjects.add(new MetalBox(new Point(x*this.imageWidth, y*this.imageHeight), 
+						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), 
 								new Dimension(this.imageWidth, this.imageHeight), true, this.METAL_BOX));
 						this.levelTiles.add(this.METAL_BOX);
 					}
