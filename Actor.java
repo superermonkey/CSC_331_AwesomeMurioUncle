@@ -33,7 +33,6 @@ public abstract class Actor extends LevelObject{
 	 */
 	protected Vector acceleration = new Vector(0, 0);
 	
-	
 	/**
 	 * Create a new Actor for the Level.
 	 * 

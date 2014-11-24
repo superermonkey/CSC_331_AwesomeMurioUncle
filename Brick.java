@@ -37,7 +37,6 @@ public class Brick extends InteractiveBox{
 	//
 	//
 	//
-		
 	/**
 	 * Returns the breakability of the Brick.
 	 * @return Whether or not the Brick can be broken.
@@ -55,8 +54,7 @@ public class Brick extends InteractiveBox{
 	{
 		this.isBreakable = isBreakable;
 	}
-
-
+	
 	/**
 	 * Draw according to superclass LevelObject.
 	 * @param g The Graphics object for drawing.

@@ -32,6 +32,4 @@ public abstract class InteractiveBox extends LevelObject{
 	public void draw(Graphics g) {
 		super.draw(g);
 	}
-
-
 }

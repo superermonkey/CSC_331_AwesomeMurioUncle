@@ -114,6 +114,9 @@ public class ImageArray {
 		}
 	}
 	
+	/*
+	 * Clear the ImageArray.
+	 */
 	public void clear(){
 		this.images.clear();
 	}
@@ -125,8 +128,6 @@ public class ImageArray {
 	//
 	//
 	//
-	
-	
 	/**
 	 * Returns the entire ArrayList of BufferedImages.
 	 * @return The entire ArrayList of BufferedImages.

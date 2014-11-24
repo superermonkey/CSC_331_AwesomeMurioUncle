@@ -1,11 +1,8 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Line2D;
-
 
 /**
  * Any object that exists in the Murio Level.  Can be static or moving(Actor).
@@ -21,8 +18,9 @@ public abstract class LevelObject{
 	protected boolean isVisible;
 	// The size of the object, contained in a Dimension with width and height.
 	protected Dimension size;
-	// The location of the object, contained in a Point object with X and Y coordinates of the top-left corner
+	// The original location of the object, contained in a Point object with X and Y coordinates of the top-left corner
 	protected Point originalLocation;
+	// The current location of the object, contained in a Point object with X and Y coordinates of the top-left corner
 	protected Point location;
 	// An image for the object.
 	protected Image image;
@@ -39,7 +37,7 @@ public abstract class LevelObject{
 		this.originalLocation = l;
 		this.size = d;
 		this.isVisible = v;
-		this.image = (Image)i;
+		this.image = i;
 	}
 
 	/**
@@ -48,59 +46,97 @@ public abstract class LevelObject{
 	 * @return Whether or not a collision occurred.
 	 */
 	public String collide(LevelObject other) {
+		/*
+		 * Create 4 points around the LevelObject initiating the collide,
+		 * 		usually an Actor (Player, Enemy, Powerup).
+		 * 
+		 * These four points are located at the midpoint of each side of the bounding
+		 * 		Rectangle of that object, as illustrated by the stars below.
+		 * 
+		 * 		_____*_____
+		 * 		|		  |
+		 * 		|		  |
+		 * 		|		  |
+		 * 		* Player  *
+		 * 		|		  |
+		 * 		|		  |
+		 * 		|____*____|
+		 * 
+		 */
 		int midX = (2*(this.getLocation().x)+ this.size.width)/2;
 		int midY = (2*(this.getLocation().y)+this.getSize().height)/2;
+		// Top intersection Point.
 		Point thisTop = new Point (midX, this.getLocation().y);
-		Point thisBottom = new Point ((2*(this.getLocation().x) + this.size.width)/2, (this.getLocation().y+this.getSize().height));
-		Point thisLeft = new Point (this.getLocation().y, midY);
-		Point thisRight = new Point (midX,midY);
+		// Bottom intersection Point.
+		Point thisBottom = new Point (midX, (this.getLocation().y+this.getSize().height));
+		// Left intersection Point.
+		Point thisLeft = new Point (this.getLocation().x, midY);
+		// Right intersection Point.
+		Point thisRight = new Point (this.location.x + this.size.width ,midY);
 		
-		
+		// The bounding Rectangle of the LevelObject to test intersection with.
 		Rectangle thatObject = new Rectangle(other.location.x-1, other.location.y-1, other.size.width+2, other.size.height+2);
+		// If object is Coin.
 		if (other instanceof Coin){
 			if(thatObject.contains(thisBottom) || thatObject.contains(thisRight) || thatObject.contains(thisRight)|| thatObject.contains(thisRight)){
 				return "COIN";
 			}
 		}
+		// If object is Brick.
 		else if (other instanceof Brick){
 			if(thatObject.contains(thisTop)){
 				return "BRICK";
 			}
 		}
+		// If collision occurs at Bottom Right corner of initiating LevelObject (Player, Enemy, Powerup).
 		if(thatObject.contains(thisBottom) && thatObject.contains(thisRight)){
 			return "BOTTOM_RIGHT_COLLISION";
 		}
+		// If collision occurs at Bottom Left corner of initiating LevelObject (Player, Enemy, Powerup).
 		else if (thatObject.contains(thisBottom) && thatObject.contains(thisLeft)){
 			return "BOTTOM_LEFT_COLLISION";
 		}
+		// If collision occurs at Top Left corner of initiating LevelObject (Player, Enemy, Powerup).
 		else if (thatObject.contains(thisTop) && thatObject.contains(thisLeft)){
 			return "TOP_LEFT_COLLISION";
 		}
-		else if (thatObject.contains(thisBottom) && thatObject.contains(thisRight)){
+		// If collision occurs at Top Right corner of initiating LevelObject (Player, Enemy, Powerup).
+		else if (thatObject.contains(thisTop) && thatObject.contains(thisRight)){
 			return "TOP_RIGHT_COLLISION";
 		}
+		// If collision occurs at both Top and Bottom of initiating LevelObject (Not supposed to happen).
 		else if (thatObject.contains(thisBottom) && thatObject.contains(thisTop)){
 			return "TOP_BOTTOM_COLLISION";
 		}
+		// If collision occurs at both Right and Left of initiating LevelObject (Not supposed to happen).
 		else if (thatObject.contains(thisRight) && thatObject.contains(thisLeft)){
 			return "LEFT_RIGHT_COLLISION";
 		}
+		// If collision occurs on Left Side of initiating LevelObject (usually Player interacting with Static Object).
 		else if (thatObject.contains(thisLeft)){ 
 			return "LEFT_COLLISION";
 		}
+		// If collision occurs on Right Side of initiating LevelObject (usually Player interacting with Static Object).
 		else if (thatObject.contains(thisRight)){ 
 			return "RIGHT_COLLISION";
 		}
+		// If collision occurs on Bottom of initiating LevelObject (usually Player interacting with Static Object).
 		else if (thatObject.contains(thisBottom)){ 
 			return "BOTTOM_COLLISION";
 		}
+		// If collision occurs on Top of initiating LevelObject (usually Player interacting with Static Object).
 		else if (thatObject.contains(thisTop)){ 
 			return "TOP_COLLISION";
 		}
+		// Default case.
 		else{
 			return "";
 		}
 	}
+	/**
+	 * The draw method for LevelObjects.
+	 * @param g The Graphics object.
+	 */
 	public void draw(Graphics g) {
 		this.image = this.getImage();
 		g.drawImage(this.image, this.originalLocation.x+Level.GLOBAL_OFFSET, this.originalLocation.y, this.size.height, this.size.width, null);

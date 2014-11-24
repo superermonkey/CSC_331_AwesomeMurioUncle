@@ -1,17 +1,18 @@
 import javax.swing.JFrame;
-
 /**
- * 
- */
-
-/**
- * @author Monkey
+ * @author RyanPierce
  *
  */
 
-@SuppressWarnings("serial")
+/**
+ * Create the window for the game to exist in.
+ * 
+ * @author RyanPierce
+ *
+ */
 public class GameWindow extends JFrame{
-
+	
+	private static final long serialVersionUID = -7357480200628684109L;
 	/**
 	 * Creates a window that contains the entire game.
 	 */
@@ -25,12 +26,10 @@ public class GameWindow extends JFrame{
 		
 	}
 	/**
-	 * main method contains window builder.
-	 * @param args
+	 * The main method for the GameWindow.
+	 * @param args The command line arguments.
 	 */
 	public static void main(String[] args) {
 		new GameWindow();
-
 	}
-
 }
