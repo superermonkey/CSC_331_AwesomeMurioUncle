@@ -161,7 +161,7 @@ public class Level{
 		// The current image for the main playable character.
 		final ImageIcon playerImg = new ImageIcon("img/Mario_walk.gif");
 		Point playerLocation = new Point(50,200);
-		Dimension playerSize = new Dimension(30,50);
+		Dimension playerSize = new Dimension(35,60);
 		boolean playerVisibility = true;
 		Vector playerVelocity = new Vector(0,0);
 		player = new Player(playerLocation, playerSize, playerVisibility, playerVelocity, playerImg.getImage());

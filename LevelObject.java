@@ -78,7 +78,7 @@ public abstract class LevelObject{
 		Rectangle thatObject = new Rectangle(other.location.x-1, other.location.y-1, other.size.width+2, other.size.height+2);
 		// If object is Coin.
 		if (other instanceof Coin){
-			if(thatObject.contains(thisBottom) || thatObject.contains(thisRight) || thatObject.contains(thisRight)|| thatObject.contains(thisRight)){
+			if(thatObject.contains(thisBottom) || thatObject.contains(thisRight) || thatObject.contains(thisTop)|| thatObject.contains(thisLeft)){
 				return "COIN";
 			}
 		}

@@ -55,6 +55,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	 * 		The file name of the sprite sheet.
 	 */
 	protected ImageArray levelImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
+	// Image array for the itemImages, in the same format as levelItems
 	protected ImageArray itemImages = new ImageArray(14, 36, 16, 16, "tileSets/items.png");
 	// Initialize Player for Player 1.
 	protected Player player;
@@ -129,7 +130,11 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 			ob.draw(g);
 		}
 	}
-	
+	/**
+	 * Shifts the level left when Murio reaches the halfway point across the Screen.
+	 * 
+	 * @param g The Graphics object.
+	 */
 	public synchronized void shiftLeft(Graphics g){
 		currentLevel.setGlobalOffset(currentLevel.getGlobalOffset()-2);
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
@@ -191,7 +196,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 						for (LevelObject currentObject: currentLevel.getLevelObjects()) {
 							// Player is on top of object and to its left.
 							if(player.collide(currentObject).equals("BOTTOM_RIGHT_COLLISION")){
-								//System.out.println("BOTTOM COLLISION");
+								System.out.println("BOTTOM RIGHT COLLISION");
 								currentObject.setImage(image);
 								player.acceleration.setDY(0);
 								player.acceleration.setDX(0);
@@ -203,12 +208,14 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 								player.setVelocity(player.velocity);
 								repaint();
 							}
+							// Collide with Coin.
 							else if(player.collide(currentObject).equals("COIN")){
 								player.addCoin();
 								currentLevel.allLevelObjects.remove(currentObject);
 								currentLevel.levelObjects.remove(currentObject);
 								repaint();
 							}
+							// Collide with Brick.
 							else if(player.collide(currentObject).equals("BRICK")){
 								Brick brick = (Brick)currentObject;
 								if(brick.isBreakable){
@@ -299,29 +306,24 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 							}
 							// Player is on top of object.
 							else if(player.collide(currentObject).equals("BOTTOM_COLLISION")){
-								//System.out.println("BOTTOM COLLISION");
-								currentObject.setImage(image);
 								player.acceleration.setDY(0);
 								player.velocity.setDY(0);
-								player.location.y -=5;
+								player.location.setLocation(player.location.x, currentObject.location.y - player.size.getHeight());
 								player.setAcceleration(player.acceleration);
 								player.setVelocity(player.velocity);
 								repaint();
 							}
 							// Player is to the Right of the current object.
 							else if(player.collide(currentObject).equals("LEFT_COLLISION")){
-								//System.out.println("LEFT COLLISION");
-								currentObject.setImage(image);
 								player.velocity.setDX(0);
 								player.acceleration.setDX(0);
-								player.location.setLocation(currentObject.location.x - currentObject.getSize().getWidth(), player.location.y);
+								player.location.setLocation(currentObject.location.x + currentObject.getSize().getWidth(), player.location.y);
 								player.setAcceleration(player.acceleration);
 								player.setVelocity(player.velocity);
 								repaint();
 							}
 							// Player is to the Left of object.
 							else if(player.collide(currentObject).equals("RIGHT_COLLISION")){
-								//System.out.println("RIGHT COLLISION");
 								player.velocity.setDX(0);
 								player.acceleration.setDX(0);
 								player.location.setLocation(currentObject.location.x - player.getSize().getWidth(), player.location.y);
@@ -331,8 +333,6 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 							}
 							// Player is Below object.
 							else if(player.collide(currentObject).equals("TOP_COLLISION")){
-								//System.out.println("TOP COLLISION");
-								currentObject.setImage(image);
 								player.acceleration.setDY(0);
 								player.velocity.setDY(0);
 								player.location.y +=10;
