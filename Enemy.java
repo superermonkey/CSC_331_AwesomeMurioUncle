@@ -40,7 +40,8 @@ public abstract class Enemy extends Actor{
 	/**
 	 * @param g The Graphics object.
 	 */
-	public void draw(Graphics g) {		
+	public void draw(Graphics g) {	
+		super.draw(g);
 	}
 
 	/**

@@ -36,6 +36,7 @@ public class Level{
 	 */
 	private ArrayList<BufferedImage> levelTiles = new ArrayList<BufferedImage>();
 	private ArrayList<BufferedImage> itemTiles = new ArrayList<BufferedImage>();
+	private ArrayList<BufferedImage> actorTiles = new ArrayList<BufferedImage>();
 	
 	/*
 	 * The ImageArray that contains all the possible static tiles for use in the Level.
@@ -45,6 +46,7 @@ public class Level{
 	 */
 	private ImageArray levelTileImageDictionary = new ImageArray();
 	private ImageArray itemTileImageDictionary = new ImageArray();
+	private ImageArray actorTileImageDictionary = new ImageArray();
 	
 	/*
 	 * The ArrayList that contains all the possible actor tiles for use in the Level.
@@ -52,7 +54,7 @@ public class Level{
 	 * This array holds the definitions for the player and enemy instances
 	 * as well as the animation frames for each. 
 	 */
-	private ArrayList<Actor> actors = new ArrayList<Actor>();
+	public ArrayList<Actor> actors = new ArrayList<Actor>();
 	
 	/*
 	 * The ArrayList that contains all the possible static tiles for use in the Level.
@@ -87,6 +89,7 @@ public class Level{
 	private BufferedImage CASTLE_DOOR_TOP;
 	private BufferedImage CASTLE_DOOR;
 	private BufferedImage COIN;
+	private BufferedImage GOOMBA;
 
 	/*
 	 * Contains the globalOffset, in Point(x,y) form, to be used for interactive purposes.
@@ -137,12 +140,13 @@ public class Level{
 	 * @param mapFileName  The filename for the "map" text file.
 	 * @param levelTileImageDictionary The ImageArray file to use for tile image definitions.
 	 */
-	public Level(int w, int h, int lvlType, String mapFileName, ImageArray levelTileImageDictionary, ImageArray itemTileImageDictionary){
+	public Level(int w, int h, int lvlType, String mapFileName, ImageArray levelTileImageDictionary, ImageArray itemTileImageDictionary, ImageArray actorTileImageDictionary){
 		this.width = w;
 		this.height = h;
 		this.levelType = lvlType;
 		this.levelTileImageDictionary = levelTileImageDictionary;
 		this.itemTileImageDictionary = itemTileImageDictionary;
+		this.actorTileImageDictionary = actorTileImageDictionary;
 		
 		/*
 		 * Set up the dictionary of images to be used for the tiles.
@@ -194,7 +198,11 @@ public class Level{
 		this.CASTLE_INTERIOR_TOP = levelTileImageDictionary.get(1+levelType, 11);
 		this.CASTLE_DOOR_TOP = levelTileImageDictionary.get(1+levelType, 12);
 		this.CASTLE_DOOR = levelTileImageDictionary.get(1+levelType, 13);
-		this.COIN = itemTileImageDictionary.get(6+levelType, 0);
+		// All the items can be found in the itemTileImageDictionary
+		this.COIN = itemTileImageDictionary.get(6, (levelType*3));
+		// All the enemies can be found in the itemTileImageDictionary
+		this.GOOMBA = actorTileImageDictionary.get(levelType+1, 0);
+				
 	}
 	
 	/**
@@ -394,6 +402,14 @@ public class Level{
 								new Dimension(this.imageWidth, this.imageHeight), true, this.COIN));
 						this.itemTiles.add(this.COIN);
 					}
+					// A goomba.
+					else if (type == '2')
+					{
+						actors.add(new Goomba(new Point(x*this.imageWidth, y*this.imageHeight),
+								new Dimension(this.imageWidth, this.imageHeight), true, new Vector(-2, 0), this.GOOMBA, 20));
+						this.actorTiles.add(this.GOOMBA);
+					
+					}
 					/*
 					 * If the given character cannot be found, simply create a null filler for the "map".
 					 */
@@ -426,6 +442,11 @@ public class Level{
 			if (ob.getOriginalLocation().x + GLOBAL_OFFSET < 0- this.getImageWidth() && levelObjects.contains(ob)){
 				// Remove object from active Array when it passes the left side of the Screen.
 				levelObjects.remove(ob);
+			}
+		}
+		for (Actor ob : actors) {
+			if (ob.getLocation().x < -30){
+				actors.remove(ob);
 			}
 		}
 	}

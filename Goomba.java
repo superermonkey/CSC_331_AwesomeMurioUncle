@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 
@@ -25,6 +26,14 @@ public class Goomba extends Enemy{
 	/**
 	 *  The movement of the Goomba.
 	 */
+	public void draw(Graphics g){
+		super.draw(g);
+	}
 	public void move() {
+		velocity.setDX(velocity.getDX()+acceleration.getDX());
+		velocity.setDY(velocity.getDY()+acceleration.getDY());
+
+		location.x += velocity.getDX();
+		location.y += velocity.getDY();
 	}
 }

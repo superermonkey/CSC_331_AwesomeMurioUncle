@@ -88,6 +88,18 @@ public abstract class LevelObject{
 				return "BRICK";
 			}
 		}
+		// If object is a Goomba and Player is beside (OUCH).
+		else if (other instanceof Goomba){
+			if(thatObject.contains(thisLeft) || thatObject.contains(thisRight)){
+				return "GOOMBA_KILL";
+			}
+		}
+		// If object is a Goomba and Player is on top.
+		else if (other instanceof Goomba){
+			if(thatObject.contains(thisBottom)){
+				return "GOOMBA_TOP";
+			}
+		}
 		// If collision occurs at Bottom Right corner of initiating LevelObject (Player, Enemy, Powerup).
 		if(thatObject.contains(thisBottom) && thatObject.contains(thisRight)){
 			return "BOTTOM_RIGHT_COLLISION";

@@ -71,13 +71,15 @@ public class Player extends Actor{
 		}
 		
 	}
-	@Override
+	/**
+	 * @param g The Graphics object.  Draws the Player at the current location.
+	 */
 	public void draw(Graphics g) {
 		super.draw(g);
 		g.drawImage(this.image, location.x, location.y, size.width, size.height, null);
 	}
 	/**
-	 * @return the coinCount
+	 * @return The number of coins the player has
 	 */
 	public int getCoinCount() {
 		return coinCount;
@@ -87,6 +89,10 @@ public class Player extends Actor{
 	 */
 	public void addCoin() {
 		this.coinCount += 1;
+		if (this.coinCount >= 100){
+			this.addLives(1);
+			this.coinCount -=100;
+		}
 	}
 	
 	public int getPoints(){
@@ -104,5 +110,7 @@ public class Player extends Actor{
 	}
 	public void loseLife(){
 		this.numberOfLives -= 1;
+		this.location.x = 0;
+		this.location.y = 0;
 	}
 }

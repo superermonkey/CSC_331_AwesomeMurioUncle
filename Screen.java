@@ -28,7 +28,7 @@ import javax.swing.Timer;
 public class Screen extends JPanel implements KeyListener, Runnable{
 	private static final long serialVersionUID = -3859645292224232330L;
 	// Set the file to be used for the level.
-	public final String LEVEL_NAME = "levels/level1_4.txt";
+	public final String LEVEL_NAME = "levels/level1_3.txt";
 	
 	/*
 	 *  Set the style layout for the level.
@@ -55,8 +55,10 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	 * 		The file name of the sprite sheet.
 	 */
 	protected ImageArray levelImages = new ImageArray(20, 32, 16, 16, "tileSets/tiles.png");
-	// Image array for the itemImages, in the same format as levelItems
+	// Image array for the itemImages, in the same format as levelImages
 	protected ImageArray itemImages = new ImageArray(14, 36, 16, 16, "tileSets/items.png");
+	// Image array for the enemyImages, in the same format as levelImages
+	protected ImageArray enemyImages = new ImageArray(8, 50, 16, 16, "tileSets/enemies.png");
 	// Initialize Player for Player 1.
 	protected Player player;
 	// Initialize the current level.
@@ -78,7 +80,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		this.addKeyListener(this);
 		
 		//Initialize Level
-		currentLevel = new Level(0, 0, LEVEL_STYLE, LEVEL_NAME, levelImages, itemImages);
+		currentLevel = new Level(0, 0, LEVEL_STYLE, LEVEL_NAME, levelImages, itemImages, enemyImages);
 		player = currentLevel.player;
 
 		// Add a Timer for the Level
@@ -195,160 +197,176 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	            public void run() {
 	            	try{
 	            		Image image = backgroundImg.getImage();
-						for (LevelObject currentObject: currentLevel.getLevelObjects()) {
-							// Collide with Coin.
-							if(player.collide(currentObject).equals("COIN")){
-								player.addCoin();
-								currentLevel.allLevelObjects.remove(currentObject);
-								currentLevel.levelObjects.remove(currentObject);
-								repaint();
-							}
-							// Collide with Brick.
-							else if(player.collide(currentObject).equals("BRICK")){
-								Brick brick = (Brick)currentObject;
-								if(brick.isBreakable){
-									player.addPoints(10);
-									currentLevel.allLevelObjects.remove(currentObject);
-									currentLevel.levelObjects.remove(currentObject);
+	            		for (Actor currentActor: currentLevel.getActors()) {
+	            			if(player.collide(currentActor).equals("GOOMBA_TOP")){
+	            				currentActor.setSize(new Dimension(0,0));
+	            				currentLevel.allLevelObjects.remove(currentActor);
+								currentLevel.actors.remove(currentActor);
+	            			}
+	            			else if(player.collide(currentActor).equals("GOOMBA_KILL")){
+	            				player.loseLife();
+	            			}	            			
+	            		}
+	            		for (Actor player: currentLevel.getActors()){
+							for (LevelObject currentObject: currentLevel.getLevelObjects()) {
+								// Collide with Coin.
+								if(player.collide(currentObject).equals("COIN")){
+									if (player instanceof Player){
+										Player player2 = (Player)player;	
+										player2.addCoin();
+										currentLevel.allLevelObjects.remove(currentObject);
+										currentLevel.levelObjects.remove(currentObject);
+									}
+									repaint();
+								}
+								// Collide with Brick.
+								else if(player.collide(currentObject).equals("BRICK")){
+									Brick brick = (Brick)currentObject;
+									if(brick.isBreakable && player instanceof Player){
+										Player player2 = (Player) player;
+										player2.addPoints(10);
+										currentLevel.allLevelObjects.remove(currentObject);
+										currentLevel.levelObjects.remove(currentObject);
+										player.acceleration.setDY(0);
+										player.velocity.setDY(0);
+										player.acceleration.setDX(0);
+										player.velocity.setDX(0);
+										player.location.y -=5;
+										player.setAcceleration(player.acceleration);
+										player.setVelocity(player.velocity);
+									repaint();
+									}
+									else{
+										player.acceleration.setDY(0);
+										player.velocity.setDY(0);
+										player.location.y -=5;
+										player.setAcceleration(player.acceleration);
+										player.setVelocity(player.velocity);
+										repaint();
+									}
+								}
+								// Player is on top of object and to its left.
+								else if(player.collide(currentObject).equals("BOTTOM_RIGHT_COLLISION")){
+									System.out.println("BOTTOM RIGHT COLLISION");
+									currentObject.setImage(image);
 									player.acceleration.setDY(0);
-									player.velocity.setDY(0);
 									player.acceleration.setDX(0);
+									player.velocity.setDY(0);
 									player.velocity.setDX(0);
 									player.location.y -=5;
+									player.location.x -=5;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								// Player is on top of object and to its right
+								else if(player.collide(currentObject).equals("BOTTOM_LEFT_COLLISION")){
+									//System.out.println("BOTTOM COLLISION");
+									player.acceleration.setDY(0);
+									player.acceleration.setDX(0);
+									player.velocity.setDY(0);
+									player.velocity.setDX(0);
+									player.location.y -=5;
+									player.location.x +=5;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								// Player is player is to the bottom left of the object.
+								else if(player.collide(currentObject).equals("TOP_RIGHT_COLLISION")){
+									//System.out.println("BOTTOM COLLISION");
+									currentObject.setImage(image);
+									player.acceleration.setDY(player.GRAVITY);
+									player.acceleration.setDX(0);
+									player.velocity.setDY(player.GRAVITY);
+									player.velocity.setDX(0);
+									player.location.y +=5;
+									player.location.x -=5;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								// Player is to the bottom right of the object.
+								else if(player.collide(currentObject).equals("TOP_LEFT_COLLISION")){
+									player.acceleration.setDY(player.GRAVITY);
+									player.acceleration.setDX(0);
+									player.velocity.setDY(player.GRAVITY);
+									player.velocity.setDX(0);
+									player.location.y +=5;
+									player.location.x +=5;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								// Player is in the middle of the object.
+								else if(player.collide(currentObject).equals("TOP_BOTTOM_COLLISION")){
+									System.out.println("TOP BOTTOM COLLISION");
+									currentObject.setImage(image);
+									player.acceleration.setDY(0);
+									player.acceleration.setDX(0);
+									player.velocity.setDY(0);
+									player.velocity.setDX(0);
+									player.location.y -=33;
+									player.location.x -=33;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								// Player is in the middle of the object
+								else if(player.collide(currentObject).equals("LEFT_RIGHT_COLLISION")){
+									System.out.println("LEFT RIGHT COLLISION");
+									currentObject.setImage(image);
+									player.acceleration.setDY(0);
+									player.acceleration.setDX(0);
+									player.velocity.setDY(0);
+									player.velocity.setDX(0);
+									player.location.setLocation(currentObject.location.x - player.getSize().getWidth(), player.location.y);
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								// Player is on top of object.
+								else if(player.collide(currentObject).equals("BOTTOM_COLLISION")){
+									player.acceleration.setDY(0);
+									player.velocity.setDY(0);
+									player.location.setLocation(player.location.x, currentObject.location.y - player.size.getHeight());
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								// Player is to the Right of the current object.
+								else if(player.collide(currentObject).equals("LEFT_COLLISION")){
+									player.velocity.setDX(0);
+									player.acceleration.setDX(0);
+									player.location.setLocation(currentObject.location.x + currentObject.getSize().getWidth(), player.location.y);
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								// Player is to the Left of object.
+								else if(player.collide(currentObject).equals("RIGHT_COLLISION")){
+									player.velocity.setDX(0);
+									player.acceleration.setDX(0);
+									player.location.setLocation(currentObject.location.x - player.getSize().getWidth(), player.location.y);
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									repaint();
+								}
+								// Player is Below object.
+								else if(player.collide(currentObject).equals("TOP_COLLISION")){
+									player.acceleration.setDY(0);
+									player.velocity.setDY(0);
+									player.location.y +=10;
 									player.setAcceleration(player.acceleration);
 									player.setVelocity(player.velocity);
 									repaint();
 								}
 								else{
-									player.acceleration.setDY(0);
-									player.velocity.setDY(0);
-									player.location.y -=5;
-									player.setAcceleration(player.acceleration);
-									player.setVelocity(player.velocity);
+									player.acceleration.setDY(player.GRAVITY);
 									repaint();
 								}
 							}
-							// Player is on top of object and to its left.
-							else if(player.collide(currentObject).equals("BOTTOM_RIGHT_COLLISION")){
-								System.out.println("BOTTOM RIGHT COLLISION");
-								currentObject.setImage(image);
-								player.acceleration.setDY(0);
-								player.acceleration.setDX(0);
-								player.velocity.setDY(0);
-								player.velocity.setDX(0);
-								player.location.y -=5;
-								player.location.x -=5;
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							// Player is on top of object and to its right
-							else if(player.collide(currentObject).equals("BOTTOM_LEFT_COLLISION")){
-								//System.out.println("BOTTOM COLLISION");
-								player.acceleration.setDY(0);
-								player.acceleration.setDX(0);
-								player.velocity.setDY(0);
-								player.velocity.setDX(0);
-								player.location.y -=5;
-								player.location.x +=5;
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							// Player is player is to the bottom left of the object.
-							else if(player.collide(currentObject).equals("TOP_RIGHT_COLLISION")){
-								//System.out.println("BOTTOM COLLISION");
-								currentObject.setImage(image);
-								player.acceleration.setDY(player.GRAVITY);
-								player.acceleration.setDX(0);
-								player.velocity.setDY(player.GRAVITY);
-								player.velocity.setDX(0);
-								player.location.y +=5;
-								player.location.x -=5;
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							// Player is to the bottom right of the object.
-							else if(player.collide(currentObject).equals("TOP_LEFT_COLLISION")){
-								player.acceleration.setDY(player.GRAVITY);
-								player.acceleration.setDX(0);
-								player.velocity.setDY(player.GRAVITY);
-								player.velocity.setDX(0);
-								player.location.y +=5;
-								player.location.x +=5;
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							// Player is in the middle of the object.
-							else if(player.collide(currentObject).equals("TOP_BOTTOM_COLLISION")){
-								System.out.println("TOP BOTTOM COLLISION");
-								currentObject.setImage(image);
-								player.acceleration.setDY(0);
-								player.acceleration.setDX(0);
-								player.velocity.setDY(0);
-								player.velocity.setDX(0);
-								player.location.y -=33;
-								player.location.x -=33;
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							// Player is in the middle of the object
-							else if(player.collide(currentObject).equals("LEFT_RIGHT_COLLISION")){
-								System.out.println("LEFT RIGHT COLLISION");
-								currentObject.setImage(image);
-								player.acceleration.setDY(0);
-								player.acceleration.setDX(0);
-								player.velocity.setDY(0);
-								player.velocity.setDX(0);
-								player.location.setLocation(currentObject.location.x - player.getSize().getWidth(), player.location.y);
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							// Player is on top of object.
-							else if(player.collide(currentObject).equals("BOTTOM_COLLISION")){
-								player.acceleration.setDY(0);
-								player.velocity.setDY(0);
-								player.location.setLocation(player.location.x, currentObject.location.y - player.size.getHeight());
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							// Player is to the Right of the current object.
-							else if(player.collide(currentObject).equals("LEFT_COLLISION")){
-								player.velocity.setDX(0);
-								player.acceleration.setDX(0);
-								player.location.setLocation(currentObject.location.x + currentObject.getSize().getWidth(), player.location.y);
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							// Player is to the Left of object.
-							else if(player.collide(currentObject).equals("RIGHT_COLLISION")){
-								player.velocity.setDX(0);
-								player.acceleration.setDX(0);
-								player.location.setLocation(currentObject.location.x - player.getSize().getWidth(), player.location.y);
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							// Player is Below object.
-							else if(player.collide(currentObject).equals("TOP_COLLISION")){
-								player.acceleration.setDY(0);
-								player.velocity.setDY(0);
-								player.location.y +=10;
-								player.setAcceleration(player.acceleration);
-								player.setVelocity(player.velocity);
-								repaint();
-							}
-							else{
-								player.acceleration.setDY(player.GRAVITY);
-								repaint();
-							}
-						}
+		            	}
 	            	}
 	            	catch (ConcurrentModificationException e){
 	            	}
