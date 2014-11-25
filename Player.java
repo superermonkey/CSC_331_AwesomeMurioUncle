@@ -60,9 +60,7 @@ public class Player extends Actor{
 		
 		if (location.y > Screen.screenSize.getHeight()) {
 			this.loseLife();
-			if (this.numberOfLives < 0){
-				new GameWindow();
-			}
+			
 			location.y = 0;
 			location.x = 0;
 		}

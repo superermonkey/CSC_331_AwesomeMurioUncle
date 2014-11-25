@@ -54,6 +54,7 @@ public class Level{
 	 * This array holds the definitions for the player and enemy instances
 	 * as well as the animation frames for each. 
 	 */
+	public ArrayList<Actor> allActors = new ArrayList<Actor>();
 	public ArrayList<Actor> actors = new ArrayList<Actor>();
 	
 	/*
@@ -405,7 +406,7 @@ public class Level{
 					// A goomba.
 					else if (type == '2')
 					{
-						actors.add(new Goomba(new Point(x*this.imageWidth, y*this.imageHeight),
+						allActors.add(new Goomba(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, new Vector(-2, 0), this.GOOMBA, 20));
 						this.actorTiles.add(this.GOOMBA);
 					
@@ -444,8 +445,14 @@ public class Level{
 				levelObjects.remove(ob);
 			}
 		}
-		for (Actor ob : actors) {
-			if (ob.getLocation().x < -30){
+		for (Actor ob : allActors) {
+			if (ob.getOriginalLocation().x + GLOBAL_OFFSET < 700 && !actors.contains(ob)){
+				actors.add(ob);
+			}
+			if (ob.getOriginalLocation().x + GLOBAL_OFFSET < 0- this.getImageWidth() && allActors.contains(ob)){
+				actors.remove(ob);
+			}
+			if (ob.getLocation().y > 600 && allActors.contains(ob)){
 				actors.remove(ob);
 			}
 		}
