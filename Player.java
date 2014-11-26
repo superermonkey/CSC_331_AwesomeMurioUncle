@@ -20,6 +20,7 @@ public class Player extends Actor{
 	// The number of Lives the Player has.
 	private int numberOfLives = 3;
 
+
 	
 	/**
 	 * Create a new Player for the Level. This will be the character that the game user will control.
@@ -99,7 +100,6 @@ public class Player extends Actor{
 	public void addPoints(int pointValue) {
 		this.points += pointValue;
 	}
-	
 	public int getNumberOfLives(){
 		return this.numberOfLives;
 	}

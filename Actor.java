@@ -32,6 +32,8 @@ public abstract class Actor extends LevelObject{
 	 * Used for gravity and player acceleration.
 	 */
 	protected Vector acceleration = new Vector(0, 0);
+	// Whether the actor can jump (False if in the middle of jumping)
+	private boolean canJump = true;
 	
 	/**
 	 * Create a new Actor for the Level.
@@ -106,6 +108,19 @@ public abstract class Actor extends LevelObject{
 	public static double getGravity() 
 	{
 		return GRAVITY;
+	}
+	/**
+	 * @return Whether or not the player can jump.
+	 */
+	public boolean isCanJump() {
+		return canJump;
+	}
+
+	/**
+	 * @param canJump Set whether or not the player can jump.
+	 */
+	public void setCanJump(boolean canJump) {
+		this.canJump = canJump;
 	}
 	
 	/**

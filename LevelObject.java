@@ -47,89 +47,66 @@ public abstract class LevelObject{
 	 */
 	public String collide(LevelObject other) {
 		/*
-		 * Create 4 points around the LevelObject initiating the collide,
+		 * Create 6 points around the LevelObject initiating the collide,
 		 * 		usually an Actor (Player, Enemy, Powerup).
 		 * 
-		 * These four points are located at the midpoint of each side of the bounding
+		 * These six points are located at the midpoint of each side of the bounding
 		 * 		Rectangle of that object, as illustrated by the stars below.
 		 * 
 		 * 		_____*_____
 		 * 		|		  |
+		 * 		*		  *
 		 * 		|		  |
+		 * 		| Player  |
 		 * 		|		  |
-		 * 		* Player  *
-		 * 		|		  |
-		 * 		|		  |
+		 * 		*		  *
 		 * 		|____*____|
 		 * 
 		 */
 		int midX = (2*(this.getLocation().x)+ this.size.width)/2;
-		int midY = (2*(this.getLocation().y)+this.getSize().height)/2;
+		
 		// Top intersection Point.
 		Point thisTop = new Point (midX, this.getLocation().y);
 		// Bottom intersection Point.
 		Point thisBottom = new Point (midX, (this.getLocation().y+this.getSize().height));
-		// Left intersection Point.
-		Point thisLeft = new Point (this.getLocation().x, midY);
-		// Right intersection Point.
-		Point thisRight = new Point (this.location.x + this.size.width ,midY);
-		
+		// TopLeft intersection Point.
+		Point thisTopLeft = new Point (this.getLocation().x, this.location.y + (this.size.height/3));
+		// TopRight intersection Point.
+		Point thisTopRight = new Point (this.location.x + this.size.width , this.location.y + (this.size.height/3));
+		// BottomLeft intersection Point.
+		Point thisBottomLeft = new Point (this.getLocation().x, this.location.y + (2*this.size.height/3));
+		// BottomRight intersection Point.
+		Point thisBottomRight = new Point (this.location.x + this.size.width , this.location.y + (2*this.size.height/3));
+				
 		// The bounding Rectangle of the LevelObject to test intersection with.
 		Rectangle thatObject = new Rectangle(other.location.x-1, other.location.y-1, other.size.width+2, other.size.height+2);
 		// If object is Coin.
 		if (other instanceof Coin){
-			if(thatObject.contains(thisBottom) || thatObject.contains(thisRight) || thatObject.contains(thisTop)|| thatObject.contains(thisLeft)){
-				return "COIN";
+			if(thatObject.contains(thisTop) || thatObject.contains(thisTopLeft) || thatObject.contains(thisBottom) 
+					|| thatObject.contains(thisTopRight) || thatObject.contains(thisBottomLeft) || thatObject.contains(thisBottomRight)){
+			return "COIN";
 			}
 		}
 		// If object is Brick.
-		else if (other instanceof Brick){
-			if(thatObject.contains(thisTop)){
-				return "BRICK";
-			}
+		else if (other instanceof Brick && thatObject.contains(thisTop)){
+			return "BRICK";
 		}
-		// If object is a Goomba and Player is beside (OUCH).
-		else if (other instanceof Goomba){
-			if(thatObject.contains(thisLeft) || thatObject.contains(thisRight)){
-				return "GOOMBA_KILL";
-			}
-		}
-		// If object is a Goomba and Player is on top.
+		// If object is a Goomba.
 		else if (other instanceof Goomba){
 			if(thatObject.contains(thisBottom)){
 				return "GOOMBA_TOP";
 			}
+			else if(thatObject.contains(thisTop) || thatObject.contains(thisTopLeft) 
+					|| thatObject.contains(thisTopRight) || thatObject.contains(thisBottomLeft) || thatObject.contains(thisBottomRight)){
+				return "GOOMBA_KILL";
+			}
 		}
 		// If collision occurs at Bottom Right corner of initiating LevelObject (Player, Enemy, Powerup).
-		if(thatObject.contains(thisBottom) && thatObject.contains(thisRight)){
-			return "BOTTOM_RIGHT_COLLISION";
-		}
-		// If collision occurs at Bottom Left corner of initiating LevelObject (Player, Enemy, Powerup).
-		else if (thatObject.contains(thisBottom) && thatObject.contains(thisLeft)){
-			return "BOTTOM_LEFT_COLLISION";
-		}
-		// If collision occurs at Top Left corner of initiating LevelObject (Player, Enemy, Powerup).
-		else if (thatObject.contains(thisTop) && thatObject.contains(thisLeft)){
-			return "TOP_LEFT_COLLISION";
-		}
-		// If collision occurs at Top Right corner of initiating LevelObject (Player, Enemy, Powerup).
-		else if (thatObject.contains(thisTop) && thatObject.contains(thisRight)){
-			return "TOP_RIGHT_COLLISION";
-		}
-		// If collision occurs at both Top and Bottom of initiating LevelObject (Not supposed to happen).
-		else if (thatObject.contains(thisBottom) && thatObject.contains(thisTop)){
-			return "TOP_BOTTOM_COLLISION";
-		}
-		// If collision occurs at both Right and Left of initiating LevelObject (Not supposed to happen).
-		else if (thatObject.contains(thisRight) && thatObject.contains(thisLeft)){
-			return "LEFT_RIGHT_COLLISION";
-		}
-		// If collision occurs on Left Side of initiating LevelObject (usually Player interacting with Static Object).
-		else if (thatObject.contains(thisLeft)){ 
+		if (thatObject.contains(thisBottomLeft) || thatObject.contains(thisTopLeft)){
 			return "LEFT_COLLISION";
 		}
-		// If collision occurs on Right Side of initiating LevelObject (usually Player interacting with Static Object).
-		else if (thatObject.contains(thisRight)){ 
+		// If collision occurs at Top Right corner of initiating LevelObject (Player, Enemy, Powerup).
+		else if (thatObject.contains(thisTopRight) || thatObject.contains(thisBottomRight)){
 			return "RIGHT_COLLISION";
 		}
 		// If collision occurs on Bottom of initiating LevelObject (usually Player interacting with Static Object).
