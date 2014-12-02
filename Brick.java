@@ -64,5 +64,9 @@ public class Brick extends InteractiveBox{
 		super.draw(g);
 		// TODO Add breaking animation for big Murio.
 	}
+	
+	public void move(){
+		// Not used.
+	}
 
 }

@@ -22,22 +22,7 @@ import javax.swing.ImageIcon;
  *
  */
 public class Level{
-	/*
-	 * The ArrayList tiles contains a set of the BufferedImages, arranged
-	 * and laid out according to the characters from the level text file.
-	 * All blank tiles are simply specified as null.
-	 * 
-	 * The tiles ArrayList simply contains the locations and images to be used
-	 * by the Screen class when it builds the LevelObjects for the level, using
-	 * this tiles ArrayList as a "map"
-	 * 
-	 * In other words, the tiles ArrayList does not store LevelObjects,
-	 * it only stores non-interactable  BufferedImages.
-	 */
-	private ArrayList<BufferedImage> levelTiles = new ArrayList<BufferedImage>();
-	private ArrayList<BufferedImage> itemTiles = new ArrayList<BufferedImage>();
-	private ArrayList<BufferedImage> actorTiles = new ArrayList<BufferedImage>();
-	
+
 	/*
 	 * The ImageArray that contains all the possible static tiles for use in the Level.
 	 * 
@@ -73,7 +58,7 @@ public class Level{
 	private int levelType = 0;
 	private BufferedImage GROUND;
 	private BufferedImage BRICK;
-	private BufferedImage METAL_BOX;
+	public BufferedImage METAL_BOX;
 	private BufferedImage QUESTION_MARK_BOX;
 	private BufferedImage TOP_LEFT_PIPE;
 	private BufferedImage TOP_RIGHT_PIPE;
@@ -91,6 +76,8 @@ public class Level{
 	private BufferedImage CASTLE_DOOR;
 	private BufferedImage COIN;
 	private BufferedImage GOOMBA;
+	// The background image to use for the level.
+	public static ImageIcon backgroundImg;
 
 	/*
 	 * Contains the globalOffset, in Point(x,y) form, to be used for interactive purposes.
@@ -200,10 +187,28 @@ public class Level{
 		this.CASTLE_DOOR_TOP = levelTileImageDictionary.get(1+levelType, 12);
 		this.CASTLE_DOOR = levelTileImageDictionary.get(1+levelType, 13);
 		// All the items can be found in the itemTileImageDictionary
-		this.COIN = itemTileImageDictionary.get(6, (levelType*3));
+		int tempType = 0;
+		if (levelType == 2){
+			tempType = 9;
+		}
+		else if(levelType == 0){
+			tempType = 0;
+		}
+		else if(levelType == 4){
+			tempType = 18;
+		}
+		else if(levelType == 6){
+			tempType = 27;
+		}
+		
+		this.COIN = itemTileImageDictionary.get(6, tempType);
 		// All the enemies can be found in the itemTileImageDictionary
 		this.GOOMBA = actorTileImageDictionary.get(levelType+1, 0);
-				
+		// Set Background Image.
+		Integer levType = new Integer(levelType);
+		String levelStyle = levType.toString();
+		levelStyle = "img/" + levelStyle + ".jpg";
+		this.backgroundImg = new ImageIcon(levelStyle);
 	}
 	
 	/**
@@ -275,151 +280,132 @@ public class Level{
 					{	
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.GROUND));
-						this.levelTiles.add(this.GROUND);
 					}
 					//Brick Object
 					else if (type == 'B')
 					{
 						this.allLevelObjects.add(new Brick(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.BRICK));
-						this.levelTiles.add(this.BRICK);
 					}
 					// Question Mark Box
 					else if (type == 'Q')
 					{
 						this.allLevelObjects.add(new QuestionMarkBox(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.QUESTION_MARK_BOX));
-						this.levelTiles.add(this.QUESTION_MARK_BOX);
 					}
 					// Metal Box
 					else if (type == 'A')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight), 
 								new Dimension(this.imageWidth, this.imageHeight), true, this.METAL_BOX));
-						this.levelTiles.add(this.METAL_BOX);
 					}
 					// Top Left piece of Pipe
 					else if (type == 'I')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_LEFT_PIPE));
-						this.levelTiles.add(this.TOP_LEFT_PIPE);
 					}
 					// Top right piece of Pipe
 					else if (type == 'O')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_RIGHT_PIPE));
-						this.levelTiles.add(this.TOP_RIGHT_PIPE);
 					}
 					// Left section of Pipe
 					else if (type == 'K')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.LEFT_PIPE));
-						this.levelTiles.add(this.LEFT_PIPE);
 					}
 					// Right section of Pipe
 					else if (type == 'L')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.RIGHT_PIPE));
-						this.levelTiles.add(this.RIGHT_PIPE);
 					}
 					// Immovable Beveled Brick
 					else if (type == 'H')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.BEVELED_BRICK));
-						this.levelTiles.add(this.BEVELED_BRICK);
 					}
 					// Segment of Pole
 					else if (type == 'P')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.POLE));
-						this.levelTiles.add(this.POLE);
 					}
 					// Top ball of flagpole
 					else if (type == 'S')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.TOP_POLE));
-						this.levelTiles.add(this.TOP_POLE);
 					}
 					// Top of the castle piece
 					else if (type == 'C')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_TOP));
-						this.levelTiles.add(this.CASTLE_TOP);
 					}
 					// Left castle window.
 					else if (type == 'E')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_LEFT));
-						this.levelTiles.add(this.CASTLE_WINDOW_LEFT);
 					}
 					// Center castle window
 					else if (type == 'D')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_CENTER));
-						this.levelTiles.add(this.CASTLE_WINDOW_CENTER);
 					}
 					// Right castle window
 					else if (type == 'M')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_WINDOW_RIGHT));
-						this.levelTiles.add(this.CASTLE_WINDOW_RIGHT);
 					}
 					// Castle interior parapet
 					else if (type == 'N')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_INTERIOR_TOP));
-						this.levelTiles.add(this.CASTLE_INTERIOR_TOP);
 					}
 					// Top of castle door
 					else if (type == 'F')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR_TOP));
-						this.levelTiles.add(this.CASTLE_DOOR_TOP);
 					}
 					// Castle door piece
 					else if (type == 'J')
 					{
 						this.allLevelObjects.add(new StaticObject(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.CASTLE_DOOR));
-						this.levelTiles.add(this.CASTLE_DOOR);
 					}
 					// A coin.
 					else if (type == '1')
 					{
 						this.allLevelObjects.add(new Coin(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, this.COIN));
-						this.itemTiles.add(this.COIN);
 					}
 					// A goomba.
 					else if (type == '2')
 					{
-						allActors.add(new Goomba(new Point(x*this.imageWidth, y*this.imageHeight),
+						allLevelObjects.add(new Goomba(new Point(x*this.imageWidth, y*this.imageHeight),
 								new Dimension(this.imageWidth, this.imageHeight), true, new Vector(-2, 0), this.GOOMBA, 20));
-						this.actorTiles.add(this.GOOMBA);
-					
 					}
 					/*
 					 * If the given character cannot be found, simply create a null filler for the "map".
 					 */
 					else
 					{
-						this.levelTiles.add(null);
 					}
 				}
 			}
+			this.levelTileImageDictionary.clear();
+			this.itemTileImageDictionary.clear();
+			this.actorTileImageDictionary.clear();
 		}
 		// Catch the invalid input and warn.
 		catch(IOException e)
@@ -479,32 +465,6 @@ public class Level{
 	public void setLevelType(int levelType) {
 		this.levelType = levelType;
 		this.setLevelConstants(levelType);
-	}
-	/**
-	 * @return The Array containing all of the static Level tiles.
-	 */
-	public ArrayList<BufferedImage> getLevelTiles() {
-		return levelTiles;
-	}
-	/**
-	 * Get a specific tile from the Level tiles Array.
-	 * 
-	 * @param x The x coordinate of the tile to get.
-	 * @param y The y coordinate of the tile to get.
-	 * @return The image at the specified tile location.
-	 */
-	public BufferedImage getTile(int x, int y){
-		return levelTiles.get(y*this.getWidth() + (x));
-	}
-	
-	/**
-	 * Get a specific tile from the Level tiles Array.
-	 * 
-	 * @param i The index of the tile to get.
-	 * @return The image at the specified tile location.
-	 */
-	public BufferedImage getTile(int i){
-		return levelTiles.get(i);
 	}
 	/**
 	 * @return The Array of all Actors.

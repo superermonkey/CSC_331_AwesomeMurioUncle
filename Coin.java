@@ -29,7 +29,9 @@ public class Coin extends LevelObject{
 		super.draw(g);
 	}
 
-
+	public void move(){
+		// Not Used.
+	}
 
 
 

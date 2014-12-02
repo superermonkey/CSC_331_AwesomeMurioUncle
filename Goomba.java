@@ -22,18 +22,18 @@ public class Goomba extends Enemy{
 	public Goomba(Point l, Dimension d, boolean v, Vector vector, Image i, int point) {
 		super(l, d, v, vector, i, point);
 	}
-	
-	/**
-	 *  The movement of the Goomba.
-	 */
 	public void draw(Graphics g){
 		super.draw(g);
 	}
+	/**
+	 *  The movement of the Goomba.
+	 */
 	public void move() {
 		velocity.setDX(velocity.getDX()+acceleration.getDX());
 		velocity.setDY(velocity.getDY()+acceleration.getDY());
 
 		location.x += velocity.getDX();
 		location.y += velocity.getDY();
+		
 	}
 }

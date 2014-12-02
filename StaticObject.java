@@ -21,4 +21,7 @@ public class StaticObject extends LevelObject {
 	public void draw(Graphics g) {
 		super.draw(g);
 	}
+	public void move(){
+		// Not Used.
+	}
 }

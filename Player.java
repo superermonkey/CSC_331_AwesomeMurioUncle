@@ -65,16 +65,13 @@ public class Player extends Actor{
 			location.y = 0;
 			location.x = 0;
 		}
-		if (location.y < 0) {
-			location.y = 1;
-		}
 		
 	}
 	/**
 	 * @param g The Graphics object.  Draws the Player at the current location.
 	 */
 	public void draw(Graphics g) {
-		super.draw(g);
+		//super.draw(g);
 		g.drawImage(this.image, location.x, location.y, size.width, size.height, null);
 	}
 	/**

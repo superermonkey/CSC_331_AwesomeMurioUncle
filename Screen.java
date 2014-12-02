@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -28,7 +29,7 @@ import javax.swing.Timer;
 public class Screen extends JPanel implements KeyListener, Runnable{
 	private static final long serialVersionUID = -3859645292224232330L;
 	// Set the file to be used for the level.
-	public final String LEVEL_NAME = "levels/level1_3.txt";
+	public final String LEVEL_NAME = "levels/level1_5.txt";
 	
 	/*
 	 *  Set the style layout for the level.
@@ -43,7 +44,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	// Set Screen width and height.
 	public static Dimension screenSize = new Dimension(700, 500);
 	// The background image to use for the level.
-	public static ImageIcon backgroundImg = new ImageIcon("img/happy_background.jpg");
+	public static ImageIcon backgroundImg;
 	// The level timer.
 	protected Timer timer;
 	/* Set up the images from the specified sprite sheet.
@@ -71,7 +72,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		// Set Screen size based on Dimension object.
 		setPreferredSize(screenSize);
 		// Set default background color.
-		setBackground(Color.blue);
+		setBackground(Color.black);
 		//  Allows KeyboardListener to be used in the level.
 		setFocusable(true);
 		requestFocusInWindow();
@@ -81,6 +82,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		
 		//Initialize Level
 		currentLevel = new Level(0, 0, LEVEL_STYLE, LEVEL_NAME, levelImages, itemImages, enemyImages);
+		backgroundImg = currentLevel.backgroundImg;
 		player = currentLevel.player;
 
 		// Add a Timer for the Level
@@ -104,7 +106,12 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		screenSize.height = this.getHeight();
 
 		if (player.location.getX() > screenSize.width/2){
-			shiftLeft(g);
+			try{
+				shiftLeft(g);
+			}
+			catch (ConcurrentModificationException e){
+				// Do nothing.  Game will catch up.
+			}
 		}
 
 		// Draw and tile background image.
@@ -118,10 +125,11 @@ public class Screen extends JPanel implements KeyListener, Runnable{
                 }
             }
 		}
-		g.setColor(Color.BLACK);
-		g.drawString("Coins: " + player.getCoinCount(), 10, 20);
-		g.drawString("Points: " + player.getPoints(), 70, 20);
-		g.drawString("Lives: " + player.getNumberOfLives(), 140, 20);
+		g.setColor(Color.white);
+		g.setFont(new Font("Courier", Font.PLAIN, 20)); 
+		g.drawString("Coins: " + player.getCoinCount(), screenSize.width-120, 20);
+		g.drawString("Points: " + player.getPoints(), (int)screenSize.width/2 - 50, 20);
+		g.drawString("Lives: " + player.getNumberOfLives(), 10, 20);
 		
 		// draw actors
 		for (Actor obj : currentLevel.getActors()) {
@@ -130,6 +138,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		// draw LevelObjects.
 		currentLevel.updateOnScreenObjects();
 		for (LevelObject ob : currentLevel.getLevelObjects()) {
+			ob.move();
 			ob.setLocation(new Point((int)(ob.getOriginalLocation().getX() + currentLevel.getGlobalOffset()), (int)(ob.getOriginalLocation().getY())));
 			ob.draw(g);
 		}
@@ -144,7 +153,9 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 		player.setLocation(new Point((int)player.getLocation().getX()-2, (int)player.getLocation().getY()));
 		
 		for (LevelObject ob : currentLevel.getLevelObjects()) {
-			ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET, ob.getOriginalLocation().y)));
+			if(!(ob instanceof Goomba)){
+				ob.setLocation((new Point(ob.getOriginalLocation().x + currentLevel.GLOBAL_OFFSET, ob.getOriginalLocation().y)));
+			}
 		}
 		// Set scroll speed of Background.
 		// Lower number is slower.
@@ -160,34 +171,34 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	 * @param e The KeyEvent.
 	 */
 	public synchronized void keyPressed(KeyEvent e) {
-		   int keyCode = e.getKeyCode();
-		    switch(keyCode) { 
-		        case KeyEvent.VK_UP:
-		        case KeyEvent.VK_W:
-		        case KeyEvent.VK_SPACE:
-		            // handle jump 
-		        	if(player.isCanJump()){
-			        	player.acceleration.setDY(-12);
-			        	player.setAcceleration(player.acceleration);
-						player.setVelocity(player.velocity);
-						player.setCanJump(false);
-		        	}
-		            break;
-		        //  Move Left
-		        case KeyEvent.VK_LEFT:
-		        case KeyEvent.VK_A:
-		        	player.velocity.setDX(-5);
+		int keyCode = e.getKeyCode();
+	    switch(keyCode) { 
+	        case KeyEvent.VK_UP:
+	        case KeyEvent.VK_W:
+	        case KeyEvent.VK_SPACE:
+	            // handle jump 
+	        	if(player.isCanJump()){
+		        	player.acceleration.setDY(-12);
 		        	player.setAcceleration(player.acceleration);
 					player.setVelocity(player.velocity);
-		            break;
-		        // Move Right
-		        case KeyEvent.VK_RIGHT :
-		        case KeyEvent.VK_D:
-		        	player.velocity.setDX(5);
-		        	player.setAcceleration(player.acceleration);
-					player.setVelocity(player.velocity);
-		            break;
-		     }		
+					player.setCanJump(false);
+	        	}
+	            break;
+	        //  Move Left
+	        case KeyEvent.VK_LEFT:
+	        case KeyEvent.VK_A:
+	        	player.velocity.setDX(-5);
+	        	player.setAcceleration(player.acceleration);
+				player.setVelocity(player.velocity);
+	            break;
+	        // Move Right
+	        case KeyEvent.VK_RIGHT :
+	        case KeyEvent.VK_D:
+	        	player.velocity.setDX(5);
+	        	player.setAcceleration(player.acceleration);
+				player.setVelocity(player.velocity);
+	            break;
+	     }		
 	}
 
 	
@@ -199,55 +210,66 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 	        new Thread(new Runnable() {
 	            public void run() {
 	            	try{
-	            		// Check player's interaction with other actors (enemies, powerups)
-	            		for (Actor currentActor: currentLevel.getActors()) {
-	            			if(player.collide(currentActor).equals("GOOMBA_TOP")){
-	            				currentActor.setSize(new Dimension(0,0));
-	            				currentLevel.allLevelObjects.remove(currentActor);
-								currentLevel.actors.remove(currentActor);
-	            			}
-	            			else if(player.collide(currentActor).equals("GOOMBA_KILL")){
-	            				player.loseLife();
-	            			}
-	            		}
-	            		for (Actor actor: currentLevel.getActors()){
+	            		
+	            		Player actor = (Player) player;
 							for (LevelObject currentObject: currentLevel.getLevelObjects()) {
 								// Collide with Coin.
 								if(actor.collide(currentObject).equals("COIN")){
 									if (actor instanceof Player){
-										Player actor2 = (Player)actor;	
+										Player actor2 = (Player)actor;
 										actor2.addCoin();
 										currentLevel.allLevelObjects.remove(currentObject);
 										currentLevel.levelObjects.remove(currentObject);
 									}
 									repaint();
 								}
+								// Collide with the top of a Goombe, smoosh him.
+								else if(player.collide(currentObject).equals("GOOMBA_TOP")){
+		            				currentObject.setSize(new Dimension(0,0));
+		            				currentLevel.allLevelObjects.remove(currentObject);
+									currentLevel.actors.remove(currentObject);
+		            			}
+								// Collide with the side of a Goomba, DIE.
+		            			else if(player.collide(currentObject).equals("GOOMBA_KILL")){
+		            				player.loseLife();
+		            			}
+								// Hit the bottom of a Question Mark Box, gain a coin and 10 points
+								// Change Question Box into Metal Box.
+		            			else if(player.collide(currentObject).equals("QUESTIONMARKBOX")){
+									player.addPoints(10);
+									player.addCoin();
+									player.acceleration.setDY(0);
+									player.velocity.setDY(0);
+									player.acceleration.setDX(0);
+									player.velocity.setDX(0);
+									player.location.y = currentObject.location.y + currentObject.size.height;
+									player.setAcceleration(player.acceleration);
+									player.setVelocity(player.velocity);
+									player.setCanJump(false);
+									currentLevel.allLevelObjects.remove(currentObject);
+									currentLevel.levelObjects.remove(currentObject);
+									StaticObject newMetalBox = new StaticObject(
+		            						new Point((int)currentObject.getOriginalLocation().x, (int)currentObject.getOriginalLocation().y), 
+		            						currentObject.size, currentObject.isVisible, 
+		            						currentLevel.METAL_BOX);
+		            				currentLevel.levelObjects.add(newMetalBox);
+									repaint();
+		            			}	
 								// Collide with Brick.
 								else if(actor.collide(currentObject).equals("BRICK")){
-									Brick brick = (Brick)currentObject;
-									if(brick.isBreakable && actor instanceof Player){
-										Player actor2 = (Player) actor;
-										actor2.addPoints(10);
+										player.addPoints(10);
 										currentLevel.allLevelObjects.remove(currentObject);
 										currentLevel.levelObjects.remove(currentObject);
-										actor2.acceleration.setDY(0);
-										actor2.velocity.setDY(0);
-										actor2.acceleration.setDX(0);
-										actor2.velocity.setDX(0);
-										actor2.location.y -=5;
-										actor2.setAcceleration(actor2.acceleration);
-										actor2.setVelocity(actor2.velocity);
-										actor2.setCanJump(true);
-									repaint();
-									}
-									else{
-										actor.acceleration.setDY(0);
-										actor.velocity.setDY(0);
-										actor.location.y -=5;
-										actor.setAcceleration(actor.acceleration);
-										actor.setVelocity(actor.velocity);
+										player.acceleration.setDY(0);
+										player.velocity.setDY(0);
+										player.acceleration.setDX(0);
+										player.velocity.setDX(0);
+										player.location.y = currentObject.location.y + currentObject.size.height;
+										player.setAcceleration(player.acceleration);
+										player.setVelocity(player.velocity);
+										player.setCanJump(false);
 										repaint();
-									}
+								
 								}
 								// Player is on top of object.
 								else if(actor.collide(currentObject).equals("BOTTOM_COLLISION")){
@@ -261,9 +283,9 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 								}
 								// Player is to the Right of the current object.
 								else if(actor.collide(currentObject).equals("LEFT_COLLISION")){
+									actor.location.setLocation(currentObject.location.x + currentObject.getSize().getWidth(), actor.location.y);
 									actor.velocity.setDX(0);
 									actor.acceleration.setDX(0);
-									actor.location.setLocation(currentObject.location.x + currentObject.getSize().getWidth(), actor.location.y);
 									actor.setAcceleration(actor.acceleration);
 									actor.setVelocity(actor.velocity);
 									repaint();
@@ -293,7 +315,7 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 								}
 							}
 		            	}
-	            	}
+	            	
 	            	catch (ConcurrentModificationException e){
 	            	}
 	            }
@@ -302,7 +324,10 @@ public class Screen extends JPanel implements KeyListener, Runnable{
 			//move each Actor
 			for (Actor ob: currentLevel.getActors()) {
 				ob.move();
-			}			
+			}	
+			for (LevelObject ob : currentLevel.getLevelObjects()) {
+				ob.move();
+			}
 		}
 	}
 	public void keyTyped(KeyEvent e) {

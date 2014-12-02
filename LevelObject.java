@@ -91,6 +91,10 @@ public abstract class LevelObject{
 		else if (other instanceof Brick && thatObject.contains(thisTop)){
 			return "BRICK";
 		}
+		// If object is Brick.
+		else if (other instanceof QuestionMarkBox && thatObject.contains(thisTop)){
+			return "QUESTIONMARKBOX";
+		}
 		// If object is a Goomba.
 		else if (other instanceof Goomba){
 			if(thatObject.contains(thisBottom)){
@@ -130,6 +134,8 @@ public abstract class LevelObject{
 		this.image = this.getImage();
 		g.drawImage(this.image, this.originalLocation.x+Level.GLOBAL_OFFSET, this.originalLocation.y, this.size.height, this.size.width, null);
 	}
+	
+	abstract public void move();
 	/**
 	 * @return whether the LevelObject is visible.
 	 */
